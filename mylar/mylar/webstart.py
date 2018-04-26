@@ -21,6 +21,8 @@ import sys
 
 import cherrypy
 
+import portend as portend
+
 import mylar
 from mylar import logger
 from mylar.webserve import WebInterface
@@ -165,9 +167,6 @@ def initialize(options):
     else:
         conf['/opds'] = {'tools.auth_basic.on': False}
 
-    # Prevent time-outs
-    cherrypy.engine.timeout_monitor.unsubscribe()
-
     cherrypy.tree.mount(WebInterface(), str(options['http_root']), config = conf)
 
     restroot = REST()
@@ -179,9 +178,9 @@ def initialize(options):
     cherrypy.tree.mount(restroot, '/rest', config = rest_api)
 
     try:
-        cherrypy.process.servers.check_port(options['http_host'], options['http_port'])
+        portend.Checker().assert_free(options['http_host'], options['http_port'])
         cherrypy.server.start()
-    except IOError:
+    except portend.PortNotFree:
         print 'Failed to start on port: %i. Is something else running?' % (options['http_port'])
         sys.exit(0)
 

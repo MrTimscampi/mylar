@@ -16,7 +16,7 @@
 import os
 import glob, urllib, urllib2
 
-import lib.simplejson as simplejson
+import simplejson as simplejson
 
 import mylar
 from mylar import db, helpers, logger

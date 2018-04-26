@@ -14,21 +14,18 @@
 #  You should have received a copy of the GNU General Public License
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
-import os, sys, locale
+import argparse
 import errno
+import locale
+import os
 import shutil
-import time
-import threading
 import signal
-
-sys.path.insert(1, os.path.join(os.path.dirname(__file__), 'lib'))
+import sys
+import threading
+import time
 
 import mylar
-
 from mylar import webstart, logger, filechecker, versioncheck, maintenance
-
-import argparse
-
 
 if ( sys.platform == 'win32' and sys.executable.split( '\\' )[-1] == 'pythonw.exe'):
     sys.stdout = open(os.devnull, "w")
@@ -69,8 +66,8 @@ def main():
 
     # Set up and gather command line arguments
     parser = argparse.ArgumentParser(description='Automated Comic Book Downloader')
-    subparsers = parser.add_subparsers(title='Subcommands', dest='maintenance')
-    parser_maintenance = subparsers.add_parser('maintenance', help='Enter maintenance mode (no GUI). Additional commands are available (maintenance --help)')
+    #subparsers = parser.add_subparsers(title='Subcommands', dest='maintenance')
+    #parser_maintenance = subparsers.add_parser('maintenance', help='Enter maintenance mode (no GUI). Additional commands are available (maintenance --help)')
 
     #main parser
     parser.add_argument('-v', '--verbose', action='store_true', help='Increase console logging verbosity')
@@ -84,16 +81,25 @@ def main():
     parser.add_argument('--nolaunch', action='store_true', help='Prevent browser from launching on startup')
     parser.add_argument('--pidfile', help='Create a pid file (only relevant when running as a daemon)')
     parser.add_argument('--safe', action='store_true', help='redirect the startup page to point to the Manage Comics screen on startup')
+<<<<<<< HEAD
     parser_maintenance.add_argument('-xj', '--exportjson', action='store', help='Export existing mylar.db to json file')
     parser_maintenance.add_argument('-id', '--importdatabase', action='store', help='Import a mylar.db into current db')
     parser_maintenance.add_argument('-ij', '--importjson', action='store', help='Import a specified json file containing just {"ComicID": "XXXXX"} into current db')
     parser_maintenance.add_argument('-st', '--importstatus', action='store_true', help='Provide current maintenance status')
     parser_maintenance.add_argument('-u', '--update', action='store_true', help='force mylar to perform an update as if in GUI')
     parser_maintenance.add_argument('-fs', '--fixslashes', action='store_true', help='remove double-slashes from within paths in db')
+=======
+    #parser_maintenance.add_argument('-xj', '--exportjson', action='store', help='Export existing mylar.db to json file')
+    #parser_maintenance.add_argument('-id', '--importdatabase', action='store', help='Import a mylar.db into current db')
+    #parser_maintenance.add_argument('-ij', '--importjson', action='store', help='Import a specified json file containing just {"ComicID": "XXXXX"} into current db')
+    #parser_maintenance.add_argument('-st', '--importstatus', action='store_true', help='Provide current maintenance status')
+    #parser_maintenance.add_argument('-u', '--update', action='store_true', help='force mylar to perform an update as if in GUI')
+>>>>>>> FIX: remove bundled libraires
     #parser_maintenance.add_argument('-it', '--importtext', action='store', help='Import a specified text file into current db')
 
     args = parser.parse_args()
 
+<<<<<<< HEAD
     if args.maintenance:
         if all([args.exportjson is None, args.importdatabase is None, args.importjson is None, args.importstatus is False, args.update is False, args.fixslashes is False]):
             print 'Expecting subcommand with the maintenance positional argumeent'
@@ -101,6 +107,15 @@ def main():
         mylar.MAINTENANCE = True
     else:
         mylar.MAINTENANCE = False
+=======
+    # if args.maintenance:
+    #     if all([args.exportjson is None, args.importdatabase is None, args.importjson is None, args.importstatus is False, args.update is False]):
+    #         print 'Expecting subcommand with the maintenance positional argumeent'
+    #         sys.exit()
+    #     mylar.MAINTENANCE = True
+    # else:
+    #     mylar.MAINTENANCE = False
+>>>>>>> FIX: remove bundled libraires
 
     if args.verbose:
         print 'Verbose/Debugging mode enabled...'
@@ -343,6 +358,7 @@ def main():
             mylar.SIGNAL = None
 
     return
+
 
 if __name__ == "__main__":
     main()

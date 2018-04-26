@@ -17,7 +17,7 @@ import mylar
 from mylar import db, logger, ftpsshup, helpers, auth32p, utorrent
 import torrent.clients.transmission as transmission
 import torrent.clients.deluge as deluge
-import torrent.clients.qbittorrent as qbittorrent
+import torrent.clients.qbittorrentclient as qbittorrent
 
 def _start_newznab_attr(self, attrsD):
     context = self._getContext()

@@ -3900,7 +3900,6 @@ def file_ops(path,dst,arc=False,one_off=False):
             #kdll.CreateSymbolicLinkW(path, dst, 0)
 
             #option 2
-            import lib.winlink as winlink
             if mylar.CONFIG.FILE_OPTS == 'hardlink':
                 try:
                     os.system(r'mklink /H dst path')

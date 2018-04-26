@@ -20,7 +20,7 @@ import time
 import logger
 import string
 import urllib2
-import lib.feedparser
+import feedparser
 import mylar
 import platform
 from bs4 import BeautifulSoup as Soup
