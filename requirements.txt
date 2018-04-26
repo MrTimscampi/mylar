@@ -1,0 +1,14 @@
+apscheduler
+cherrypy
+requests
+feedparser
+cfscrape
+bs4
+deluge_client
+python-qbittorrent
+simplejson
+mako
+portend
+# Will need Python 3 replacements
+bencode
+transmissionrpc
