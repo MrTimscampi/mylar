@@ -2,6 +2,7 @@
 # modified very slightly so Mylar just passes it the IssueID for it to do it's magic.
 
 
+from builtins import str
 import os, errno
 import sys
 import re

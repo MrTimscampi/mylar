@@ -16,22 +16,26 @@
 from __future__ import division
 from __future__ import print_function
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
 import mylar
 from mylar import logger, db, updater, helpers, parseit, findcomicfeed, notifiers, rsscheck, Failed, filechecker, auth32p, sabnzbd, nzbget, wwt
 
 import feedparser
 import requests
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import os, errno
 import string
 import sys
 import getopt
 import re
 import time
-import urlparse
-from urlparse import urljoin
+import urllib.parse
+from urllib.parse import urljoin
 from xml.dom.minidom import parseString
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import email.utils
 import datetime
 import shutil
@@ -1076,7 +1080,7 @@ def NZB_SEARCH(ComicName, IssueNumber, ComicYear, SeriesYear, Publisher, IssueDa
                                 vol_nono.append(ctchk.index(ct))
                                 #recreate the cleantitle, with the volume label completely removed (but stored for comparison later)
                                 ct = 'v' + str(ct)
-                                ctchk_indexes.extend(range(0, len(ctchk)))
+                                ctchk_indexes.extend(list(range(0, len(ctchk))))
                                 for i in ctchk_indexes:
                                     if i not in vol_nono:
                                         new_cleantitle.append(ctchk[i])
@@ -2211,7 +2215,7 @@ def provider_sequence(nzbprovider, torprovider, newznab_hosts, torznab_hosts):
     torproviders_lower = [y.lower() for y in torprovider]
 
     if len(mylar.CONFIG.PROVIDER_ORDER) > 0:
-        for pr_order in sorted(mylar.CONFIG.PROVIDER_ORDER.items(), key=itemgetter(0), reverse=False):
+        for pr_order in sorted(list(mylar.CONFIG.PROVIDER_ORDER.items()), key=itemgetter(0), reverse=False):
             if any(pr_order[1].lower() in y for y in torproviders_lower) or any(pr_order[1].lower() in x for x in nzbproviders_lower):
                 if any(pr_order[1].lower() in x for x in nzbproviders_lower):
                     # this is for nzb providers
@@ -2496,7 +2500,7 @@ def searcher(nzbprov, nzbname, comicinfo, link, IssueID, ComicID, tmpprov, direc
         else:
             tmppay = payload.copy()
             tmppay['apikey'] = 'YOUDONTNEEDTOKNOWTHIS'
-            logger.fdebug('[PAYLOAD] Download URL: ' + down_url + '?' + urllib.urlencode(tmppay) + ' [VerifySSL:' + str(verify) + ']')
+            logger.fdebug('[PAYLOAD] Download URL: ' + down_url + '?' + urllib.parse.urlencode(tmppay) + ' [VerifySSL:' + str(verify) + ']')
 
         if down_url.startswith('https') and verify == False:
             try:
@@ -2542,7 +2546,7 @@ def searcher(nzbprov, nzbname, comicinfo, link, IssueID, ComicID, tmpprov, direc
             if payload is None:
                 logger.error('[PAYLOAD:NONE] Unable to download nzb from link: ' + str(down_url) + ' [' + link + ']')
             else:
-                errorlink = down_url + '?' + urllib.urlencode(payload)
+                errorlink = down_url + '?' + urllib.parse.urlencode(payload)
                 logger.error('[PAYLOAD:PRESENT] Unable to download nzb from link: ' + str(errorlink) + ' [' + link + ']')
             return "sab-fail"
         else:
@@ -3153,7 +3157,7 @@ def generate_id(nzbprov, link):
     #logger.fdebug('[%s] generate_id - link: %s' % (nzbprov, link))
     if nzbprov == 'experimental':
         #id is located after the /download/ portion
-        url_parts = urlparse.urlparse(link)
+        url_parts = urllib.parse.urlparse(link)
         path_parts = url_parts[2].rpartition('/')
         nzbtempid = path_parts[0].rpartition('/')
         nzblen = len(nzbtempid)
@@ -3173,25 +3177,25 @@ def generate_id(nzbprov, link):
             nzbid = link
         else:
             #for users that already have the cache in place.
-            url_parts = urlparse.urlparse(link)
+            url_parts = urllib.parse.urlparse(link)
             path_parts = url_parts[2].rpartition('/')
             nzbtempid = path_parts[2]
             nzbid = re.sub('.torrent', '', nzbtempid).rstrip()
     elif nzbprov == 'nzb.su':
         nzbid = os.path.splitext(link)[0].rsplit('/', 1)[1]
     elif nzbprov == 'dognzb':
-        url_parts = urlparse.urlparse(link)
+        url_parts = urllib.parse.urlparse(link)
         path_parts = url_parts[2].rpartition('/')
         nzbid = path_parts[0].rsplit('/', 1)[1]
     elif 'newznab' in nzbprov:
         #if in format of http://newznab/getnzb/<id>.nzb&i=1&r=apikey
-        tmpid = urlparse.urlparse(link)[4]  #param 4 is the query string from the url.
+        tmpid = urllib.parse.urlparse(link)[4]  #param 4 is the query string from the url.
         if 'searchresultid' in tmpid:
             nzbid = os.path.splitext(link)[0].rsplit('searchresultid=',1)[1]
         elif tmpid == '' or tmpid is None:
             nzbid = os.path.splitext(link)[0].rsplit('/', 1)[1]
         else:
-            nzbinfo = urlparse.parse_qs(link)
+            nzbinfo = urllib.parse.parse_qs(link)
             nzbid = nzbinfo.get('id', None)
             if nzbid is not None:
                 nzbid = ''.join(nzbid)
@@ -3205,10 +3209,10 @@ def generate_id(nzbprov, link):
                 findend = tmpid.find('apikey=', findend)
                 nzbid = tmpid[findend+1:].strip()
             if '&id' not in tmpid or nzbid == '':
-                tmpid = urlparse.urlparse(link)[2]
+                tmpid = urllib.parse.urlparse(link)[2]
                 nzbid = tmpid.rsplit('/', 1)[1]
     elif nzbprov == 'torznab':
-        idtmp = urlparse.urlparse(link)[4]
+        idtmp = urllib.parse.urlparse(link)[4]
         idpos = idtmp.find('&')
         nzbid = re.sub('id=', '', idtmp[:idpos]).strip()
     return nzbid

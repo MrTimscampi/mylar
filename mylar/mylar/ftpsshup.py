@@ -1,5 +1,6 @@
 #!/usr/local/bin/python
 
+from builtins import str
 import os
 import time
 

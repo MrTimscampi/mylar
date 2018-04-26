@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
 from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 import os
 import sys
 import time
@@ -9,7 +12,7 @@ import re
 from . import logger
 import mylar
 import unicodedata
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 def Startit(searchName, searchIssue, searchYear, ComicVersion, IssDateFix):
     cName = searchName

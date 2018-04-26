@@ -1,9 +1,11 @@
+from __future__ import print_function
+from __future__ import absolute_import
 
 from bs4 import BeautifulSoup, UnicodeDammit
 import urllib2
 import re
-import helpers
-import logger
+from . import helpers
+from . import logger
 import datetime
 import sys
 from decimal import Decimal
@@ -44,16 +46,16 @@ def cbdb(comicnm, ComicYear):
             else:
                 i += 1
                 continue
-            print "ComicYear: " + resultYear
+            print("ComicYear: " + resultYear)
 
             ID_som = titlet['href']
             resultURL = ID_som
-            print "CBDB URL: " + resultURL
+            print("CBDB URL: " + resultURL)
 
             IDst = ID_som.find('?ID=')
             resultID = ID_som[(IDst +4):]
 
-            print "CBDB ID: " + resultID
+            print("CBDB ID: " + resultID)
 
             print ("resultname: " + resultName)
             CleanComicName = re.sub('[\,\.\:\;\'\[\]\(\)\!\@\#\$\%\^\&\*\-\_\+\=\?\/]', '', comicnm)

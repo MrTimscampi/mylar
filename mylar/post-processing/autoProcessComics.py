@@ -1,9 +1,12 @@
 from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 import sys
 import os.path
-import ConfigParser
-import urllib2
-import urllib
+import configparser
+import urllib.request, urllib.error, urllib.parse
+import urllib.request, urllib.parse, urllib.error
 try:
     import requests
     use_requests = True
@@ -20,7 +23,7 @@ def processEpisode(dirName, nzbName=None):
 
 def processIssue(dirName, nzbName=None, failed=False, comicrn_version=None):
 
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     configFilename = os.path.join(os.path.dirname(sys.argv[0]), "autoProcessComics.cfg")
     print("Loading config from", configFilename)
 
@@ -44,12 +47,12 @@ def processIssue(dirName, nzbName=None, failed=False, comicrn_version=None):
         sys.exit(1)
     try:
         ssl = int(config.get("Mylar", "ssl"))
-    except (ConfigParser.NoOptionError, ValueError):
+    except (configparser.NoOptionError, ValueError):
         ssl = 0
 
     try:
         web_root = config.get("Mylar", "web_root")
-    except ConfigParser.NoOptionError:
+    except configparser.NoOptionError:
         web_root = ""
 
     if ssl:
@@ -82,10 +85,10 @@ def processIssue(dirName, nzbName=None, failed=False, comicrn_version=None):
             result = pp.content
             print(result)
     else:
-        url += "?" + urllib.urlencode(params)
+        url += "?" + urllib.parse.urlencode(params)
         print("Opening URL:", url)
         try:
-            urlObj = urllib2.urlopen(url)
+            urlObj = urllib.request.urlopen(url)
         except IOError as e:
             print("Unable to open URL: ", str(e))
             sys.exit(1)

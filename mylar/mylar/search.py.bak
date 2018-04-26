@@ -14,6 +14,7 @@
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import division
+from __future__ import print_function
 
 import mylar
 from mylar import logger, db, updater, helpers, parseit, findcomicfeed, notifiers, rsscheck, Failed, filechecker, auth32p, sabnzbd, nzbget, wwt
@@ -2430,7 +2431,7 @@ def searcher(nzbprov, nzbname, comicinfo, link, IssueID, ComicID, tmpprov, direc
         try:
             r = requests.get(down_url, params=payload, verify=verify, headers=headers)
 
-        except Exception, e:
+        except Exception as e:
             logger.warn('Error fetching data from %s: %s' % (tmpprov, e))
             return "sab-fail"
 
@@ -2958,8 +2959,8 @@ def IssueTitleCheck(issuetitle, watchcomic_split, splitit, splitst, issue_firstw
                 chkme = orignzb.find(decit[0])
                 chkend = orignzb.find(decit[1], chkme + len(decit[0]))
                 chkspot = orignzb[chkme:chkend +1]
-                print chkme, chkend
-                print chkspot
+                print(chkme, chkend)
+                print(chkspot)
                 # we add +1 to decit totals in order to account for the '.' that's missing and we assume is there.
                 if len(chkspot) == (len(decit[0]) + len(decit[1]) + 1):
                     logger.fdebug('lengths match for possible decimal issue.')

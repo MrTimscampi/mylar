@@ -20,11 +20,14 @@
 # Session tool to be loaded.
 ###### from cherrypy/tools on github
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 import cherrypy
 from cherrypy.lib.static import serve_file
 from cgi import escape
 #from datetime import datetime, timedelta
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import re
 import mylar
 from mylar import logger
@@ -47,7 +50,7 @@ def check_auth(*args, **kwargs):
     is not None, a login is required and the entry is evaluated as a list of
     conditions that the user must fulfill"""
     conditions = cherrypy.request.config.get('auth.require', None)
-    get_params = urllib.quote(cherrypy.request.request_line.split()[1])
+    get_params = urllib.parse.quote(cherrypy.request.request_line.split()[1])
     if conditions is not None:
         username = cherrypy.session.get(SESSION_KEY)
         if username:

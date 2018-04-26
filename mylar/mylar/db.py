@@ -17,26 +17,30 @@
 ## Stolen from Sick-Beard's db.py  ##
 #####################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 from __future__ import with_statement
 
 import os
 import sqlite3
 import threading
 import time
-import Queue
+import queue
 
 import mylar
 
 from mylar import logger
 
 db_lock = threading.Lock()
-mylarQueue = Queue.Queue()
+mylarQueue = queue.Queue()
 
 def dbFilename(filename="mylar.db"):
 
     return os.path.join(mylar.DATA_DIR, filename)
 
-class WriteOnly:
+class WriteOnly(object):
 
     def __init__(self):
         t = threading.Thread(target=self.worker, name="DB-WRITER")
@@ -63,7 +67,7 @@ class WriteOnly:
                 time.sleep(1)
                 #logger.fdebug('[' + str(thisthread) + '] sleeping until active.')
 
-class DBConnection:
+class DBConnection(object):
 
     def __init__(self, filename="mylar.db"):
 
@@ -163,16 +167,16 @@ class DBConnection:
 
         changesBefore = self.connection.total_changes
 
-        genParams = lambda myDict: [x + " = ?" for x in myDict.keys()]
+        genParams = lambda myDict: [x + " = ?" for x in list(myDict.keys())]
 
         query = "UPDATE " + tableName + " SET " + ", ".join(genParams(valueDict)) + " WHERE " + " AND ".join(genParams(keyDict))
 
-        self.action(query, valueDict.values() + keyDict.values())
+        self.action(query, list(valueDict.values()) + list(keyDict.values()))
 
         if self.connection.total_changes == changesBefore:
-            query = "INSERT INTO " +tableName +" (" + ", ".join(valueDict.keys() + keyDict.keys()) + ")" + \
-                        " VALUES (" + ", ".join(["?"] * len(valueDict.keys() + keyDict.keys())) + ")"
-            self.action(query, valueDict.values() + keyDict.values())
+            query = "INSERT INTO " +tableName +" (" + ", ".join(list(valueDict.keys()) + list(keyDict.keys())) + ")" + \
+                        " VALUES (" + ", ".join(["?"] * len(list(valueDict.keys()) + list(keyDict.keys()))) + ")"
+            self.action(query, list(valueDict.values()) + list(keyDict.values()))
 
 
         #else:

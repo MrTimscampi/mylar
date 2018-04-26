@@ -16,6 +16,10 @@
 from __future__ import with_statement
 from __future__ import absolute_import
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import os
 import shutil
 import re
@@ -24,7 +28,7 @@ import time
 import logging
 import mylar
 import subprocess
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import sys
 from xml.dom.minidom import parseString
 
@@ -809,7 +813,7 @@ class PostProcessor(object):
 
                     if len(res) > 0:
                         logger.fdebug('%s Now Checking if %s issue(s) may also reside in one of the storyarc\'s that I am watching.' % (module, len(res)))
-                    for k,v in res.items():
+                    for k,v in list(res.items()):
                         i = 0
                         #k is ComicName
                         #v is ArcValues and WatchValues
@@ -2454,14 +2458,14 @@ class PostProcessor(object):
 
         return
 
-class FolderCheck():
+class FolderCheck(object):
 
     def __init__(self):
-        import Queue
+        import queue
         from . import PostProcessor, logger
 
         self.module = '[FOLDER-CHECK]'
-        self.queue = Queue.Queue()
+        self.queue = queue.Queue()
 
     def run(self):
         if mylar.IMPORTLOCK:

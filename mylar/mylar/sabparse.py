@@ -14,6 +14,10 @@
 #  You should have received a copy of the GNU General Public License
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import mylar
 from mylar import logger
 
@@ -23,7 +27,7 @@ import re
 import datetime
 import sys
 from decimal import Decimal
-from HTMLParser import HTMLParseError
+from html.parser import HTMLParseError
 from time import strptime
 
 class sabnzbd(object):

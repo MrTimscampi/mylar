@@ -13,14 +13,18 @@
 #  You should have received a copy of the GNU General Public License
 #  along with mylar.  If not, see <http://www.gnu.org/licenses/>.
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 from mylar import logger
 import base64
 import cherrypy
-import urllib
-import urllib2
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 import mylar
-from httplib import HTTPSConnection
-from urllib import urlencode
+from http.client import HTTPSConnection
+from urllib.parse import urlencode
 import os.path
 import subprocess
 import time
@@ -30,7 +34,7 @@ import requests
 
 # This was obviously all taken from headphones with great appreciation :)
 
-class PROWL:
+class PROWL(object):
 
     keys = []
     priority = []
@@ -80,7 +84,7 @@ class PROWL:
     def test_notify(self):
         self.notify('ZOMG Lazors Pewpewpew!', 'Test Message')
 
-class NMA:
+class NMA(object):
 
     def __init__(self, test_apikey=None):
 
@@ -203,7 +207,7 @@ class NMA:
 
 # 2013-04-01 Added Pushover.net notifications, based on copy of Prowl class above.
 # No extra care has been put into API friendliness at the moment (read: https://pushover.net/api#friendly)
-class PUSHOVER:
+class PUSHOVER(object):
 
     def __init__(self, test_apikey=None, test_userkey=None, test_device=None):
         if all([test_apikey is None, test_userkey is None, test_device is None]):
@@ -293,7 +297,7 @@ class PUSHOVER:
     def test_notify(self):
         return self.notify(event='Test Message', message='Release the Ninjas!')
 
-class BOXCAR:
+class BOXCAR(object):
 
     #new BoxCar2 API
     def __init__(self):
@@ -313,19 +317,19 @@ class BOXCAR:
 
         try:
 
-            data = urllib.urlencode({
+            data = urllib.parse.urlencode({
                 'user_credentials': mylar.CONFIG.BOXCAR_TOKEN,
                 'notification[title]': title.encode('utf-8').strip(),
                 'notification[long_message]': msg.encode('utf-8'),
                 'notification[sound]': "done"
                 })
 
-            req = urllib2.Request(self.url)
-            handle = urllib2.urlopen(req, data)
+            req = urllib.request.Request(self.url)
+            handle = urllib.request.urlopen(req, data)
             handle.close()
             return True
 
-        except urllib2.URLError as e:
+        except urllib.error.URLError as e:
             # if we get an error back that doesn't have an error code then who knows what's really happening
             if not hasattr(e, 'code'):
                 logger.error(module + 'Boxcar2 notification failed. %s' % e)
@@ -372,7 +376,7 @@ class BOXCAR:
     def test_notify(self):
         self.notify(prline='Test Message',prline2='ZOMG Lazors Pewpewpew!')
 
-class PUSHBULLET:
+class PUSHBULLET(object):
 
     def __init__(self, test_apikey=None):
         self.PUSH_URL = "https://api.pushbullet.com/v2/pushes"
@@ -445,7 +449,7 @@ class PUSHBULLET:
     def test_notify(self):
         return self.notify(prline='Test Message', prline2='Release the Ninjas!')
 
-class TELEGRAM:
+class TELEGRAM(object):
     def __init__(self, test_userid=None, test_token=None):
         self.TELEGRAM_API = "https://api.telegram.org/bot%s/%s"
         if test_userid is None:
@@ -479,7 +483,7 @@ class TELEGRAM:
     def test_notify(self):
         return self.notify('Test Message: Release the Ninjas!')
 
-class SLACK:
+class SLACK(object):
     def __init__(self, test_webhook_url=None):
         self.webhook_url = mylar.CONFIG.SLACK_WEBHOOK_URL if test_webhook_url is None else test_webhook_url
 

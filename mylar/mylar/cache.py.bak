@@ -122,7 +122,7 @@ class Cache(object):
             logger.debug('Retrieving comic image from: ' + image_url)
             try:
                 artwork = urllib2.urlopen(image_url, timeout=20).read()
-            except Exception, e:
+            except Exception as e:
                 logger.error('Unable to open url "' + image_url + '". Error: ' + str(e))
                 artwork = None
 
@@ -132,7 +132,7 @@ class Cache(object):
                 if not os.path.isdir(self.path_to_art_cache):
                     try:
                         os.makedirs(self.path_to_art_cache)
-                    except Exception, e:
+                    except Exception as e:
                         logger.error('Unable to create artwork cache dir. Error: ' + str(e))
                         self.artwork_errors = True
                         self.artwork_url = image_url
@@ -150,7 +150,7 @@ class Cache(object):
                     f = open(artwork_path, 'wb')
                     f.write(artwork)
                     f.close()
-                except Exception, e:
+                except Exception as e:
                     logger.error('Unable to write to the cache dir: ' + str(e))
                     self.artwork_errors = True
                     self.artwork_url = image_url

@@ -94,7 +94,7 @@ class DBConnection:
                         sqlResult = cursor.execute(query, args)
                     # get out of the connection attempt loop since we were successful
                     break
-                except sqlite3.OperationalError, e:
+                except sqlite3.OperationalError as e:
                     if "unable to open database file" in e.args[0] or "database is locked" in e.args[0]:
                         logger.warn('Database Error: %s' % e)
                         attempt += 1
@@ -102,7 +102,7 @@ class DBConnection:
                     else:
                         logger.warn('DB error: %s' % e)
                         raise
-                except sqlite3.DatabaseError, e:
+                except sqlite3.DatabaseError as e:
                     logger.error('Fatal error executing query: %s' % e)
                     raise
 
@@ -129,7 +129,7 @@ class DBConnection:
                         sqlResult = self.connection.execute(query, args)
                     self.connection.commit()
                     break
-                except sqlite3.OperationalError, e:
+                except sqlite3.OperationalError as e:
                     if "unable to open database file" in e.message or "database is locked" in e.message:
                         logger.warn('Database Error: %s' % e)
                         logger.warn('sqlresult: %s' %  query)

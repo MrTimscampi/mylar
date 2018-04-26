@@ -1,4 +1,11 @@
 from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import zip
+from builtins import str
+from builtins import range
+from past.builtins import basestring
+from builtins import object
 import itertools
 from collections import OrderedDict
 from operator import itemgetter
@@ -7,11 +14,11 @@ import os
 import codecs
 import shutil
 import re
-import ConfigParser
+import configparser
 import mylar
 from mylar import logger, helpers
 
-config = ConfigParser.SafeConfigParser()
+config = configparser.SafeConfigParser()
 
 _CONFIG_DEFINITIONS = OrderedDict({
      #keyname, type, section, default
@@ -391,7 +398,7 @@ class Config(object):
         setattr(self, 'MINIMAL_INI', MINIMALINI)
 
         config_values = []
-        for k,v in _CONFIG_DEFINITIONS.iteritems():
+        for k,v in _CONFIG_DEFINITIONS.items():
             xv = []
             xv.append(k)
             for x in v:
@@ -400,7 +407,7 @@ class Config(object):
                 xv.append(x)
             value = self.check_setting(xv)
 
-            for b, bv in _BAD_DEFINITIONS.iteritems():
+            for b, bv in _BAD_DEFINITIONS.items():
                 try:
                     if config.has_section(bv[0]) and any([b == k, bv[1] is None]):
                         cvs = xv
@@ -455,13 +462,13 @@ class Config(object):
                 if all([self.MINIMAL_INI is True, str(value) != str(v[2])]) or self.MINIMAL_INI is False:
                     try:
                         config.add_section(v[1])
-                    except ConfigParser.DuplicateSectionError:
+                    except configparser.DuplicateSectionError:
                         pass
                 else:
                     try:
                         if config.has_section(v[1]):
                             config.remove_option(v[1], k.lower())
-                    except ConfigParser.NoSectionError:
+                    except configparser.NoSectionError:
                         continue
 
                 if all([config.has_section(v[1]), self.MINIMAL_INI is False]) or all([self.MINIMAL_INI is True, str(value) != str(v[2]), config.has_section(v[1])]):
@@ -472,7 +479,7 @@ class Config(object):
                             config.remove_option(v[1], k.lower())
                         if len(dict(config.items(v[1]))) == 0:
                             config.remove_section(v[1])
-                    except ConfigParser.NoSectionError:
+                    except configparser.NoSectionError:
                         continue
             else:
                 if k == 'CONFIG_VERSION':
@@ -577,7 +584,7 @@ class Config(object):
                         chkstatus = True
                         try:
                             config.remove_option('Torrents', inikey)
-                        except ConfigParser.NoSectionError:
+                        except configparser.NoSectionError:
                             pass
                 if all([chkstatus is False, config.has_section('General')]):
                     myval = self.check_config(definition_type, 'General', inikey, default)
@@ -609,7 +616,7 @@ class Config(object):
             if definition_type == str:
                 try:
                     myval = {'status': True, 'value': config.get(section, inikey, raw=True)}
-                except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+                except (configparser.NoSectionError, configparser.NoOptionError):
                     myval = {'status': False, 'value': None}
             else:
                 myval = {'status': False, 'value': None}
@@ -630,7 +637,7 @@ class Config(object):
         """
         Given a big bunch of key value pairs, apply them to the ini.
         """
-        for name, value in kwargs.items():
+        for name, value in list(kwargs.items()):
             if not any([(name.startswith('newznab') and name[-1].isdigit()), name.startswith('torznab') and name[-1].isdigit()]):
                 key, definition_type, section, ini_key, default = self._define(name)
                 if definition_type == str:
@@ -665,7 +672,7 @@ class Config(object):
                     if all([self.MINIMAL_INI is True, definition_type(value) != definition_type(default)]) or self.MINIMAL_INI is False:
                         try:
                             config.add_section(section)
-                        except ConfigParser.DuplicateSectionError:
+                        except configparser.DuplicateSectionError:
                             pass
                     else:
                         try:
@@ -673,7 +680,7 @@ class Config(object):
                                 config.remove_option(section, ini_key)
                             if len(dict(config.items(section))) == 0:
                                 config.remove_section(section) 
-                        except ConfigParser.NoSectionError:
+                        except configparser.NoSectionError:
                             continue
 
                     if any([value is None, value == ""]):
@@ -800,7 +807,7 @@ class Config(object):
             #we can't have metatagging enabled with hard/soft linking. Forcibly disable it here just in case it's set on load.
             self.ENABLE_META = False
 
-        if self.BLACKLISTED_PUBLISHERS is not None and type(self.BLACKLISTED_PUBLISHERS) == unicode:
+        if self.BLACKLISTED_PUBLISHERS is not None and type(self.BLACKLISTED_PUBLISHERS) == str:
             setattr(self, 'BLACKLISTED_PUBLISHERS', self.BLACKLISTED_PUBLISHERS.split(', '))
 
         if all([self.AUTHENTICATION == 0, self.HTTP_USERNAME is not None, self.HTTP_PASSWORD is not None]):
@@ -909,11 +916,11 @@ class Config(object):
         return KEYS_32P
 
     def get_extra_newznabs(self):
-        extra_newznabs = zip(*[iter(self.EXTRA_NEWZNABS.split(', '))]*6)
+        extra_newznabs = list(zip(*[iter(self.EXTRA_NEWZNABS.split(', '))]*6))
         return extra_newznabs
 
     def get_extra_torznabs(self):
-        extra_torznabs = zip(*[iter(self.EXTRA_TORZNABS.split(', '))]*5)
+        extra_torznabs = list(zip(*[iter(self.EXTRA_TORZNABS.split(', '))]*5))
         return extra_torznabs
 
     def provider_sequence(self):
@@ -965,14 +972,14 @@ class Config(object):
 
         if self.PROVIDER_ORDER is not None:
             try:
-                PRO_ORDER = zip(*[iter(self.PROVIDER_ORDER.split(', '))]*2)
+                PRO_ORDER = list(zip(*[iter(self.PROVIDER_ORDER.split(', '))]*2))
             except:
                 PO = []
-                for k, v in self.PROVIDER_ORDER.iteritems():
+                for k, v in self.PROVIDER_ORDER.items():
                     PO.append(k)
                     PO.append(v)
                 POR = ', '.join(PO)
-                PRO_ORDER = zip(*[iter(POR.split(', '))]*2)
+                PRO_ORDER = list(zip(*[iter(POR.split(', '))]*2))
 
             logger.fdebug(u"Original provider_order sequence: %s" % self.PROVIDER_ORDER)
 
@@ -1057,7 +1064,7 @@ class Config(object):
             config.add_section('Providers')
         config.set('Providers', 'PROVIDER_ORDER', ll)
 
-        PROVIDER_ORDER = dict(zip(*[PROVIDER_ORDER[i::2] for i in range(2)]))
+        PROVIDER_ORDER = dict(list(zip(*[PROVIDER_ORDER[i::2] for i in range(2)])))
         setattr(self, 'PROVIDER_ORDER', PROVIDER_ORDER)
         logger.fdebug('Provider Order is now set : %s ' % self.PROVIDER_ORDER)
 

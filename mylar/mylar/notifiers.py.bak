@@ -311,7 +311,7 @@ class BOXCAR:
             handle.close()
             return True
 
-        except urllib2.URLError, e:
+        except urllib2.URLError as e:
             # if we get an error back that doesn't have an error code then who knows what's really happening
             if not hasattr(e, 'code'):
                 logger.error(module + 'Boxcar2 notification failed. %s' % e)
@@ -450,7 +450,7 @@ class TELEGRAM:
         # Send message to user using Telegram's Bot API
         try:
             response = requests.post(self.TELEGRAM_API % (self.token, "sendMessage"), json=payload, verify=True)
-        except Exception, e:
+        except Exception as e:
             logger.info(u'Telegram notify failed: ' + str(e))
 
         # Error logging
@@ -488,7 +488,7 @@ class SLACK:
 
         try:
             response = requests.post(self.webhook_url, json=payload, verify=True)
-        except Exception, e:
+        except Exception as e:
             logger.info(module + u'Slack notify failed: ' + str(e))
 
         # Error logging

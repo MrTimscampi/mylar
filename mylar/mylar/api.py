@@ -17,6 +17,12 @@
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import zip
+from past.builtins import basestring
+from builtins import object
 import mylar
 from mylar import db, mb, importer, search, process, versioncheck, logger, webserve, helpers
 import simplejson as simplejson
@@ -24,7 +30,7 @@ import json
 import cherrypy
 import random
 import os
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from . import cache
 import imghdr
 from operator import itemgetter
@@ -140,7 +146,7 @@ class Api(object):
         rows_as_dic = []
 
         for row in rows:
-            row_as_dic = dict(zip(row.keys(), row))
+            row_as_dic = dict(list(zip(list(row.keys()), row)))
             rows_as_dic.append(row_as_dic)
 
         return rows_as_dic
@@ -457,10 +463,10 @@ class Api(object):
 
             # Try every img url in the db
             try:
-                img = urllib2.urlopen(comic[0]['ComicImageURL']).read()
+                img = urllib.request.urlopen(comic[0]['ComicImageURL']).read()
             except:
                 try:
-                    img = urllib2.urlopen(comic[0]['ComicImageALTURL']).read()
+                    img = urllib.request.urlopen(comic[0]['ComicImageALTURL']).read()
                 except:
                     pass
 
@@ -660,7 +666,7 @@ class REST(object):
             rows_as_dic = []
 
             for row in rows:
-                row_as_dic = dict(zip(row.keys(), row))
+                row_as_dic = dict(list(zip(list(row.keys()), row)))
                 rows_as_dic.append(row_as_dic)
 
             return rows_as_dic
@@ -693,7 +699,7 @@ class REST(object):
             rows_as_dic = []
 
             for row in rows:
-                row_as_dic = dict(zip(row.keys(), row))
+                row_as_dic = dict(list(zip(list(row.keys()), row)))
                 rows_as_dic.append(row_as_dic)
 
             return rows_as_dic

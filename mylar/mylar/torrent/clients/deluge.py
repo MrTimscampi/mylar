@@ -1,3 +1,7 @@
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import os
 import mylar
 import base64
@@ -173,7 +177,7 @@ class TorrentClient(object):
 
 
     def get_the_hash(self, filepath):
-        import hashlib, StringIO
+        import hashlib, io
         import bencode
 
         # Open torrent file

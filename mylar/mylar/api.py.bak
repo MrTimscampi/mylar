@@ -16,6 +16,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 import mylar
 from mylar import db, mb, importer, search, process, versioncheck, logger, webserve, helpers
 import simplejson as simplejson
@@ -24,7 +25,7 @@ import cherrypy
 import random
 import os
 import urllib2
-import cache
+from . import cache
 import imghdr
 from operator import itemgetter
 from cherrypy.lib.static import serve_file, serve_download
@@ -259,7 +260,7 @@ class Api(object):
 
         try:
             importer.addComictoDB(self.id)
-        except Exception, e:
+        except Exception as e:
             self.data = e
 
         return
@@ -273,7 +274,7 @@ class Api(object):
 
         try:
             importer.addComictoDB(self.id)
-        except Exception, e:
+        except Exception as e:
             self.data = e
 
         return

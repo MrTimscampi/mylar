@@ -14,33 +14,37 @@ from __future__ import absolute_import
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
 import sys
 import os
 import re
 import time
 from . import logger
 import string
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import feedparser
 import mylar
 import platform
 from bs4 import BeautifulSoup as Soup
-import httplib
+import http.client
 import requests
 
 def patch_http_response_read(func):
     def inner(*args):
         try:
             return func(*args)
-        except httplib.IncompleteRead as e:
+        except http.client.IncompleteRead as e:
             return e.partial
 
     return inner
-httplib.HTTPResponse.read = patch_http_response_read(httplib.HTTPResponse.read)
+http.client.HTTPResponse.read = patch_http_response_read(http.client.HTTPResponse.read)
 
 if platform.python_version() == '2.7.6':
-    httplib.HTTPConnection._http_vsn = 10
-    httplib.HTTPConnection._http_vsn_str = 'HTTP/1.0'
+    http.client.HTTPConnection._http_vsn = 10
+    http.client.HTTPConnection._http_vsn_str = 'HTTP/1.0'
 
 
 def pulldetails(comicid, type, issueid=None, offset=1, arclist=None, comicidlist=None):

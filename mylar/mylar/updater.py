@@ -1,3 +1,4 @@
+from __future__ import division
 #  This file is part of Mylar.
 #
 #  Mylar is free software: you can redistribute it and/or modify
@@ -12,10 +13,14 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from past.utils import old_div
 import time
 import datetime
 from xml.dom.minidom import parseString
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import shlex
 import operator
 import re
@@ -103,7 +108,7 @@ def dbUpdate(ComicIDList=None, calledfrom=None, sched=False):
                 c_obj_date = datetime.datetime.strptime(c_date, "%Y-%m-%d %H:%M:%S")
                 n_date = datetime.datetime.now()
                 absdiff = abs(n_date - c_obj_date)
-                hours = (absdiff.days * 24 * 60 * 60 + absdiff.seconds) / 3600.0
+                hours = old_div((absdiff.days * 24 * 60 * 60 + absdiff.seconds), 3600.0)
                 cache_hours = mylar.CONFIG.REFRESH_CACHE * 24
                 if hours < cache_hours:
                     #logger.fdebug('%s [%s] Was refreshed less than %s hours ago. Skipping Refresh at this time.' % (ComicName, ComicID, cache_hours))
@@ -391,7 +396,7 @@ def upcoming_update(ComicID, ComicName, IssueNumber, IssueDate, forcecheck=None,
             c_obj_date = datetime.datetime.strptime(c_date, "%Y-%m-%d %H:%M:%S")
             n_date = datetime.datetime.now()
             absdiff = abs(n_date - c_obj_date)
-            hours = (absdiff.days * 24 * 60 * 60 + absdiff.seconds) / 3600.0
+            hours = old_div((absdiff.days * 24 * 60 * 60 + absdiff.seconds), 3600.0)
     else:
         #if it's at this point and the refresh is None, odds are very good that it's already up-to-date so let it flow thru
         if mylar.CONFIG.PULL_REFRESH is None:
@@ -405,7 +410,7 @@ def upcoming_update(ComicID, ComicName, IssueNumber, IssueDate, forcecheck=None,
         #logger.fdebug('n_date: ' + str(n_date))
         absdiff = abs(n_date - c_obj_date)
         #logger.fdebug('absdiff: ' + str(absdiff))
-        hours = (absdiff.days * 24 * 60 * 60 + absdiff.seconds) / 3600.0
+        hours = old_div((absdiff.days * 24 * 60 * 60 + absdiff.seconds), 3600.0)
         #logger.fdebug('hours: ' + str(hours))
 
     if any(['annual' in ComicName.lower(), 'special' in ComicName.lower()]):

@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 #/usr/bin/env python
 #  This file is part of Mylar.
 #
@@ -592,7 +593,7 @@ class FileChecker(object):
                                 lastissue_mod_position = file_length
                             else:
                                 raise ValueError
-                        except ValueError, e:
+                        except ValueError as e:
                             volumeprior = False
                             volumeprior_label = None
                             sep_volume = False
@@ -1138,7 +1139,7 @@ class FileChecker(object):
         dir = dir.encode(mylar.SYS_ENCODING)
 
         if all([mylar.CONFIG.ENABLE_TORRENTS is True, self.pp_mode is True]):
-            import db
+            from . import db
             myDB = db.DBConnection()
             pp_crclist =[]
             pp_crc = myDB.select("SELECT a.crc, b.IssueID FROM Snatched as a INNER JOIN issues as b ON a.IssueID=b.IssueID WHERE (a.Status='Post-Processed' or a.status='Snatched' or a.provider='32P' or a.provider='WWT' or a.provider='DEM') and a.crc is not NULL and (b.Status='Downloaded' or b.status='Archived') GROUP BY a.crc ORDER BY a.DateAdded")

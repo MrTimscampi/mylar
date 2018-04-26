@@ -15,13 +15,18 @@
 
 
 from __future__ import print_function
+from __future__ import division
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from past.utils import old_div
 import sys
 import fileinput
 import csv
 import getopt
 import sqlite3
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import os
 import time
 import re
@@ -1482,7 +1487,7 @@ def future_check():
                         catch_words = ('the', 'and', '&', 'to')
                         for pos_match in search_results:
                             logger.info(pos_match)
-                            length_match = len(pos_match['name']) / len(ser['ComicName'])
+                            length_match = old_div(len(pos_match['name']), len(ser['ComicName']))
                             logger.fdebug('length match differential set for an allowance of 20%')
                             logger.fdebug('actual differential in length between result and series title: ' + str((length_match * 100)-100) + '%')
                             if ((length_match * 100)-100) > 20:
@@ -1521,7 +1526,7 @@ def future_check():
                                         break
                                 i+=1                                
                             logger.fdebug('word match score of : ' + str(word_match) + ' / ' + str(len(split_series)))
-                            if word_match == len(split_series) or (word_match / len(split_series)) > 80:
+                            if word_match == len(split_series) or (old_div(word_match, len(split_series))) > 80:
                                  logger.fdebug('[' + pos_match['name'] + '] considered a match - word matching percentage is greater than 80%. Attempting to auto-add series into watchlist.')
                                  cid = pos_match['comicid']
                                  matched = True                

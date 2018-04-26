@@ -14,19 +14,25 @@
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import with_statement
+from __future__ import division
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
+from past.utils import old_div
 import re
 import time
 import threading
 import platform
-import urllib, urllib2
+import urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse
 from xml.dom.minidom import parseString, Element
 import requests
 
 import mylar
 from mylar import logger, db, cv
 from mylar.helpers import multikeysort, replace_all, cleanName, listLibrary, listStoryArcs
-import httplib
+import http.client
 
 mb_lock = threading.Lock()
 
@@ -34,15 +40,15 @@ def patch_http_response_read(func):
     def inner(*args):
         try:
             return func(*args)
-        except httplib.IncompleteRead as e:
+        except http.client.IncompleteRead as e:
             return e.partial
 
     return inner
-httplib.HTTPResponse.read = patch_http_response_read(httplib.HTTPResponse.read)
+http.client.HTTPResponse.read = patch_http_response_read(http.client.HTTPResponse.read)
 
 if platform.python_version() == '2.7.6':
-    httplib.HTTPConnection._http_vsn = 10
-    httplib.HTTPConnection._http_vsn_str = 'HTTP/1.0'
+    http.client.HTTPConnection._http_vsn = 10
+    http.client.HTTPConnection._http_vsn_str = 'HTTP/1.0'
 
 def pullsearch(comicapi, comicquery, offset, type):
 
@@ -304,7 +310,7 @@ def findComic(name, mode, issue, limityear=None, type=None):
                         if tmpYr.isdigit():
 
                             yearRange.append(tmpYr)
-                            tmpyearRange = int(xmlcnt) / 12
+                            tmpyearRange = old_div(int(xmlcnt), 12)
                             if float(tmpyearRange): tmpyearRange +1
                             possible_years = int(tmpYr) + tmpyearRange
 
@@ -316,7 +322,7 @@ def findComic(name, mode, issue, limityear=None, type=None):
                         if tmpYr != xmlYr:
                             xmlYr = tmpYr
 
-                        if any(map(lambda v: v in limityear, yearRange)) or limityear == 'None':
+                        if any([v in limityear for v in yearRange]) or limityear == 'None':
                             xmlurl = result.getElementsByTagName('site_detail_url')[0].firstChild.wholeText
                             idl = len (result.getElementsByTagName('id'))
                             idt = 0

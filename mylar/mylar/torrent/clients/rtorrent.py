@@ -1,6 +1,10 @@
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import os
 import re
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 from lib.rtorrent import RTorrent
 

@@ -14,9 +14,13 @@
 #  You should have received a copy of the GNU General Public License
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import requests as requests
 from bs4 import BeautifulSoup, UnicodeDammit
-import urlparse
+import urllib.parse
 import re
 import time
 import sys
@@ -103,7 +107,7 @@ class wwt(object):
                 try:
                     for link in res.find_all('a', href=True):
                         if link['href'].startswith('download.php'):
-                            linkurl = urlparse.parse_qs(urlparse.urlparse(link['href']).query)['id']
+                            linkurl = urllib.parse.parse_qs(urllib.parse.urlparse(link['href']).query)['id']
                             #results = {'torrent':  torrent,
                             #           'link':     link['href']}
                             break

@@ -13,7 +13,10 @@
 #  You should have received a copy of the GNU General Public License
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
-import platform, subprocess, re, os, urllib2, tarfile
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+import platform, subprocess, re, os, urllib.request, urllib.error, urllib.parse, tarfile
 
 import mylar
 from mylar import logger, version
@@ -237,7 +240,7 @@ def update():
         try:
             logger.info('Downloading update from: ' + tar_download_url)
             response = requests.get(tar_download_url, verify=True, stream=True)
-        except (IOError, urllib2.URLError):
+        except (IOError, urllib.error.URLError):
             logger.error("Unable to retrieve new version from " + tar_download_url + ", can't update")
             return
 

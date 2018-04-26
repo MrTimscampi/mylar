@@ -1,5 +1,6 @@
 from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
 #  This file is part of Mylar.
 # -*- coding: utf-8 -*-
 #
@@ -16,6 +17,12 @@ from __future__ import absolute_import
 #  You should have received a copy of the GNU General Public License
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
+from past.builtins import cmp
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
+from past.utils import old_div
 import time
 from operator import itemgetter
 import datetime
@@ -33,7 +40,7 @@ import shutil
 import hashlib
 import gzip
 import os, errno
-from StringIO import StringIO
+from io import StringIO
 
 import mylar
 from . import logger
@@ -109,7 +116,7 @@ def latinToAscii(unicrap):
 
 def convert_milliseconds(ms):
 
-    seconds = ms /1000
+    seconds = old_div(ms,1000)
     gmtime = time.gmtime(seconds)
     if seconds > 3600:
         minutes = time.strftime("%H:%M:%S", gmtime)
@@ -142,7 +149,7 @@ def utctimestamp():
 
 def bytes_to_mb(bytes):
 
-    mb = int(bytes) /1048576
+    mb = old_div(int(bytes),1048576)
     size = '%.1f MB' % mb
     return size
 
@@ -191,7 +198,7 @@ def human2bytes(s):
     return int(num * prefix[letter])
 
 def replace_all(text, dic):
-    for i, j in dic.iteritems():
+    for i, j in dic.items():
         text = text.replace(i, j)
     return text.rstrip()
 
@@ -376,7 +383,7 @@ def rename_param(comicid, comicname, issue, ofilename, comicyear=None, issueid=N
 
             unicodeissue = issuenum
 
-            if type(issuenum) == unicode:
+            if type(issuenum) == str:
                vals = {u'\xbd':'.5',u'\xbc':'.25',u'\xbe':'.75',u'\u221e':'9999999999',u'\xe2':'9999999999'}
             else:
                vals = {'\xbd':'.5','\xbc':'.25','\xbe':'.75','\u221e':'9999999999','\xe2':'9999999999'}
@@ -706,7 +713,7 @@ def apiremove(apistring, type):
 def remove_apikey(payd, key):
         #payload = some dictionary with payload values
         #key = the key to replace with REDACTED (normally apikey)
-    for k,v in payd.items():
+    for k,v in list(payd.items()):
         payd[key] = 'REDACTED'
 
     return payd
@@ -993,7 +1000,7 @@ def issuedigits(issnum):
             except:
                 issnum = issnum.decode('windows-1252')
 
-        if type(issnum) == unicode:
+        if type(issnum) == str:
             vals = {u'\xbd':.5,u'\xbc':.25,u'\xbe':.75,u'\u221e':9999999999,u'\xe2':9999999999}
         else:
             vals = {'\xbd':.5,'\xbc':.25,'\xbe':.75,'\u221e':9999999999,'\xe2':9999999999}
@@ -1269,9 +1276,9 @@ def upgrade_dynamic():
 
 def checkFolder(folderpath=None):
     from mylar import PostProcessor
-    import Queue
+    import queue
 
-    queue = Queue.Queue()
+    queue = queue.Queue()
     #monitor a selected folder for 'snatched' files that haven't been processed
     if folderpath is None:
         logger.info('Checking folder ' + mylar.CONFIG.CHECK_FOLDER + ' for newly snatched downloads')
@@ -1363,7 +1370,7 @@ def havetotals(refreshit=None):
                     return False  # if it's 5/5 or 4/5, send back to updater and restore previous status'
 
             try:
-                percent = (haveissues *100.0) /totalissues
+                percent = old_div((haveissues *100.0),totalissues)
                 if percent > 100:
                     percent = 101
             except (ZeroDivisionError, TypeError):
@@ -2325,7 +2332,7 @@ def humanize_time(amount, units = 'seconds'):
 
         result = []
 
-        unit = map(lambda a: a[1], NAMES).index(units)
+        unit = [a[1] for a in NAMES].index(units)
         # Convert to seconds
         amount = amount * INTERVALS[unit]
 
@@ -2407,7 +2414,7 @@ def issue_find_ids(ComicName, ComicID, pack, IssueNumber):
         pack_issues = []
         for pl in packlist:
             if '-' in pl:
-                plist.append(range(int(pl[:pl.find('-')]),int(pl[pl.find('-')+1:])+1))
+                plist.append(list(range(int(pl[:pl.find('-')]),int(pl[pl.find('-')+1:])+1)))
             else:
                 plist.append(int(pl))
 
@@ -2425,7 +2432,7 @@ def issue_find_ids(ComicName, ComicID, pack, IssueNumber):
         tmp_annuals = pack[pack.find('Annual'):]
         tmp_ann = re.sub('[annual/annuals/+]', '', tmp_annuals.lower()).strip()
         tmp_pack = re.sub('[annual/annuals/+]', '', pack.lower()).strip() 
-        pack_issues = range(int(tmp_pack[:tmp_pack.find('-')]),int(tmp_pack[tmp_pack.find('-')+1:])+1)
+        pack_issues = list(range(int(tmp_pack[:tmp_pack.find('-')]),int(tmp_pack[tmp_pack.find('-')+1:])+1))
         annualize = True
 
     issues = {}
@@ -2479,7 +2486,7 @@ def clean_url(url):
 
 def chunker(seq, size):
     #returns a list from a large group of tuples by size (ie. for group in chunker(seq, 3))
-    return [seq[pos:pos + size] for pos in xrange(0, len(seq), size)]
+    return [seq[pos:pos + size] for pos in range(0, len(seq), size)]
 
 def cleanHost(host, protocol = True, ssl = False, username = None, password = None):
     """  Return a cleaned up host with given url options set
@@ -2537,7 +2544,7 @@ def checkthe_id(comicid=None, up_vals=None):
                c_obj_date = datetime.datetime.strptime(chk['Updated'], "%Y-%m-%d %H:%M:%S")
                n_date = datetime.datetime.now()
                absdiff = abs(n_date - c_obj_date)
-               hours = (absdiff.days * 24 * 60 * 60 + absdiff.seconds) / 3600.0
+               hours = old_div((absdiff.days * 24 * 60 * 60 + absdiff.seconds), 3600.0)
                if hours >= 24:
                    logger.fdebug('Reference found for 32p - but older than 24hours since last checked. Verifying it is still the right id before proceeding.')
                    return None
@@ -3217,7 +3224,7 @@ def date_conversion(originaldate):
     c_obj_date = datetime.datetime.strptime(originaldate, "%Y-%m-%d %H:%M:%S")
     n_date = datetime.datetime.now()
     absdiff = abs(n_date - c_obj_date)
-    hours = (absdiff.days * 24 * 60 * 60 + absdiff.seconds) / 3600.0
+    hours = old_div((absdiff.days * 24 * 60 * 60 + absdiff.seconds), 3600.0)
     return hours
 
 def job_management(write=False, job=None, last_run_completed=None, current_run=None, status=None):

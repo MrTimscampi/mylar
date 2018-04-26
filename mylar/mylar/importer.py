@@ -16,14 +16,19 @@
 #  You should have received a copy of the GNU General Public License
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from past.utils import old_div
 import time
 import os, errno
 import sys
 import shlex
 import datetime
 import re
-import urllib
-import urllib2
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 import shutil
 import imghdr
 import sqlite3
@@ -669,7 +674,7 @@ def GCDimport(gcomicid, pullupd=None, imported=None, ogcname=None):
     else:
         time.sleep(mylar.CONFIG.CVAPI_RATE)
 
-    urllib.urlretrieve(str(ComicImage), str(coverfile))
+    urllib.request.urlretrieve(str(ComicImage), str(coverfile))
     try:
         with open(str(coverfile)) as f:
             ComicImage = os.path.join('cache', str(gcomicid) + ".jpg")
@@ -738,7 +743,7 @@ def GCDimport(gcomicid, pullupd=None, imported=None, ogcname=None):
             if gcdinfo['gcdvariation'] == 'gcd':
                 #print ("gcd-variation accounted for.")
                 issdate = '0000-00-00'
-                int_issnum =  int (issis / 1000)
+                int_issnum =  int (old_div(issis, 1000))
             break
         if 'nn' in str(gcdval['GCDIssue']):
             #no number detected - GN, TP or the like
@@ -763,7 +768,7 @@ def GCDimport(gcomicid, pullupd=None, imported=None, ogcname=None):
             gcdis = int(str(gcdval['GCDIssue'])) * 1000
             gcd_issue = str(gcdval['GCDIssue'])
         #get the latest issue / date using the date.
-        int_issnum = int(gcdis / 1000)
+        int_issnum = int(old_div(gcdis, 1000))
         issdate = str(gcdval['GCDDate'])
         issid = "G" + str(gcdval['IssueID'])
         if gcdval['GCDDate'] > latestdate:

@@ -1,6 +1,9 @@
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 from bs4 import BeautifulSoup, UnicodeDammit
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import csv
 import fileinput
 import sys
@@ -10,7 +13,7 @@ import sqlite3
 import datetime
 import unicodedata
 from decimal import Decimal
-from HTMLParser import HTMLParseError
+from html.parser import HTMLParseError
 from time import strptime
 import requests
 

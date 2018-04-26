@@ -13,6 +13,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
+from builtins import str
+from builtins import object
 import os
 import sys
 import inspect
@@ -183,10 +185,10 @@ if not LOG_LANG.startswith('en'):
         if not PY2:
             return str(obj, *args)
         try:
-            return unicode(obj, *args)
+            return str(obj, *args)
         except UnicodeDecodeError:
             ascii_text = str(obj).encode('string_escape')
-            return unicode(ascii_text)
+            return str(ascii_text)
 
 else:
     # Mylar logger

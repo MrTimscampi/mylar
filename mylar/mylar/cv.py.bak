@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 #  This file is part of Mylar.
 #
 #  Mylar is free software: you can redistribute it and/or modify
@@ -17,7 +18,7 @@ import sys
 import os
 import re
 import time
-import logger
+from . import logger
 import string
 import urllib2
 import feedparser
@@ -31,7 +32,7 @@ def patch_http_response_read(func):
     def inner(*args):
         try:
             return func(*args)
-        except httplib.IncompleteRead, e:
+        except httplib.IncompleteRead as e:
             return e.partial
 
     return inner
@@ -91,7 +92,7 @@ def pulldetails(comicid, type, issueid=None, offset=1, arclist=None, comicidlist
 
     try:
         r = requests.get(PULLURL, params=payload, verify=mylar.CONFIG.CV_VERIFY, headers=mylar.CV_HEADERS)
-    except Exception, e:
+    except Exception as e:
         logger.warn('Error fetching data from ComicVine: %s' % (e))
         return
 

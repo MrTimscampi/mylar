@@ -15,8 +15,13 @@
 #  along with Harpoon.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
+from past.utils import old_div
 import optparse
-import xmlrpclib
+import xmlrpc.client
 from base64 import standard_b64encode
 from xml.dom.minidom import parseString
 import os
@@ -156,7 +161,7 @@ class NZBGet(object):
                     logger.fdebug('name: %s' % queuedl[0]['NZBName'])
                     logger.fdebug('FileSize: %sMB' % queuedl[0]['FileSizeMB'])
                     logger.fdebug('Download Left: %sMB' % queuedl[0]['RemainingSizeMB'])
-                    logger.fdebug('health: %s' % (queuedl[0]['Health']/10))
+                    logger.fdebug('health: %s' % (old_div(queuedl[0]['Health'],10)))
                     logger.fdebug('destination: %s' % queuedl[0]['DestDir'])
 
             logger.fdebug('File has now downloaded!')

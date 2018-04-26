@@ -13,12 +13,16 @@
 #  You should have received a copy of the GNU General Public License
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import re
 import os
 import requests
 import bencode
 import hashlib
-import StringIO
+import io
 
 import mylar
 from mylar import logger

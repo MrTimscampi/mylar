@@ -14,6 +14,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with Harpoon.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 import optparse
 import xmlrpclib
 from base64 import standard_b64encode
@@ -23,7 +24,7 @@ import sys
 import re
 import time
 import mylar
-import logger
+from . import logger
 
 class NZBGet(object):
     def __init__(self):

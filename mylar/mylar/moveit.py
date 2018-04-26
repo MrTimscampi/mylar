@@ -1,3 +1,4 @@
+from builtins import str
 import mylar
 from mylar import db, logger, helpers, updater, filechecker
 import os

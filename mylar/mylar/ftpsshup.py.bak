@@ -50,7 +50,7 @@ def putfile(localpath, file):    #localpath=full path to .torrent (including fil
         try:
             sftp.put(localpath, rempath)
             sendcheck = True
-        except Exception, e:
+        except Exception as e:
             logger.fdebug('ERROR Sending torrent to seedbox *** Caught exception: %s: %s' % (e.__class__, e))
             logger.fdebug('Forcibly closing connection and attempting to reconnect')
             sftp.close()
@@ -139,7 +139,7 @@ def sendtohome(sftp, remotepath, filelist, transport):
             chkdir = os.path.join(remdir, comicdir)
             try:
                 sftp.stat(chkdir)
-            except IOError, e:
+            except IOError as e:
                 logger.info('Comic Folder does not Exist, creating ' + chkdir )
                 try:
                     sftp.mkdir(chkdir)
@@ -158,7 +158,7 @@ def sendtohome(sftp, remotepath, filelist, transport):
 
         try:
             sftp.stat(remotesend)
-        except IOError, e:
+        except IOError as e:
             if e[0] == 2:
                 filechk = False
         else:
@@ -172,7 +172,7 @@ def sendtohome(sftp, remotepath, filelist, transport):
                 try:
                     sftp.put(localsend, remotesend)#, callback=printTotals)
                     sendcheck = True
-                except Exception, e:
+                except Exception as e:
                     logger.info('Attempt #' + str(count) + ': ERROR Sending issue to seedbox *** Caught exception: %s: %s' % (e.__class__, e))
                     logger.info('Forcibly closing connection and attempting to reconnect')
                     sftp.close()
@@ -201,7 +201,7 @@ def sendtohome(sftp, remotepath, filelist, transport):
                     try:
                         sftp.put(localsend, remotesend)
                         sendcheck = True
-                    except Exception, e:
+                    except Exception as e:
                         logger.info('Attempt #' + str(count) + ': ERROR Sending issue to seedbox *** Caught exception: %s: %s' % (e.__class__, e))
                         logger.info('Forcibly closing connection and attempting to reconnect')
                         sftp.close()

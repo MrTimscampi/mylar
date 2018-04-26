@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
+from builtins import object
 from __future__ import with_statement
 
 import mylar
@@ -21,7 +22,7 @@ from mylar import logger, helpers
 
 #import threading
 
-class dbUpdate():
+class dbUpdate(object):
     def __init__(self, sched):
         pass
 

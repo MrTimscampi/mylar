@@ -1,7 +1,10 @@
 from __future__ import print_function
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 from bs4 import BeautifulSoup, UnicodeDammit
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import csv
 import fileinput
 import sys
@@ -11,7 +14,7 @@ import sqlite3
 import datetime
 import unicodedata
 from decimal import Decimal
-from HTMLParser import HTMLParseError
+from html.parser import HTMLParseError
 from time import strptime
 
 import mylar
@@ -83,7 +86,7 @@ def solicit(month, year):
 
         #logger.info('datestring:' + datestring)
         #logger.info('checking:' + pagelinks)
-        pageresponse = urllib2.urlopen (pagelinks)
+        pageresponse = urllib.request.urlopen (pagelinks)
         soup = BeautifulSoup (pageresponse)
         cntlinks = soup.findAll('h3')
         lenlinks = len(cntlinks)
@@ -209,7 +212,7 @@ def populate(link, publisher, shipdate):
     #this is the secondary url call to populate
     input = 'http://www.comicbookresources.com/' + link
     #print 'checking ' + str(input)
-    response = urllib2.urlopen (input)
+    response = urllib.request.urlopen (input)
     soup = BeautifulSoup (response)
     abc = soup.findAll('p')
     lenabc = len(abc)

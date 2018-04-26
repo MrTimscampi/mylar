@@ -18,7 +18,12 @@
 
 from __future__ import with_statement
 from __future__ import print_function
+from __future__ import division
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from past.utils import old_div
 import os, sys, subprocess
 
 import threading
@@ -29,7 +34,7 @@ import sqlite3
 import itertools
 import csv
 import shutil
-import Queue
+import queue
 import platform
 import locale
 import re
@@ -357,7 +362,7 @@ def start():
                 else:
                     search_timestamp = helpers.utctimestamp() + (int(CONFIG.SEARCH_INTERVAL) *60)
 
-                duration_diff = (helpers.utctimestamp() - search_timestamp)/60
+                duration_diff = old_div((helpers.utctimestamp() - search_timestamp),60)
                 if duration_diff >= int(CONFIG.SEARCH_INTERVAL):
                     logger.fdebug('[AUTO-SEARCH]Auto-Search set to a delay of one minute before initialization as it has been %s minutes since the last run' % duration_diff)
                     SCHED.add_job(func=ss.run, id='search', name='Auto-Search', trigger=IntervalTrigger(hours=0, minutes=CONFIG.SEARCH_INTERVAL, timezone='UTC'))
@@ -419,10 +424,10 @@ def start():
                 weekly_timestamp = weektimestamp + weekly_interval
 
             ws = weeklypullit.Weekly()
-            duration_diff = (weektimestamp - weekly_timestamp)/60
+            duration_diff = old_div((weektimestamp - weekly_timestamp),60)
 
-            if abs(duration_diff) >= weekly_interval/60:
-                logger.info('[WEEKLY] Weekly Pull-Update initializing immediately as it has been %s hours since the last run' % abs(duration_diff/60))
+            if abs(duration_diff) >= old_div(weekly_interval,60):
+                logger.info('[WEEKLY] Weekly Pull-Update initializing immediately as it has been %s hours since the last run' % abs(old_div(duration_diff,60)))
                 SCHED.add_job(func=ws.run, id='weekly', name='Weekly Pullist', next_run_time=datetime.datetime.utcnow(), trigger=IntervalTrigger(hours=weektimer, minutes=0, timezone='UTC'))
             else:
                 weekly_diff = datetime.datetime.utcfromtimestamp(weektimestamp + (weekly_interval - (duration_diff * 60)))

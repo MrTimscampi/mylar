@@ -947,7 +947,7 @@ def issue_collection(issuedata, nostatus):
 
             try:
                 myDB.upsert(dbwrite, newValueDict, controlValueDict)
-            except sqlite3.InterfaceError, e:
+            except sqlite3.InterfaceError as e:
                 #raise sqlite3.InterfaceError(e)
                 logger.error('Something went wrong - I cannot add the issue information into my DB.')
                 myDB.action("DELETE FROM comics WHERE ComicID=?", [issue['ComicID']])
@@ -1174,7 +1174,7 @@ def updateissuedata(comicid, comicname=None, issued=None, comicIssues=None, call
                             logger.fdebug('value of x is : ' + str(x))
                             int_issnum = (int(x) *1000) - 1
                         else: raise ValueError
-                    except ValueError, e:
+                    except ValueError as e:
                         x = 0
                         tstord = None
                         issno = None
@@ -1189,7 +1189,7 @@ def updateissuedata(comicid, comicname=None, issued=None, comicIssues=None, call
                                     issno = re.sub('[\-\,\.\+]', '', issno).rstrip()
                                     try:
                                         isschk = float(issno)
-                                    except ValueError, e:
+                                    except ValueError as e:
                                         if len(issnum) == 1 and issnum.isalpha():
                                             logger.fdebug('detected lone alpha issue. Attempting to figure this out.')
                                             break

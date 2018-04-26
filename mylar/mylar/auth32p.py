@@ -1,4 +1,8 @@
-import urllib2
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
+import urllib.request, urllib.error, urllib.parse
 import json
 import re
 import time
@@ -7,7 +11,7 @@ import datetime
 import os
 import requests
 from bs4 import BeautifulSoup
-from cookielib import LWPCookieJar
+from http.cookiejar import LWPCookieJar
 import cfscrape
 
 from operator import itemgetter

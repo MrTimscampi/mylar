@@ -1,15 +1,18 @@
 from __future__ import print_function
 from __future__ import absolute_import
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 from bs4 import BeautifulSoup, UnicodeDammit
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import re
 from . import helpers
 from . import logger
 import datetime
 import sys
 from decimal import Decimal
-from HTMLParser import HTMLParseError
+from html.parser import HTMLParseError
 from time import strptime
 
 
@@ -19,7 +22,7 @@ def cbdb(comicnm, ComicYear):
     #print ( "comicyear: " + str(comicyr) )
     comicnm = re.sub(' ', '+', comicnm)
     input = "http://mobile.comicbookdb.com/search.php?form_search=" + str(comicnm) + "&form_searchtype=Title&x=0&y=0"
-    response = urllib2.urlopen(input)
+    response = urllib.request.urlopen(input)
     soup = BeautifulSoup(response)
     abc = soup.findAll('a', href=True)
     lenabc = len(abc)
@@ -87,7 +90,7 @@ def IssueDetails(cbdb_id):
     gcount = 0
     pagethis = 'http://comicbookdb.com/title.php?ID=' + str(cbdb_id)
 
-    response = urllib2.urlopen(pagethis)
+    response = urllib.request.urlopen(pagethis)
     soup = BeautifulSoup(response)
 
     resultp = soup.findAll("table")

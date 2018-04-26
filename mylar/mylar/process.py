@@ -15,7 +15,11 @@ from __future__ import absolute_import
 #  You should have received a copy of the GNU General Public License
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
-import Queue
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
+import queue
 import threading
 import mylar
 from . import logger
@@ -36,7 +40,7 @@ class Process(object):
         elif self.failed == '1':
             self.failed = True
 
-        queue = Queue.Queue()
+        queue = queue.Queue()
         retry_outside = False
 
         if self.failed is False:

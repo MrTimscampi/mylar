@@ -13,8 +13,12 @@
 #  You should have received a copy of the GNU General Public License
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import os
-import glob, urllib, urllib2
+import glob, urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse
 
 import simplejson as simplejson
 
@@ -121,7 +125,7 @@ class Cache(object):
             image_url = imageURL
             logger.debug('Retrieving comic image from: ' + image_url)
             try:
-                artwork = urllib2.urlopen(image_url, timeout=20).read()
+                artwork = urllib.request.urlopen(image_url, timeout=20).read()
             except Exception as e:
                 logger.error('Unable to open url "' + image_url + '". Error: ' + str(e))
                 artwork = None

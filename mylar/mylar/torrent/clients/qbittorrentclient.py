@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 import os
 import mylar
 from base64 import b16encode, b32decode

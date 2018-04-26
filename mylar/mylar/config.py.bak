@@ -1,3 +1,4 @@
+from __future__ import print_function
 import itertools
 from collections import OrderedDict
 from operator import itemgetter
@@ -801,7 +802,7 @@ class Config(object):
             if not os.path.exists(mylar.CT_SETTINGSPATH):
                 try:
                     os.mkdir(mylar.CT_SETTINGSPATH)
-                except OSError,e:
+                except OSError as e:
                     if e.errno != errno.EEXIST:
                         logger.error('Unable to create setting directory for ComicTagger. This WILL cause problems when tagging.')
                 else:

@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with Sick Beard.  If not, see <http://www.gnu.org/licenses/>.
 
+from builtins import str
+from builtins import object
 import datetime
 import time
 import threading
@@ -24,7 +26,7 @@ import traceback
 from mylar import logger
 
 
-class Scheduler:
+class Scheduler(object):
     def __init__(self, action, cycleTime=datetime.timedelta(minutes=10), runImmediately=True,
                  threadName="ScheduledThread", silent=False, delay=None):
 

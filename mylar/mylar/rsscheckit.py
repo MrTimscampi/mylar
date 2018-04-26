@@ -14,7 +14,11 @@
 # along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import with_statement
+from __future__ import division
 
+from builtins import str
+from builtins import object
+from past.utils import old_div
 import datetime
 import threading
 import mylar
@@ -23,7 +27,7 @@ from mylar import logger, rsscheck, helpers, auth32p
 rss_lock = threading.Lock()
 
 
-class tehMain():
+class tehMain(object):
     def __init__(self):
         pass 
 
@@ -39,7 +43,7 @@ class tehMain():
                 duration_diff = 0
             else:
                 tstamp = float(mylar.SCHED_RSS_LAST)
-                duration_diff = abs(helpers.utctimestamp() - tstamp)/60
+                duration_diff = old_div(abs(helpers.utctimestamp() - tstamp),60)
             #logger.fdebug('[RSS-FEEDS] Duration diff: %s' % duration_diff)
             if firstrun == "no" and duration_diff < int(mylar.CONFIG.RSS_CHECKINTERVAL):
                 logger.fdebug('[RSS-FEEDS] RSS Check has taken place less than the threshold - not initiating at this time.')

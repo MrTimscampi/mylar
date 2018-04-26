@@ -13,13 +13,13 @@
 # You should have received a copy of the GNU General Public License
 # along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import with_statement
+from builtins import object
 
 import mylar
 
 from mylar import logger, helpers, versioncheck
 
-class CheckVersion():
+class CheckVersion(object):
     def __init__(self):
         pass
 
