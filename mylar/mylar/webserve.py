@@ -15,6 +15,8 @@
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import with_statement
+from __future__ import print_function
+from __future__ import absolute_import
 
 import os
 import io
@@ -319,7 +321,7 @@ class WebInterface(object):
                 self.importResults()
             return
         elif imported == 'futurecheck':
-            print 'serinfo:' + str(serinfo)
+            print('serinfo:' + str(serinfo))
             logger.info('selected comicid of : ' + str(comicid) + ' [ ' + comicname + ' (' + str(comicyear) + ') ]')
             ser = []
             ser.append({"comicname": comicname,
@@ -1664,7 +1666,7 @@ class WebInterface(object):
                 x = None
                 try:
                     x = float(weekly['ISSUE'])
-                except ValueError, e:
+                except ValueError as e:
                     if 'au' in weekly['ISSUE'].lower() or 'ai' in weekly['ISSUE'].lower() or '.inh' in weekly['ISSUE'].lower() or '.now' in weekly['ISSUE'].lower() or '.mu' in weekly['ISSUE'].lower():
                         x = weekly['ISSUE']
 
@@ -1804,7 +1806,7 @@ class WebInterface(object):
                 if future['ISSUE'] is None: break
                 try:
                     x = float(future['ISSUE'])
-                except ValueError, e:
+                except ValueError as e:
                     if 'au' in future['ISSUE'].lower() or 'ai' in future['ISSUE'].lower() or '.inh' in future['ISSUE'].lower() or '.now' in future['ISSUE'].lower() or '.mu' in future['ISSUE'].lower():
                         x = future['ISSUE']
 
@@ -2243,7 +2245,7 @@ class WebInterface(object):
 
     def manage(self):
         mylarRoot = mylar.CONFIG.DESTINATION_DIR
-        import db
+        from . import db
         myDB = db.DBConnection()
         jobresults = myDB.select('SELECT DISTINCT * FROM jobhistory')
         if jobresults is not None:
@@ -3025,7 +3027,7 @@ class WebInterface(object):
         else:
             AMS = []
             for Arc_MS in Arc_MultipleSeries:
-                print Arc_MS
+                print(Arc_MS)
                 #the purpose of this loop is to loop through the multiple entries, pulling out the lowest & highest issue numbers
                 #along with the publication years in order to help the auto-detector attempt to figure out what the series is on CV.
                 #.schema storyarcs
@@ -3451,14 +3453,14 @@ class WebInterface(object):
 
     def ReadGetWanted(self, StoryArcID):
         # this will queue up (ie. make 'Wanted') issues in a given Story Arc that are 'Not Watched'
-        print StoryArcID
+        print(StoryArcID)
         stupdate = []
         mode = 'story_arc'
         myDB = db.DBConnection()
         wantedlist = myDB.select("SELECT * FROM storyarcs WHERE StoryArcID=? AND Status != 'Downloaded' AND Status !='Archived' AND Status !='Snatched'", [StoryArcID])
         if wantedlist is not None:
             for want in wantedlist:
-                print want
+                print(want)
                 issuechk = myDB.selectone("SELECT * FROM issues WHERE IssueID=?", [want['IssueArcID']]).fetchone()
                 SARC = want['StoryArc']
                 IssueArcID = want['IssueArcID']
@@ -4107,7 +4109,7 @@ class WebInterface(object):
                                 continue
                         else:
                             if (result['ComicYear'] not in yearRANGE) or all([yearRANGE is None, yearRANGE == 'None']):
-                                if result['ComicYear'] <> "0000" and result['ComicYear'] is not None:
+                                if result['ComicYear'] != "0000" and result['ComicYear'] is not None:
                                     yearRANGE.append(str(result['ComicYear']))
                                     yearTOP = str(result['ComicYear'])
                             getiss_num = helpers.issuedigits(getiss)
@@ -5296,7 +5298,7 @@ class WebInterface(object):
     def manual_metatag(self, dirName, issueid, filename, comicid, comversion, seriesyear=None, group=False):
         module = '[MANUAL META-TAGGING]'
         try:
-            import cmtagmylar
+            from . import cmtagmylar
             if mylar.CONFIG.CMTAG_START_YEAR_AS_VOLUME:
                 if all([seriesyear is not None, seriesyear != 'None']):
                     vol_label = seriesyear
@@ -5485,7 +5487,7 @@ class WebInterface(object):
 
 
     def testrtorrent(self, host, username, password, auth, verify, ssl, rpc_url):
-        import torrent.clients.rtorrent as TorClient
+        from . import torrent.clients.rtorrent as TorClient
         client = TorClient.TorrentClient()
         ca_bundle = None
         if mylar.CONFIG.RTORRENT_CA_BUNDLE is not None:
@@ -5594,7 +5596,7 @@ class WebInterface(object):
     download_0day.exposed = True
 
     def test_32p(self):
-        import auth32p
+        from . import auth32p
         tmp = auth32p.info32p(test=True)
         rtnvalues = tmp.authenticate()
         if rtnvalues['status'] is True:
@@ -5655,7 +5657,7 @@ class WebInterface(object):
                 x = None
                 try:
                     x = float(weekly['ISSUE'])
-                except ValueError, e:
+                except ValueError as e:
                     if 'au' in weekly['ISSUE'].lower() or 'ai' in weekly['ISSUE'].lower() or '.inh' in weekly['ISSUE'].lower() or '.now' in weekly['ISSUE'].lower() or '.mu' in weekly['ISSUE'].lower():
                         x = weekly['ISSUE']
 

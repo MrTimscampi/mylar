@@ -221,7 +221,7 @@ class Readinglist(object):
             cmd = shlex.split(cmdstring)
             try:
                 output = subprocess.check_output(cmd)
-            except subprocess.CalledProcessError, e:
+            except subprocess.CalledProcessError as e:
                 logger.info(module + ' The host {0} is not Reachable at this time.'.format(cmd[-1]))
                 return
             else:

@@ -14,6 +14,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 import urllib
 import requests
 import ntpath
@@ -21,7 +22,7 @@ import os
 import sys
 import re
 import time
-import logger
+from . import logger
 import mylar
 
 class SABnzbd(object):

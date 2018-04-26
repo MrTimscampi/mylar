@@ -17,6 +17,7 @@
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import with_statement
+from __future__ import print_function
 
 import os, sys, subprocess
 
@@ -181,7 +182,7 @@ def initialize(config_file):
         logger.info('Checking to see if the database has all tables....')
         try:
             dbcheck()
-        except Exception, e:
+        except Exception as e:
             logger.error('Cannot connect to the database: %s' % e)
 
         if MAINTENANCE is False:
@@ -279,7 +280,7 @@ def daemonize():
             # Exit the parent process
             logger.debug('Forking once...')
             os._exit(0)
-    except OSError, e:
+    except OSError as e:
         sys.exit("1st fork failed: %s [%d]" % (e.strerror, e.errno))
 
     os.setsid()
@@ -294,7 +295,7 @@ def daemonize():
         if pid > 0:
             logger.debug('Forking twice...')
             os._exit(0) # Exit second parent process
-    except OSError, e:
+    except OSError as e:
         sys.exit("2nd fork failed: %s [%d]" % (e.strerror, e.errno))
 
     dev_null = file('/dev/null', 'r')
@@ -322,7 +323,7 @@ def launch_browser(host, port, root):
 
     try:
         webbrowser.open('http://%s:%i%s' % (host, port, root))
-    except Exception, e:
+    except Exception as e:
         logger.error('Could not launch browser: %s' % e)
 
 def start():
@@ -1131,7 +1132,7 @@ def csv_load():
             try:
                 #print row.split(',')
                 c.execute("INSERT INTO exceptions VALUES (?,?,?,?)", row)
-            except Exception, e:
+            except Exception as e:
                 #print ("Error - invald arguments...-skipping")
                 pass
         csvfile.close()

@@ -34,7 +34,7 @@ def patch_http_response_read(func):
     def inner(*args):
         try:
             return func(*args)
-        except httplib.IncompleteRead, e:
+        except httplib.IncompleteRead as e:
             return e.partial
 
     return inner
@@ -70,7 +70,7 @@ def pullsearch(comicapi, comicquery, offset, type):
 
     try:
         r = requests.get(PULLURL, params=payload, verify=mylar.CONFIG.CV_VERIFY, headers=mylar.CV_HEADERS)
-    except Exception, e:
+    except Exception as e:
         logger.warn('Error fetching data from ComicVine: %s' % (e))
         return
 
@@ -436,7 +436,7 @@ def storyarcinfo(xmlid):
 
     try:
         r = requests.get(ARCPULL_URL, params=payload, verify=mylar.CONFIG.CV_VERIFY, headers=mylar.CV_HEADERS)
-    except Exception, e:
+    except Exception as e:
         logger.warn('Error fetching data from ComicVine: %s' % (e))
         return
 #    try:

@@ -1,3 +1,4 @@
+from __future__ import print_function
 
 from bs4 import BeautifulSoup, UnicodeDammit
 import urllib2
@@ -102,7 +103,7 @@ def solicit(month, year):
                 #print ("titlet: " + str(headt))
                 headName = headt.findNext(text=True)
                 #print ('headName: ' + headName)
-                if 'Image' in headName: print 'IMAGE FOUND'
+                if 'Image' in headName: print('IMAGE FOUND')
                 if not all(['Marvel' in headName, 'DC' in headName, 'Image' in headName]) and ('Solicitations' in headName or 'Solicits' in headName):
                    # test for month here (int(month) + 5)
                     if not any(d.get('month', None) == str(headName).lower() for d in monthlist):
@@ -191,7 +192,7 @@ def solicit(month, year):
         try:
             #print ("Row: %s" % row)
             cursor.execute("INSERT INTO future VALUES (?,?,?,?,?,?,?,null);", row)
-        except Exception, e:
+        except Exception as e:
             logger.fdebug("Error - invald arguments...-skipping")
             pass
         t+=1

@@ -16,6 +16,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import print_function
 import os
 import sys
 
@@ -181,7 +182,7 @@ def initialize(options):
         portend.Checker().assert_free(options['http_host'], options['http_port'])
         cherrypy.server.start()
     except portend.PortNotFree:
-        print 'Failed to start on port: %i. Is something else running?' % (options['http_port'])
+        print('Failed to start on port: %i. Is something else running?' % (options['http_port']))
         sys.exit(0)
 
     cherrypy.server.wait()

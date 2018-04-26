@@ -1,3 +1,5 @@
+from __future__ import print_function
+from __future__ import absolute_import
 #  This file is part of Mylar.
 # -*- coding: utf-8 -*-
 #
@@ -27,16 +29,14 @@ import sys
 import ctypes
 import platform
 import calendar
-import itertools
 import shutil
 import hashlib
 import gzip
 import os, errno
 from StringIO import StringIO
-from apscheduler.triggers.interval import IntervalTrigger
 
 import mylar
-import logger
+from . import logger
 from mylar import sabnzbd, nzbget, process
 
 def multikeysort(items, columns):
@@ -99,7 +99,7 @@ def latinToAscii(unicrap):
 
     r = ''
     for i in unicrap:
-        if xlate.has_key(ord(i)):
+        if ord(i) in xlate:
             r += xlate[ord(i)]
         elif ord(i) >= 0x80:
             pass
@@ -263,7 +263,7 @@ def decimal_issue(iss):
     return deciss, dec_except
 
 def rename_param(comicid, comicname, issue, ofilename, comicyear=None, issueid=None, annualize=None, arc=False):
-            import db
+            from . import db
             myDB = db.DBConnection()
             comicid = str(comicid)   # it's coming in unicoded...
 
@@ -483,7 +483,7 @@ def rename_param(comicid, comicname, issue, ofilename, comicyear=None, issueid=N
                         pass
                     else:
                         raise ValueError
-                except ValueError, e:
+                except ValueError as e:
                     logger.warn('Unable to properly determine issue number [ %s] - you should probably log this on github for help.' % issueno)
                     return
 
@@ -715,7 +715,7 @@ def ComicSort(comicorder=None, sequence=None, imported=None):
     if sequence:
         # if it's on startup, load the sql into a tuple for use to avoid record-locking
         i = 0
-        import db
+        from . import db
         myDB = db.DBConnection()
         comicsort = myDB.select("SELECT * FROM comics ORDER BY ComicSortName COLLATE NOCASE")
         comicorderlist = []
@@ -800,7 +800,7 @@ def updateComicLocation():
     #                  - set NEWCOMDIR = new ComicLocation
     #after running, set ComicLocation to new location in Configuration GUI
 
-    import db
+    from . import db
     myDB = db.DBConnection()
     if mylar.CONFIG.NEWCOM_DIR is not None:
         logger.info('Performing a one-time mass update to Comic Location')
@@ -914,12 +914,12 @@ def cleanhtml(raw_html):
         if tag.name not in VALID_TAGS:
             tag.replaceWith(tag.renderContents())
     flipflop = soup.renderContents()
-    print flipflop
+    print(flipflop)
     return flipflop
 
 
 def issuedigits(issnum):
-    import db
+    from . import db
 
     int_issnum = None
 
@@ -1043,7 +1043,7 @@ def issuedigits(issnum):
                         logger.fdebug('Infinity issue found.')
                         int_issnum = 9999999999 * 1000
                     else: raise ValueError
-                except ValueError, e:
+                except ValueError as e:
                     #this will account for any alpha in a issue#, so long as it doesn't have decimals.
                     x = 0
                     tstord = None
@@ -1059,7 +1059,7 @@ def issuedigits(issnum):
                                 issno = re.sub('[\-\,\.\+]', '', issno).rstrip()
                                 try:
                                     isschk = float(issno)
-                                except ValueError, e:
+                                except ValueError as e:
                                     if len(issnum) == 1 and issnum.isalpha():
                                         break
                                     logger.fdebug('[' + issno + '] Invalid numeric for issue - cannot be found. Ignoring.')
@@ -1105,7 +1105,7 @@ def issuedigits(issnum):
 
 
 def checkthepub(ComicID):
-    import db
+    from . import db
     myDB = db.DBConnection()
     publishers = ['marvel', 'dc', 'darkhorse']
     pubchk = myDB.selectone("SELECT * FROM comics WHERE ComicID=?", [ComicID]).fetchone()
@@ -1122,7 +1122,7 @@ def checkthepub(ComicID):
         return mylar.CONFIG.INDIE_PUB
 
 def annual_update():
-    import db
+    from . import db
     myDB = db.DBConnection()
     annuallist = myDB.select('SELECT * FROM annuals')
     if annuallist is None:
@@ -1164,10 +1164,10 @@ def urlretrieve(urlfile, fpath):
     while 1:
         data = urlfile.read(chunk)
         if not data:
-            print "done."
+            print("done.")
             break
         f.write(data)
-        print "Read %s bytes"%len(data)
+        print("Read %s bytes"%len(data))
 
 def renamefile_readingorder(readorder):
     logger.fdebug('readingorder#: ' + str(readorder))
@@ -1178,7 +1178,7 @@ def renamefile_readingorder(readorder):
     return readord
 
 def latestdate_fix():
-    import db
+    from . import db
     datefix = []
     cnupdate = []
     myDB = db.DBConnection()
@@ -1230,7 +1230,7 @@ def latestdate_fix():
     return
 
 def upgrade_dynamic():
-    import db
+    from . import db
     dynamic_comiclist = []
     myDB = db.DBConnection()
     #update the comicdb to include the Dynamic Names (and any futher changes as required)
@@ -1315,7 +1315,7 @@ def LoadAlternateSearchNames(seriesname_alt, comicid):
         return Alternate_Names
 
 def havetotals(refreshit=None):
-        import db
+        from . import db
 
         comics = []
         myDB = db.DBConnection()
@@ -1801,7 +1801,7 @@ def IssueDetails(filelocation, IssueID=None, justinfo=False):
     return issuedetails
 
 def get_issue_title(IssueID=None, ComicID=None, IssueNumber=None, IssueArcID=None):
-    import db
+    from . import db
     myDB = db.DBConnection()
     if IssueID:
         issue = myDB.selectone('SELECT * FROM issues WHERE IssueID=?', [IssueID]).fetchone()
@@ -1833,7 +1833,7 @@ def int_num(s):
         return float(s)
 
 def listPull(weeknumber, year):
-    import db
+    from . import db
     library = {}
     myDB = db.DBConnection()
     # Get individual comics
@@ -1843,7 +1843,7 @@ def listPull(weeknumber, year):
     return library
 
 def listLibrary():
-    import db
+    from . import db
     library = {}
     myDB = db.DBConnection()
     list = myDB.select("SELECT a.comicid, b.releasecomicid, a.status FROM Comics AS a LEFT JOIN annuals AS b on a.comicid=b.comicid group by a.comicid")
@@ -1856,7 +1856,7 @@ def listLibrary():
     return library
 
 def listStoryArcs():
-    import db
+    from . import db
     library = {}
     myDB = db.DBConnection()
     # Get Distinct Arc IDs
@@ -1870,7 +1870,7 @@ def listStoryArcs():
     return library
 
 def listoneoffs(weeknumber, year):
-    import db
+    from . import db
     library = []
     myDB = db.DBConnection()
     # Get Distinct one-off issues from the pullist that have already been downloaded / snatched
@@ -1886,7 +1886,7 @@ def listoneoffs(weeknumber, year):
     return library
 
 def manualArc(issueid, reading_order, storyarcid):
-    import db
+    from . import db
     if issueid.startswith('4000-'):
         issueid = issueid[5:]
 
@@ -2022,7 +2022,7 @@ def manualArc(issueid, reading_order, storyarcid):
     return
 
 def listIssues(weeknumber, year):
-    import db
+    from . import db
     library = []
     myDB = db.DBConnection()
     # Get individual issues
@@ -2067,7 +2067,7 @@ def listIssues(weeknumber, year):
     return library
 
 def incr_snatched(ComicID):
-    import db
+    from . import db
     myDB = db.DBConnection()
     incr_count = myDB.selectone("SELECT Have FROM Comics WHERE ComicID=?", [ComicID]).fetchone()
     logger.fdebug('Incrementing HAVE count total to : ' + str(incr_count['Have'] + 1))
@@ -2083,7 +2083,7 @@ def duplicate_filecheck(filename, ComicID=None, IssueID=None, StoryArcID=None, r
     #storyarcid = the storyarcid of the issue that's being checked for duplication.
     #rtnval = the return value of a previous duplicate_filecheck that's re-running against new values
     #
-    import db
+    from . import db
     myDB = db.DBConnection()
 
     logger.info('[DUPECHECK] Duplicate check for ' + filename)
@@ -2361,7 +2361,7 @@ def humanize_time(amount, units = 'seconds'):
     return buf
 
 def issue_status(IssueID):
-    import db
+    from . import db
     myDB = db.DBConnection()
 
     IssueID = str(IssueID)
@@ -2395,7 +2395,7 @@ def crc(filename):
     return hashlib.md5(filename).hexdigest()
 
 def issue_find_ids(ComicName, ComicID, pack, IssueNumber):
-    import db
+    from . import db
 
     myDB = db.DBConnection()
 
@@ -2522,7 +2522,7 @@ def cleanHost(host, protocol = True, ssl = False, username = None, password = No
     return host
 
 def checkthe_id(comicid=None, up_vals=None):
-    import db
+    from . import db
     myDB = db.DBConnection()
     if not up_vals:
         chk = myDB.selectone("SELECT * from ref32p WHERE ComicID=?", [comicid]).fetchone()
@@ -2553,7 +2553,7 @@ def checkthe_id(comicid=None, up_vals=None):
         myDB.upsert("ref32p", newVal, ctrlVal)
 
 def updatearc_locs(storyarcid, issues):
-    import db
+    from . import db
     myDB = db.DBConnection()
     issuelist = []
     for x in issues:
@@ -2643,7 +2643,7 @@ def updatearc_locs(storyarcid, issues):
 
 
 def spantheyears(storyarcid):
-    import db
+    from . import db
     myDB = db.DBConnection()
 
     totalcnt = myDB.select("SELECT * FROM storyarcs WHERE StoryArcID=?", [storyarcid])
@@ -2707,7 +2707,7 @@ def arcformat(arc, spanyears, publisher):
     return dstloc
 
 def torrentinfo(issueid=None, torrent_hash=None, download=False, monitor=False):
-    import db
+    from . import db
     from base64 import b16encode, b32decode
 
     #check the status of the issueid to make sure it's in Snatched status and was grabbed via torrent.
@@ -2733,12 +2733,12 @@ def torrentinfo(issueid=None, torrent_hash=None, download=False, monitor=False):
        snatch_status = 'ERROR'
     else:
         if mylar.USE_RTORRENT:
-            import test
+            from . import test
             rp = test.RTorrent()
             torrent_info = rp.main(torrent_hash, check=True)
         elif mylar.USE_DELUGE:
             #need to set the connect here as well....
-            import torrent.clients.deluge as delu
+            from .client import deluge as delu
             dp = delu.TorrentClient()
             if not dp.connect(mylar.CONFIG.DELUGE_HOST, mylar.CONFIG.DELUGE_USERNAME, mylar.CONFIG.DELUGE_PASSWORD):
                 logger.warn('Not connected to Deluge!')
@@ -2822,7 +2822,7 @@ def torrentinfo(issueid=None, torrent_hash=None, download=False, monitor=False):
                 p = subprocess.Popen(script_cmd, env=dict(autosnatch_env), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=mylar.PROG_DIR)
                 out, err = p.communicate()
                 logger.fdebug(u"Script result: " + out)
-            except OSError, e:
+            except OSError as e:
                 logger.warn(u"Unable to run extra_script: " + e)
                 snatch_status = 'ERROR'
             else:
@@ -2946,7 +2946,7 @@ def weekly_info(week=None, year=None):
     return weekinfo
 
 def latestdate_update():
-    import db
+    from . import db
     myDB = db.DBConnection()
     ccheck = myDB.select('SELECT a.ComicID, b.IssueID, a.LatestDate, b.ReleaseDate, b.Issue_Number from comics as a left join issues as b on a.comicid=b.comicid where a.LatestDate < b.ReleaseDate or a.LatestDate like "%Unknown%" group by a.ComicID')
     if ccheck is None or len(ccheck) == 0:
@@ -3178,7 +3178,7 @@ def script_env(mode, vars):
     logger.fdebug(u"Executing command " +str(script_cmd))
     try:
         subprocess.call(script_cmd, env=dict(mylar_env))
-    except OSError, e:
+    except OSError as e:
         logger.warn(u"Unable to run extra_script: " + str(script_cmd))
         return False
     else:
@@ -3223,7 +3223,7 @@ def date_conversion(originaldate):
 def job_management(write=False, job=None, last_run_completed=None, current_run=None, status=None):
         jobresults = []
 
-        import db
+        from . import db
         myDB = db.DBConnection()
 
         if job is None:
@@ -3422,7 +3422,7 @@ def job_management(write=False, job=None, last_run_completed=None, current_run=N
 
 
 def stupidchk():
-    import db
+    from . import db
     myDB = db.DBConnection()
     CCOMICS = myDB.select("SELECT COUNT(*) FROM comics WHERE Status='Active'")
     ens = myDB.select("SELECT COUNT(*) FROM comics WHERE Status='Loading' OR Status='Paused'")
@@ -3516,7 +3516,7 @@ def getImage(comicid, url, issueid=None):
     logger.info('Attempting to retrieve the comic image for series')
     try:
         r = requests.get(url, params=None, stream=True, verify=mylar.CONFIG.CV_VERIFY, headers=mylar.CV_HEADERS)
-    except Exception, e:
+    except Exception as e:
         logger.warn('Unable to download image from CV URL link: ' + url + ' [Status Code returned: ' + str(r.status_code) + ']')
 
     logger.fdebug('comic image retrieval status code: ' + str(r.status_code))
@@ -3736,7 +3736,7 @@ def publisherImages(publisher):
     return comicpublisher
 
 def lookupthebitches(filelist, folder, nzbname, nzbid, prov, hash, pulldate):
-    import db
+    from . import db
     myDB = db.DBConnection()
     watchlist = listLibrary()
     matchlist = []
@@ -3836,7 +3836,7 @@ def file_ops(path,dst,arc=False,one_off=False):
                     # Now create another copy of the above file.
                     os.link( path, dst )
                     logger.info('Created hard link successfully!!')
-                except OSError, e:
+                except OSError as e:
                     if e.errno == errno.EXDEV:
                         logger.warn('[' + str(e) + '] Hardlinking failure. Could not create hardlink - dropping down to copy mode so that this operation can complete. Intervention is required if you wish to continue using hardlinks.')
                         try:
@@ -3870,7 +3870,7 @@ def file_ops(path,dst,arc=False,one_off=False):
                     else:
                         os.symlink ( path, dst )
                         logger.fdebug('Successfully created softlink [' + path + ' --> ' + dst + ']')
-                except OSError, e:
+                except OSError as e:
                     #if e.errno == errno.EEXIST:
                     #    os.remove(dst)
                     #    os.symlink( path, dst )
@@ -3904,7 +3904,7 @@ def file_ops(path,dst,arc=False,one_off=False):
                 try:
                     os.system(r'mklink /H dst path')
                     logger.fdebug('Successfully hardlinked file [' + dst + ' --> ' + path + ']')
-                except OSError, e:
+                except OSError as e:
                     logger.warn('[' + e + '] Unable to create symlink. Dropping down to copy mode so that this operation can continue.')
                     try:
                         shutil.copy( dst, path )
@@ -3919,7 +3919,7 @@ def file_ops(path,dst,arc=False,one_off=False):
                         os.remove( path )
                     os.system(r'mklink dst path')
                     logger.fdebug('Successfully created symlink [' + dst + ' --> ' + path + ']')
-                except OSError, e:
+                except OSError as e:
                     raise e
                     logger.warn('[' + e + '] Unable to create softlink. Dropping down to copy mode so that this operation can continue.')
                     try:

@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 #  This file is part of Mylar.
 # -*- coding: utf-8 -*-
 #
@@ -17,7 +18,7 @@
 import Queue
 import threading
 import mylar
-import logger
+from . import logger
 
 class Process(object):
 

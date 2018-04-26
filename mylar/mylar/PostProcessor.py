@@ -14,6 +14,7 @@
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import with_statement
+from __future__ import absolute_import
 
 import os
 import shutil
@@ -139,7 +140,7 @@ class PostProcessor(object):
             out, err = p.communicate() #@UnusedVariable
             logger.fdebug(u"Script result: " + out)
             self._log(u"Script result: " + out)
-        except OSError, e:
+        except OSError as e:
            logger.warn(u"Unable to run pre_script: " + str(script_cmd))
            self._log(u"Unable to run pre_script: " + str(script_cmd))
 
@@ -180,7 +181,7 @@ class PostProcessor(object):
             out, err = p.communicate() #@UnusedVariable
             logger.fdebug(u"Script result: " + out)
             self._log(u"Script result: " + out)
-        except OSError, e:
+        except OSError as e:
             logger.warn(u"Unable to run extra_script: " + str(script_cmd))
             self._log(u"Unable to run extra_script: " + str(script_cmd))
 
@@ -1030,7 +1031,7 @@ class PostProcessor(object):
                         if mylar.CONFIG.ENABLE_META:
                             logger.info('[STORY-ARC POST-PROCESSING] Metatagging enabled - proceeding...')
                             try:
-                                import cmtagmylar
+                                from . import cmtagmylar
                                 metaresponse = cmtagmylar.run(self.nzb_folder, issueid=issueid, filename=ofilename)
                             except ImportError:
                                 logger.warn(module + ' comictaggerlib not found on system. Ensure the ENTIRE lib directory is located within mylar/lib/comictaggerlib/')
@@ -1485,7 +1486,7 @@ class PostProcessor(object):
                     if all([mylar.CONFIG.ENABLE_META, issueid is not None]):
                         self._log("Metatagging enabled - proceeding...")
                         try:
-                            import cmtagmylar
+                            from . import cmtagmylar
                             metaresponse = cmtagmylar.run(location, issueid=issueid, filename=os.path.join(self.nzb_folder, ofilename))
                         except ImportError:
                             logger.warn(module + ' comictaggerlib not found on system. Ensure the ENTIRE lib directory is located within mylar/lib/comictaggerlib/')
@@ -1844,7 +1845,7 @@ class PostProcessor(object):
                         pass
                     else:
                         raise ValueError
-                except ValueError, e:
+                except ValueError as e:
                     logger.warn('Unable to properly determine issue number [' + str(issueno) + '] - you should probably log this on github for help.')
                     return
 
@@ -2020,7 +2021,7 @@ class PostProcessor(object):
                     vol_label = comversion
 
                 try:
-                    import cmtagmylar
+                    from . import cmtagmylar
                     if ml is None:
                         pcheck = cmtagmylar.run(self.nzb_folder, issueid=issueid, comversion=vol_label, filename=os.path.join(odir, ofilename))
                     else:
@@ -2457,7 +2458,7 @@ class FolderCheck():
 
     def __init__(self):
         import Queue
-        import PostProcessor, logger
+        from . import PostProcessor, logger
 
         self.module = '[FOLDER-CHECK]'
         self.queue = Queue.Queue()

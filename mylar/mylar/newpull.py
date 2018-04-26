@@ -23,7 +23,7 @@ def newpull():
         try:
             r = requests.get(pagelinks, verify=False)
 
-        except Exception, e:
+        except Exception as e:
             logger.warn('Error fetching data: %s' % e)
 
         soup = BeautifulSoup(r.content)

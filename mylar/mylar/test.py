@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 #  This file is part of Mylar.
 #
 #  Mylar is free software: you can redistribute it and/or modify
@@ -23,12 +24,12 @@ from base64 import b16encode, b32decode
 
 import hashlib, StringIO
 import bencode
-from torrent.helpers.variable import link, symlink, is_rarfile
+from .torrent.helpers.variable import link, symlink, is_rarfile
 
 import requests
 #from lib.unrar2 import RarFile
 
-import torrent.clients.rtorrent as TorClient
+from . import torrent.clients.rtorrent as TorClient
 
 import mylar
 from mylar import logger, helpers

@@ -254,7 +254,7 @@ def run(dirName, nzbName=None, issueid=None, comversion=None, manual=None, filen
             else:
                 logger.info(module + '[COMIC-TAGGER] Successfully wrote ' + tagdisp + ' [' + filepath + ']')
                 i+=1
-        except OSError, e:
+        except OSError as e:
             logger.warn(module + '[COMIC-TAGGER] Unable to run comictagger with the options provided: ' + re.sub(f_tagoptions[f_tagoptions.index(mylar.CONFIG.COMICVINE_API)], 'REDACTED', str(script_cmd)))
             tidyup(filepath, new_filepath, new_folder, manualmeta)
             return "fail"

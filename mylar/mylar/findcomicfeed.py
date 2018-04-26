@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 
+from __future__ import absolute_import
 import os
 import sys
 import time
 import feedparser
 import re
-import logger
+from . import logger
 import mylar
 import unicodedata
 import urllib

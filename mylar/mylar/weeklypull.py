@@ -43,7 +43,7 @@ def pullit(forcecheck=None, weeknumber=None, year=None):
                     pulldate = '00000000'
                 else:
                     pulldate = pull_date['SHIPDATE']
-            except (sqlite3.OperationalError, TypeError), msg:
+            except (sqlite3.OperationalError, TypeError) as msg:
                 logger.info(u"Error Retrieving weekly pull list - attempting to adjust")
                 myDB.action("DROP TABLE weekly")
                 myDB.action("CREATE TABLE IF NOT EXISTS weekly (SHIPDATE TEXT, PUBLISHER TEXT, ISSUE TEXT, COMIC VARCHAR(150), EXTRA TEXT, STATUS TEXT, ComicID TEXT, IssueID TEXT, CV_Last_Update TEXT, DynamicName TEXT, weeknumber TEXT, year TEXT, volume TEXT, seriesyear TEXT, annuallink TEXT, rowid INTEGER PRIMARY KEY)")
@@ -270,7 +270,7 @@ def pullit(forcecheck=None, weeknumber=None, year=None):
                                 x = None
                                 try:
                                      x = float(re.sub('#', '', issname[n].strip()))
-                                except ValueError, e:
+                                except ValueError as e:
                                      if any(d in re.sub(r'[^a-zA-Z0-9]', '', issname[n]).strip() for d in specialissues):
                                         issue = issname[n]
                                      else:
@@ -465,7 +465,7 @@ def pullit(forcecheck=None, weeknumber=None, year=None):
                                 'WEEKNUMBER': int(weeknumber),
                                 'YEAR': mylar.CURRENT_YEAR}
                 myDB.upsert("weekly", newValueDict, controlValueDict)
-            except Exception, e:
+            except Exception as e:
                 #print ("Error - invald arguments...-skipping")
                 pass
             t+=1
@@ -1007,7 +1007,7 @@ def new_pullcheck(weeknumber, pullyear, comic1off_name=None, comic1off_id=None, 
                 todaydate = datetime.datetime.today()
                 try:
                     ComicDate = str(week['shipdate'])
-                except TypeError, e:
+                except TypeError as e:
                     ComicDate = todaydate.strftime('%Y-%m-%d')
                     logger.fdebug('[WEEKLY-PULL] Invalid Cover date. Forcing to weekly pull date of : ' + str(ComicDate))
 

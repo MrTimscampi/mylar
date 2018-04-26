@@ -1,12 +1,13 @@
 #!/usr/bin/python
 
+from __future__ import absolute_import
 import os, sys
 import re
 import feedparser
 import requests
 import cfscrape
 import urlparse
-import ftpsshup
+from . import ftpsshup
 from datetime import datetime, timedelta
 import gzip
 import time
@@ -15,9 +16,9 @@ from StringIO import StringIO
 
 import mylar
 from mylar import db, logger, ftpsshup, helpers, auth32p, utorrent
-import torrent.clients.transmission as transmission
-import torrent.clients.deluge as deluge
-import torrent.clients.qbittorrentclient as qbittorrent
+from . import torrent.clients.transmission as transmission
+from . import torrent.clients.deluge as deluge
+from . import torrent.clients.qbittorrentclient as qbittorrent
 
 def _start_newznab_attr(self, attrsD):
     context = self._getContext()
@@ -379,7 +380,7 @@ def nzbs(provider=None, forcerss=False):
 
         try:
             r = requests.get(url, params=payload, verify=verify, headers=headers)
-        except Exception, e:
+        except Exception as e:
             logger.warn('Error fetching RSS Feed Data from %s: %s' % (site, e))
             return
 
@@ -1000,7 +1001,7 @@ def torsend2client(seriesname, issue, seriesyear, linkit, site, pubhash=None):
             else:
                 r = scraper.get(url, params=payload, verify=verify, stream=True, headers=headers)
             #r = requests.get(url, params=payload, verify=verify, stream=True, headers=headers)
-        except Exception, e:
+        except Exception as e:
             logger.warn('Error fetching data from %s (%s): %s' % (site, url, e))
             if site == '32P':
                 logger.info('[TOR2CLIENT-32P] Retrying with 32P')
@@ -1020,7 +1021,7 @@ def torsend2client(seriesname, issue, seriesyear, linkit, site, pubhash=None):
 
                     try:
                         r = scraper.get(url, params=payload, verify=verify, allow_redirects=True)
-                    except Exception, e:
+                    except Exception as e:
                         logger.warn('[TOR2CLIENT-32P] Unable to GET %s (%s): %s' % (site, url, e))
                         return "fail"
                 else:
@@ -1038,7 +1039,7 @@ def torsend2client(seriesname, issue, seriesyear, linkit, site, pubhash=None):
                 try:
                     r = requests.get(url, params=payload, verify=verify, stream=True, headers=headers)
 
-                except Exception, e:
+                except Exception as e:
                     return "fail"
             else:
                 logger.warn('Cloudflare protection online for ' + site + '. Attempting to bypass...')
@@ -1049,7 +1050,7 @@ def torsend2client(seriesname, issue, seriesyear, linkit, site, pubhash=None):
                                'User-Agent':       cf_user_agent}
 
                     r = scraper.get(url, verify=verify, cookies=cf_cookievalue, stream=True, headers=headers)
-                except Exception, e:
+                except Exception as e:
                     return "fail"
 
         if str(r.status_code) != '200':
@@ -1094,7 +1095,7 @@ def torsend2client(seriesname, issue, seriesyear, linkit, site, pubhash=None):
             return torrent_info
 
     elif mylar.USE_RTORRENT:
-        import test
+        from . import test
         rp = test.RTorrent()
 
         torrent_info = rp.main(filepath=filepath)

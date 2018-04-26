@@ -133,7 +133,7 @@ def libraryScan(dir=None, append=False, ComicID=None, ComicName=None, cron=None,
                         if comic.endswith('.cbz'):
                             cbz_retry +=1
 
-                except Exception, e:
+                except Exception as e:
                     logger.info('bang')
                     utter_failure_list.append({'ComicFilename':           comic,
                                                'ComicLocation':           comicpath,
@@ -618,7 +618,7 @@ def scanLibrary(scan=None, queue=None):
     if scan:
         try:
             soma = libraryScan(queue=queue)
-        except Exception, e:
+        except Exception as e:
             logger.error('[IMPORT] Unable to complete the scan: %s' % e)
             mylar.IMPORT_STATUS = None
             valreturn.append({"somevalue":  'self.ie',

@@ -1,3 +1,5 @@
+from __future__ import print_function
+from __future__ import absolute_import
 #  This file is part of Mylar.
 #
 #  Mylar is free software: you can redistribute it and/or modify
@@ -17,8 +19,8 @@
 from bs4 import BeautifulSoup, UnicodeDammit
 import urllib2
 import re
-import helpers
-import logger
+from . import helpers
+from . import logger
 import datetime
 import sys
 from decimal import Decimal
