@@ -33,7 +33,7 @@ import sys
 from xml.dom.minidom import parseString
 
 
-from mylar import logger, db, helpers, updater, notifiers, filechecker, weeklypull
+from mylar.mylar import logger, db, helpers, updater, notifiers, filechecker, weeklypull
 
 class PostProcessor(object):
     """

@@ -6,19 +6,18 @@ import re
 import feedparser
 import requests
 import cfscrape
-import urlparse
-from . import ftpsshup
-from datetime import datetime, timedelta
+import urllib.parse
+from datetime import datetime
 import gzip
 import time
 import random
-from StringIO import StringIO
+from io import StringIO
 
 import mylar
-from mylar import db, logger, ftpsshup, helpers, auth32p, utorrent
-from . import torrent.clients.transmission as transmission
-from . import torrent.clients.deluge as deluge
-from . import torrent.clients.qbittorrentclient as qbittorrent
+from mylar.mylar import db, logger, ftpsshup, helpers, auth32p, utorrent
+from mylar.mylar.torrent.clients import transmission as transmission
+from mylar.mylar.torrent.clients import deluge as deluge
+from mylar.mylar.torrent.clients import qbittorrentclient as qbittorrent
 
 def _start_newznab_attr(self, attrsD):
     context = self._getContext()
@@ -218,7 +217,7 @@ def torrents(pickfeed=None, seriesname=None, issue=None, feedinfo=None):
                 elif 'MB' in tmpsz[tmpsz_st:]:
                     szform = 'MB'
                     sz = 'M'
-                linkwwt = urlparse.parse_qs(urlparse.urlparse(entry.link).query)['id']
+                linkwwt = urllib.parse.parse_qs(urllib.parse.urlparse(entry.link).query)['id']
                 feeddata.append({
                                 'site':     picksite,
                                 'title':    entry.title,
@@ -292,8 +291,12 @@ def torrents(pickfeed=None, seriesname=None, issue=None, feedinfo=None):
                     feeddata.append({
                                     'site':     picksite,
                                     'title':    feedme.entries[i].title,
+<<<<<<< HEAD
                                     'link':     str(re.sub('genid=', '', urlparse.urlparse(feedme.entries[i].link)[4]).strip()),
                                     #'link':     str(urlparse.urlparse(feedme.entries[i].link)[2].rpartition('/')[0].rsplit('/',2)[2]),
+=======
+                                    'link':     str(urllib.parse.urlparse(feedme.entries[i].link)[2].rpartition('/')[0].rsplit('/',2)[2]),
+>>>>>>> Make Mylar launch under Python 3
                                     'pubdate':  pdate,
                                     'size':     tsize
                                     })

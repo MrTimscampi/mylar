@@ -17,7 +17,7 @@ import cfscrape
 from operator import itemgetter
 
 import mylar
-from mylar import logger, filechecker, helpers
+from mylar.mylar import logger, filechecker, helpers
 
 
 class info32p(object):

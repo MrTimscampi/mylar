@@ -21,7 +21,7 @@ standard_library.install_aliases()
 from builtins import str
 from builtins import range
 import mylar
-from mylar import logger, db, updater, helpers, parseit, findcomicfeed, notifiers, rsscheck, Failed, filechecker, auth32p, sabnzbd, nzbget, wwt
+from mylar.mylar import logger, db, updater, helpers, parseit, findcomicfeed, notifiers, rsscheck, Failed, filechecker, auth32p, sabnzbd, nzbget, wwt
 
 import feedparser
 import requests
@@ -3016,7 +3016,7 @@ def notify_snatch(nzbname, sent_to, modcomicname, comyear, IssueNumber, nzbprov)
 def FailedMark(IssueID, ComicID, id, nzbname, prov, oneoffinfo=None):
         # Used to pass a failed attempt at sending a download to a client, to the failed handler, and then back again to continue searching.
 
-        from mylar import Failed
+        from mylar.mylar import Failed
 
         FailProcess = Failed.FailedProcessor(issueid=IssueID, comicid=ComicID, id=id, nzb_name=nzbname, prov=prov, oneoffinfo=oneoffinfo)
         Markit = FailProcess.markFailed()

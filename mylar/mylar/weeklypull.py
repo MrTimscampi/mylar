@@ -34,7 +34,7 @@ import datetime
 import shutil
 
 import mylar
-from mylar import db, updater, helpers, logger, newpull, importer, mb, locg
+from mylar.mylar import db, updater, helpers, logger, newpull, importer, mb, locg
 
 def pullit(forcecheck=None, weeknumber=None, year=None):
     myDB = db.DBConnection()

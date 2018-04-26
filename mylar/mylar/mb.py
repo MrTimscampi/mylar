@@ -30,8 +30,8 @@ from xml.dom.minidom import parseString, Element
 import requests
 
 import mylar
-from mylar import logger, db, cv
-from mylar.helpers import multikeysort, replace_all, cleanName, listLibrary, listStoryArcs
+from mylar.mylar import logger, db, cv
+from mylar.mylar.helpers import multikeysort, replace_all, cleanName, listLibrary, listStoryArcs
 import http.client
 
 mb_lock = threading.Lock()
@@ -118,7 +118,7 @@ def findComic(name, mode, issue, limityear=None, type=None):
     if '+' in name:
        name = re.sub('\+', 'PLUS', name)
 
-    pattern = re.compile(ur'\w+', re.UNICODE)
+    pattern = re.compile('\w+', re.UNICODE)
     name = pattern.findall(name)
 
     if '+' in originalname:

@@ -23,7 +23,7 @@ import glob, urllib.request, urllib.parse, urllib.error, urllib.request, urllib.
 import simplejson as simplejson
 
 import mylar
-from mylar import db, helpers, logger
+from mylar.mylar import db, helpers, logger
 
 
 class Cache(object):
@@ -43,9 +43,9 @@ class Cache(object):
     The basic format for art in the cache is <musicbrainzid>.<date>.<ext>
     and for info it is <musicbrainzid>.<date>.txt
     """
-    mylar.CACHE_DIR = os.path.join(str(mylar.PROG_DIR), 'cache/')
+    mylar.mylar.CACHE_DIR = os.path.join(str(mylar.mylar.PROG_DIR), 'cache/')
 
-    path_to_art_cache = os.path.join(mylar.CACHE_DIR, 'artwork')
+    path_to_art_cache = os.path.join(mylar.mylar.CACHE_DIR, 'artwork')
 
     id = None
     id_type = None  # 'comic' or 'issue' - set automatically depending on whether ComicID or IssueID is passed

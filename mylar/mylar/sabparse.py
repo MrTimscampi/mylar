@@ -19,17 +19,11 @@ standard_library.install_aliases()
 from builtins import str
 from builtins import object
 import mylar
-from mylar import logger
+from mylar.mylar import logger
 
 import requests
-from bs4 import BeautifulSoup, UnicodeDammit
+from bs4 import BeautifulSoup
 import re
-import datetime
-import sys
-from decimal import Decimal
-from html.parser import HTMLParseError
-from time import strptime
-
 class sabnzbd(object):
 
     def __init__(self, sabhost, sabusername, sabpassword):

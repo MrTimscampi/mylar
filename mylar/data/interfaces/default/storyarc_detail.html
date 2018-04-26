@@ -2,13 +2,13 @@
 <%!
         import os
         import mylar
-	from mylar.helpers import checked, listLibrary
+	from mylar.mylar.helpers import checked, listLibrary
 %>
 
 <%def name="headerIncludes()">
 	<div id="subhead_container">
 		<div id="subhead_menu">
-                        %if mylar.CONFIG.TAB_ENABLE:
+                        %if mylar.mylar.CONFIG.TAB_ENABLE:
   			    <a id="menu_link_delete" onclick="doAjaxCall('syncfiles',$(this),'table')" data-success="Successfully sent issues to your device">Sync</a>
                         %endif
 			<a id="menu_link_delete" href="#">Remove Read</a>
@@ -52,7 +52,7 @@
                      <fieldset>
                      <div class="row checkbox left clearfix">
                          </br>
-                         %if mylar.CONFIG.STORYARCDIR is True:
+                         %if mylar.mylar.CONFIG.STORYARCDIR is True:
                              <label>Location: ${sdir}</label>
                          %endif
                          </br>
@@ -60,14 +60,14 @@
                          <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" /><label>Show Downloaded Story Arc Issues on ReadingList tab</label><br/>
                          <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" /><label>Enforce Renaming/MetaTagging options (if enabled)</label><br/>
 -->
-                         <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="read2filename" id="read2filename" value="1" ${checked(mylar.CONFIG.READ2FILENAME)} /><label>Prepend Reading# to filename</label><br/>
+                         <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="read2filename" id="read2filename" value="1" ${checked(mylar.mylar.CONFIG.READ2FILENAME)} /><label>Prepend Reading# to filename</label><br/>
                          <%
-                               if mylar.CONFIG.STORYARCDIR:
+                               if mylar.mylar.CONFIG.STORYARCDIR:
                                    carcdir = 'StoryArc'
                                else:
                                    carcdir = 'GrabBag'
                          %>
-                         <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="copy2arcdir" id="copy2arcdir" value="1" ${checked(mylar.CONFIG.COPY2ARCDIR)} /><label>Copy watchlisted issues to ${carcdir} Directory</label>
+                         <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="copy2arcdir" id="copy2arcdir" value="1" ${checked(mylar.mylar.CONFIG.COPY2ARCDIR)} /><label>Copy watchlisted issues to ${carcdir} Directory</label>
 
                        <input type="hidden" name="StoryArcID" value="${storyarcid}">
                        <input type="hidden" name="StoryArcName" value="${storyarcname}">

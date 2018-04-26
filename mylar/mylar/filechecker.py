@@ -38,7 +38,7 @@ import subprocess
 from subprocess import CalledProcessError, check_output
 
 import mylar
-from mylar import logger, helpers
+from mylar.mylar import logger, helpers
 
 class FileChecker(object):
 
@@ -305,11 +305,11 @@ class FileChecker(object):
             tmpfilename = ''.join(tmpfilename)
             modfilename = tmpfilename
 
-            sf3 = re.compile(ur"[^,\s_]+", re.UNICODE)
+            sf3 = re.compile("[^,\s_]+", re.UNICODE)
             split_file3 = sf3.findall(modfilename)
             if len(split_file3) == 1:
                 logger.fdebug('Improperly formatted filename - there is no seperation using appropriate characters between wording.')
-                sf3 = re.compile(ur"[^,\s_\.]+", re.UNICODE)
+                sf3 = re.compile("[^,\s_\.]+", re.UNICODE)
                 split_file3 = sf3.findall(modfilename)
                 logger.fdebug('NEW split_file3: ' + str(split_file3))
 

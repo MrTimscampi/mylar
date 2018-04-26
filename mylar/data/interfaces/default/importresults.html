@@ -1,8 +1,8 @@
 <%inherit file="base.html" />
 <%!
 	import mylar
-        from mylar import db
-	from mylar.helpers import checked
+        from mylar.mylar import db
+	from mylar.mylar.helpers import checked
 %>
 <%def name="headerIncludes()">
 	<div id="subhead_container">
@@ -30,25 +30,25 @@
                            <img src="interfaces/default/images/ultron.png" style="float:right" height="125" width="125" />                     
                            <fieldset>
                               <div class="row checkbox">
-                                   <input type="checkbox" name="autoadd" style="vertical-align: middle; margin: 3px; margin-top: -1px;" id="autoadd" value="1" ${checked(mylar.CONFIG.ADD_COMICS)}><label>Auto-add new series</label>
+                                   <input type="checkbox" name="autoadd" style="vertical-align: middle; margin: 3px; margin-top: -1px;" id="autoadd" value="1" ${checked(mylar.mylar.CONFIG.ADD_COMICS)}><label>Auto-add new series</label>
                               </div>
                               <div class="row checkbox">
-                                   <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="imp_move" id="imp_move" value="1" ${checked(mylar.CONFIG.IMP_MOVE)}><label>Move files</label>
+                                   <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="imp_move" id="imp_move" value="1" ${checked(mylar.mylar.CONFIG.IMP_MOVE)}><label>Move files</label>
                               </div>
-                              %if mylar.CONFIG.RENAME_FILES:
+                              %if mylar.mylar.CONFIG.RENAME_FILES:
                                    <div class="row checkbox">
-                                         <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="imp_rename" id="imp_rename" value="1" ${checked(mylar.CONFIG.IMP_RENAME)}><label>Rename Files </label>
+                                         <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="imp_rename" id="imp_rename" value="1" ${checked(mylar.mylar.CONFIG.IMP_RENAME)}><label>Rename Files </label>
                                          <small>(After importing, Rename the files to configuration settings)</small>
-                                         <label>${mylar.CONFIG.FOLDER_FORMAT}/${mylar.CONFIG.FILE_FORMAT}</label>
+                                         <label>${mylar.mylar.CONFIG.FOLDER_FORMAT}/${mylar.mylar.CONFIG.FILE_FORMAT}</label>
                                    </div>
                               %endif
                               <div class="row checkbox">
-                                   <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="imp_metadata" id="imp_metadata" value="1" ${checked(mylar.CONFIG.IMP_METADATA)}><label>Use Existing Metadata</label>
+                                   <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="imp_metadata" id="imp_metadata" value="1" ${checked(mylar.mylar.CONFIG.IMP_METADATA)}><label>Use Existing Metadata</label>
                                    <small>(Use existing Metadata to better locate series for import)</small>
                               </div>
-                              %if mylar.IMPORTLOCK:
+                              %if mylar.mylar.IMPORTLOCK:
                                    <div class="row checkbox">
-                                        <input type="checkbox" onclick="<%mylar.IMPORTLOCK = False%>" style="vertical-align: middle; margin: 3px; margin-top: -1px;"><label>Existing Import running. Force next run?</label>
+                                        <input type="checkbox" onclick="<%mylar.mylar.IMPORTLOCK = False%>" style="vertical-align: middle; margin: 3px; margin-top: -1px;"><label>Existing Import running. Force next run?</label>
                                    </div>
                               %endif
                            </fieldset>

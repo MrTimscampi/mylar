@@ -19,7 +19,7 @@ from bs4 import BeautifulSoup, UnicodeDammit
 import datetime
 import re
 import mylar
-from mylar import logger, db
+from mylar.mylar import logger, db
 
 def locg(pulldate=None,weeknumber=None,year=None):
 

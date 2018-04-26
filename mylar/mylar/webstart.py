@@ -26,10 +26,10 @@ import cherrypy
 import portend as portend
 
 import mylar
-from mylar import logger
-from mylar.webserve import WebInterface
-from mylar.helpers import create_https_certificates
-from mylar.api import REST
+from mylar.mylar import logger
+from mylar.mylar.webserve import WebInterface
+from mylar.mylar.helpers import create_https_certificates
+from mylar.mylar.api import REST
 
 def initialize(options):
 
@@ -78,7 +78,7 @@ def initialize(options):
 
     conf = {
         '/': {
-            'tools.staticdir.root': os.path.join(mylar.PROG_DIR, 'data')
+            'tools.staticdir.root': os.path.join(mylar.mylar.PROG_DIR, 'data')
             #'tools.proxy.on': True  # pay attention to X-Forwarded-Proto header
         },
         '/interfaces': {
@@ -103,7 +103,7 @@ def initialize(options):
         },
         '/cache': {
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': mylar.CONFIG.CACHE_DIR,
+            'tools.staticdir.dir': mylar.mylar.CONFIG.CACHE_DIR,
             'tools.auth_basic.on': False,
             'tools.auth.on': False
         }

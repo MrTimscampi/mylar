@@ -1,7 +1,7 @@
 <%inherit file="base.html" />
 <%!
         import mylar
-        from mylar.helpers import checked
+        from mylar.mylar.helpers import checked
 
 %>
 
@@ -24,7 +24,7 @@
               <form action="CreateFolders" method="GET" id="CreatetheFolders">
                   <fieldset>
                        <div class="row">
-                            <input type="checkbox" name="createfolders" id="createfolders" value=1 ${checked(mylar.CONFIG.CREATE_FOLDERS)} /><label>Automatic Folder Creation</label>
+                            <input type="checkbox" name="createfolders" id="createfolders" value=1 ${checked(mylar.mylar.CONFIG.CREATE_FOLDERS)} /><label>Automatic Folder Creation</label>
                        </div>
                        <input type="submit" style="display:none" />
                   </fieldset>

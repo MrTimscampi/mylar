@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 from lib.rtorrent import RTorrent
 
 import mylar
-from mylar import logger, helpers
+from mylar.mylar import logger, helpers
 
 class TorrentClient(object):
     def __init__(self):

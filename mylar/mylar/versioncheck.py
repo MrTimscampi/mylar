@@ -19,7 +19,7 @@ from builtins import str
 import platform, subprocess, re, os, urllib.request, urllib.error, urllib.parse, tarfile
 
 import mylar
-from mylar import logger, version
+from mylar.mylar import logger, version
 
 import requests
 import re
@@ -27,8 +27,8 @@ import re
 def runGit(args):
 
     git_locations = []
-    if mylar.CONFIG.GIT_PATH is not None:
-        git_locations.append(mylar.CONFIG.GIT_PATH)
+    if mylar.mylar.CONFIG.GIT_PATH is not None:
+        git_locations.append(mylar.mylar.CONFIG.GIT_PATH)
 
     git_locations.append('git')
 
@@ -43,8 +43,8 @@ def runGit(args):
         cmd = '%s %s' % (cur_git, args)
 
         try:
-            #logger.debug('Trying to execute: %s with shell in %s' % (cmd, mylar.PROG_DIR))
-            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True, cwd=mylar.PROG_DIR)
+            #logger.debug('Trying to execute: %s with shell in %s' % (cmd, mylar.mylar.PROG_DIR))
+            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True, cwd=mylar.mylar.PROG_DIR)
             output, err = p.communicate()
             #logger.debug('Git output: %s' % output)
         except Exception as e:
@@ -68,16 +68,16 @@ def runGit(args):
 
 def getVersion():
 
-    if mylar.CONFIG.GIT_BRANCH is not None and mylar.CONFIG.GIT_BRANCH.startswith('win32build'):
+    if mylar.mylar.CONFIG.GIT_BRANCH is not None and mylar.mylar.CONFIG.GIT_BRANCH.startswith('win32build'):
 
-        mylar.INSTALL_TYPE = 'win'
+        mylar.mylar.INSTALL_TYPE = 'win'
 
         # Don't have a way to update exe yet, but don't want to set VERSION to None
         return 'Windows Install', 'None'
 
-    elif os.path.isdir(os.path.join(mylar.PROG_DIR, '.git')):
+    elif os.path.isdir(os.path.join(mylar.mylar.PROG_DIR, '.git')):
 
-        mylar.INSTALL_TYPE = 'git'
+        mylar.mylar.INSTALL_TYPE = 'git'
         output, err = runGit('rev-parse HEAD')
 
         if not output:
@@ -96,8 +96,8 @@ def getVersion():
             logger.error('Output does not look like a hash, not using it')
             cur_commit_hash = None
 
-        if mylar.CONFIG.GIT_BRANCH:
-            branch = mylar.CONFIG.GIT_BRANCH
+        if mylar.mylar.CONFIG.GIT_BRANCH:
+            branch = mylar.mylar.CONFIG.GIT_BRANCH
 
         else:
             branch = None
@@ -112,9 +112,9 @@ def getVersion():
                         branch = re.sub('[\*\n]','',line).strip()
                         break
 
-                if not branch and mylar.CONFIG.GIT_BRANCH:
-                    logger.warn('Unable to retrieve branch name [%s] from git. Setting branch to configuration value of : %s' % (branch, mylar.CONFIG.GIT_BRANCH))
-                    branch = mylar.CONFIG.GIT_BRANCH
+                if not branch and mylar.mylar.CONFIG.GIT_BRANCH:
+                    logger.warn('Unable to retrieve branch name [%s] from git. Setting branch to configuration value of : %s' % (branch, mylar.mylar.CONFIG.GIT_BRANCH))
+                    branch = mylar.mylar.CONFIG.GIT_BRANCH
                 if not branch:
                     logger.warn('Could not retrieve branch name [%s] from git. Defaulting to Master.' % branch)
                     branch = 'master'
@@ -125,9 +125,9 @@ def getVersion():
 
     else:
 
-        mylar.INSTALL_TYPE = 'source'
+        mylar.mylar.INSTALL_TYPE = 'source'
 
-        version_file = os.path.join(mylar.PROG_DIR, 'version.txt')
+        version_file = os.path.join(mylar.mylar.PROG_DIR, 'version.txt')
 
         if not os.path.isfile(version_file):
             current_version = None
@@ -136,9 +136,9 @@ def getVersion():
                 current_version = f.read().strip(' \n\r')
 
         if current_version:
-            if mylar.CONFIG.GIT_BRANCH:
-                logger.info('Branch detected & set to : ' + mylar.CONFIG.GIT_BRANCH)
-                return current_version, mylar.CONFIG.GIT_BRANCH
+            if mylar.mylar.CONFIG.GIT_BRANCH:
+                logger.info('Branch detected & set to : ' + mylar.mylar.CONFIG.GIT_BRANCH)
+                return current_version, mylar.mylar.CONFIG.GIT_BRANCH
             else:
                 logger.warn('No branch specified within config - will attempt to poll version from mylar')
                 try:
@@ -149,9 +149,9 @@ def getVersion():
                     logger.info('Unable to detect branch properly - set branch in config.ini, currently defaulting to : ' + branch)
                 return current_version, branch
         else:
-            if mylar.CONFIG.GIT_BRANCH:
-                logger.info('Branch detected & set to : ' + mylar.CONFIG.GIT_BRANCH)
-                return current_version, mylar.CONFIG.GIT_BRANCH
+            if mylar.mylar.CONFIG.GIT_BRANCH:
+                logger.info('Branch detected & set to : ' + mylar.mylar.CONFIG.GIT_BRANCH)
+                return current_version, mylar.mylar.CONFIG.GIT_BRANCH
             else:
                 logger.warn('No branch specified within config - will attempt to poll version from mylar')
                 try:
@@ -166,57 +166,57 @@ def getVersion():
 
 def checkGithub(current_version=None):
     if current_version is None:
-        current_version = mylar.CURRENT_VERSION
+        current_version = mylar.mylar.CURRENT_VERSION
 
     # Get the latest commit available from github
-    url = 'https://api.github.com/repos/%s/mylar/commits/%s' % (mylar.CONFIG.GIT_USER, mylar.CONFIG.GIT_BRANCH)
+    url = 'https://api.github.com/repos/%s/mylar/commits/%s' % (mylar.mylar.CONFIG.GIT_USER, mylar.mylar.CONFIG.GIT_BRANCH)
     try:
         response = requests.get(url, verify=True)
         git = response.json()
-        mylar.LATEST_VERSION = git['sha']
+        mylar.mylar.LATEST_VERSION = git['sha']
     except Exception as e:
         logger.warn('[ERROR] Could not get the latest commit from github: %s' % e)
-        mylar.COMMITS_BEHIND = 0
-        return mylar.CURRENT_VERSION
+        mylar.mylar.COMMITS_BEHIND = 0
+        return mylar.mylar.CURRENT_VERSION
 
     # See how many commits behind we are
     if current_version is not None:
-        logger.fdebug('Comparing currently installed version [%s] with latest github version [%s]' % (current_version, mylar.LATEST_VERSION))
-        url = 'https://api.github.com/repos/%s/mylar/compare/%s...%s' % (mylar.CONFIG.GIT_USER, current_version, mylar.LATEST_VERSION)
+        logger.fdebug('Comparing currently installed version [%s] with latest github version [%s]' % (current_version, mylar.mylar.LATEST_VERSION))
+        url = 'https://api.github.com/repos/%s/mylar/compare/%s...%s' % (mylar.mylar.CONFIG.GIT_USER, current_version, mylar.mylar.LATEST_VERSION)
 
         try:
             response = requests.get(url, verify=True)
             git = response.json()
-            mylar.COMMITS_BEHIND = git['total_commits']
+            mylar.mylar.COMMITS_BEHIND = git['total_commits']
         except Exception as e:
             logger.warn('[ERROR] Could not get commits behind from github: %s' % e)
-            mylar.COMMITS_BEHIND = 0
-            return mylar.CURRENT_VERSION
+            mylar.mylar.COMMITS_BEHIND = 0
+            return mylar.mylar.CURRENT_VERSION
 
-        if mylar.COMMITS_BEHIND >= 1:
-            logger.info('New version is available. You are %s commits behind' % mylar.COMMITS_BEHIND)
-        elif mylar.COMMITS_BEHIND == 0:
+        if mylar.mylar.COMMITS_BEHIND >= 1:
+            logger.info('New version is available. You are %s commits behind' % mylar.mylar.COMMITS_BEHIND)
+        elif mylar.mylar.COMMITS_BEHIND == 0:
             logger.info('Mylar is up to date')
-        elif mylar.COMMITS_BEHIND == -1:
+        elif mylar.mylar.COMMITS_BEHIND == -1:
             logger.info('You are running an unknown version of Mylar. Run the updater to identify your version')
 
     else:
         logger.info('You are running an unknown version of Mylar. Run the updater to identify your version')
 
-    return mylar.LATEST_VERSION
+    return mylar.mylar.LATEST_VERSION
 
 def update():
 
 
-    if mylar.INSTALL_TYPE == 'win':
+    if mylar.mylar.INSTALL_TYPE == 'win':
 
         logger.info('Windows .exe updating not supported yet.')
         pass
 
 
-    elif mylar.INSTALL_TYPE == 'git':
+    elif mylar.mylar.INSTALL_TYPE == 'git':
 
-        output, err = runGit('pull origin ' + mylar.CONFIG.GIT_BRANCH)
+        output, err = runGit('pull origin ' + mylar.mylar.CONFIG.GIT_BRANCH)
 
         if output is None:
             logger.error('Couldn\'t download latest version')
@@ -233,9 +233,9 @@ def update():
 
     else:
 
-        tar_download_url = 'https://github.com/%s/mylar/tarball/%s' % (mylar.CONFIG.GIT_USER, mylar.CONFIG.GIT_BRANCH)
-        update_dir = os.path.join(mylar.PROG_DIR, 'update')
-        version_path = os.path.join(mylar.PROG_DIR, 'version.txt')
+        tar_download_url = 'https://github.com/%s/mylar/tarball/%s' % (mylar.mylar.CONFIG.GIT_USER, mylar.mylar.CONFIG.GIT_BRANCH)
+        update_dir = os.path.join(mylar.mylar.PROG_DIR, 'update')
+        version_path = os.path.join(mylar.mylar.PROG_DIR, 'version.txt')
 
         try:
             logger.info('Downloading update from: ' + tar_download_url)
@@ -245,8 +245,8 @@ def update():
             return
 
         #try sanitizing the name here...
-        download_name = mylar.CONFIG.GIT_BRANCH + '-github' #data.geturl().split('/')[-1].split('?')[0]
-        tar_download_path = os.path.join(mylar.PROG_DIR, download_name)
+        download_name = mylar.mylar.CONFIG.GIT_BRANCH + '-github' #data.geturl().split('/')[-1].split('?')[0]
+        tar_download_path = os.path.join(mylar.mylar.PROG_DIR, download_name)
 
         # Save tar to disk
         with open(tar_download_path, 'wb') as f:
@@ -277,7 +277,7 @@ def update():
             dirname = dirname[len(content_dir) +1:]
             for curfile in filenames:
                 old_path = os.path.join(content_dir, dirname, curfile)
-                new_path = os.path.join(mylar.PROG_DIR, dirname, curfile)
+                new_path = os.path.join(mylar.mylar.PROG_DIR, dirname, curfile)
 
                 if os.path.isfile(new_path):
                     os.remove(new_path)
@@ -286,40 +286,40 @@ def update():
         # Update version.txt
         try:
             with open(version_path, 'w') as f:
-                f.write(str(mylar.LATEST_VERSION))
+                f.write(str(mylar.mylar.LATEST_VERSION))
         except IOError as e:
             logger.error("Unable to write current version to version.txt, update not complete: %s" % ex(e))
             return
 
 def versionload():
 
-    mylar.CURRENT_VERSION, mylar.CONFIG.GIT_BRANCH = getVersion()
+    mylar.mylar.CURRENT_VERSION, mylar.mylar.CONFIG.GIT_BRANCH = getVersion()
 
-    if mylar.CURRENT_VERSION is not None:
-        hash = mylar.CURRENT_VERSION[:7]
+    if mylar.mylar.CURRENT_VERSION is not None:
+        hash = mylar.mylar.CURRENT_VERSION[:7]
     else:
         hash = "unknown"
 
-    if mylar.CONFIG.GIT_BRANCH == 'master':
+    if mylar.mylar.CONFIG.GIT_BRANCH == 'master':
         vers = 'M'
-    elif mylar.CONFIG.GIT_BRANCH == 'development':
+    elif mylar.mylar.CONFIG.GIT_BRANCH == 'development':
         vers = 'D'
     else:
         vers = 'NONE'
 
-    mylar.USER_AGENT = 'Mylar/' +str(hash) +'(' +vers +') +http://www.github.com/evilhero/mylar/'
+    mylar.mylar.USER_AGENT = 'Mylar/' +str(hash) +'(' +vers +') +http://www.github.com/evilhero/mylar/'
 
-    logger.info('Version information: %s [%s]' % (mylar.CONFIG.GIT_BRANCH, mylar.CURRENT_VERSION))
+    logger.info('Version information: %s [%s]' % (mylar.mylar.CONFIG.GIT_BRANCH, mylar.mylar.CURRENT_VERSION))
 
-    if mylar.CONFIG.CHECK_GITHUB_ON_STARTUP:
+    if mylar.mylar.CONFIG.CHECK_GITHUB_ON_STARTUP:
         try:
-            mylar.LATEST_VERSION = checkGithub() #(CURRENT_VERSION)
+            mylar.mylar.LATEST_VERSION = checkGithub() #(CURRENT_VERSION)
         except:
-            mylar.LATEST_VERSION = mylar.CURRENT_VERSION
+            mylar.mylar.LATEST_VERSION = mylar.mylar.CURRENT_VERSION
     else:
-        mylar.LATEST_VERSION = mylar.CURRENT_VERSION
+        mylar.mylar.LATEST_VERSION = mylar.mylar.CURRENT_VERSION
 
-    if mylar.CONFIG.AUTO_UPDATE:
-        if mylar.CURRENT_VERSION != mylar.LATEST_VERSION and mylar.INSTALL_TYPE != 'win' and mylar.COMMITS_BEHIND > 0:
+    if mylar.mylar.CONFIG.AUTO_UPDATE:
+        if mylar.mylar.CURRENT_VERSION != mylar.mylar.LATEST_VERSION and mylar.mylar.INSTALL_TYPE != 'win' and mylar.mylar.COMMITS_BEHIND > 0:
              logger.info('Auto-updating has been enabled. Attempting to auto-update.')
              #SIGNAL = 'update'

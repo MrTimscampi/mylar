@@ -104,9 +104,9 @@ def Startit(searchName, searchIssue, searchYear, ComicVersion, IssDateFix):
         countUp = 0
 
         while countUp < totNum:
-     	    urlParse = feed.entries[countUp].enclosures[0]
-	    #keyPair[feed.entries[countUp].title] = feed.entries[countUp].link
-	    #keyPair[feed.entries[countUp].title] = urlParse["href"]
+            urlParse = feed.entries[countUp].enclosures[0]
+            #keyPair[feed.entries[countUp].title] = feed.entries[countUp].link
+            #keyPair[feed.entries[countUp].title] = urlParse["href"]
             keyPair.append({"title":     feed.entries[countUp].title,
                             "link":      urlParse["href"],
                             "length":    urlParse["length"],

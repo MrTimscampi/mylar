@@ -17,7 +17,7 @@ from future import standard_library
 standard_library.install_aliases()
 from builtins import str
 from builtins import object
-from mylar import logger
+from mylar.mylar import logger
 import base64
 import cherrypy
 import urllib.request, urllib.parse, urllib.error

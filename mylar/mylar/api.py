@@ -24,7 +24,7 @@ from builtins import zip
 from past.builtins import basestring
 from builtins import object
 import mylar
-from mylar import db, mb, importer, search, process, versioncheck, logger, webserve, helpers
+from mylar.mylar import db, mb, importer, search, process, versioncheck, logger, webserve, helpers
 import simplejson as simplejson
 import json
 import cherrypy

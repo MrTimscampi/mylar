@@ -32,7 +32,7 @@ import requests
 from . import torrent.clients.rtorrent as TorClient
 
 import mylar
-from mylar import logger, helpers
+from mylar.mylar import logger, helpers
 
 class RTorrent(object):
     def __init__(self):

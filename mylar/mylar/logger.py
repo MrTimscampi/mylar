@@ -23,7 +23,7 @@ import threading
 import platform
 import locale
 import mylar
-from mylar import helpers
+from mylar.mylar import helpers
 import logging
 from logging import getLogger, WARN, ERROR, INFO, DEBUG, StreamHandler, Formatter, Handler
 from six import PY2
@@ -202,7 +202,7 @@ else:
         def emit(self, record):
             message = self.format(record)
             message = message.replace("\n", "<br />")
-            mylar.LOGLIST.insert(0, (helpers.now(), message, record.levelname, record.threadName))
+            mylar.mylar.LOGLIST.insert(0, (helpers.now(), message, record.levelname, record.threadName))
 
     def initLogger(console=False, log_dir=False, init=False, loglevel=1, max_logsize=None, max_logfiles=5):
         #concurrentLogHandler/0.8.7 (to deal with windows locks)
@@ -210,16 +210,16 @@ else:
         if platform.system() == 'Windows':
             #set the path to the lib here - just to make sure it can detect cloghandler & portalocker.
             import sys
-            sys.path.append(os.path.join(mylar.PROG_DIR, 'lib'))
+            sys.path.append(os.path.join(mylar.mylar.PROG_DIR, 'lib'))
 
             try:
                 from ConcurrentLogHandler.cloghandler import ConcurrentRotatingFileHandler as RFHandler
-                mylar.LOGTYPE = 'clog'
+                mylar.mylar.LOGTYPE = 'clog'
             except ImportError:
-                mylar.LOGTYPE = 'log'
+                mylar.mylar.LOGTYPE = 'log'
                 from logging.handlers import RotatingFileHandler as RFHandler
         else:
-            mylar.LOGTYPE = 'log'
+            mylar.mylar.LOGTYPE = 'log'
             from logging.handlers import RotatingFileHandler as RFHandler
 
         if all([init is True, max_logsize is None]):

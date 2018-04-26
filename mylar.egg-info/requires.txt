@@ -11,3 +11,7 @@ mako
 portend
 bencode-python3
 transmissionrpc
+
+[dev]
+
+[test]

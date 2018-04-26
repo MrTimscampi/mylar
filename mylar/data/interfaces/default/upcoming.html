@@ -22,12 +22,12 @@
           <div style="padding-bottom: 5px;">
             <label for="Wanted" class="checkbox inline Wanted"><input type="checkbox" id="Wanted" checked="checked" /> Wanted: <b>${isCounts['Wanted']}</b></label>
             <label for="WantedTier" class="checkbox inline WantedTier">Tiered: <b>${isCounts['WantedTier']}</b></label>
-            %if mylar.CONFIG.UPCOMING_SNATCHED is True:
+            %if mylar.mylar.CONFIG.UPCOMING_SNATCHED is True:
                 %if int(isCounts['Snatched']) > 0:
                     <label for="Snatched" class="checkbox inline Snatched"><input type="checkbox" id="Snatched" checked="checked" /> Snatched: <b>${isCounts['Snatched']}</b></label>
                 %endif
             %endif
-            %if int(isCounts['Failed']) > 0 and mylar.CONFIG.FAILED_DOWNLOAD_HANDLING is True:
+            %if int(isCounts['Failed']) > 0 and mylar.mylar.CONFIG.FAILED_DOWNLOAD_HANDLING is True:
                 <label for="Failed" class="checkbox inline Failed"><input type="checkbox" id="Failed" checked="checked" /> Failed: <b>${isCounts['Failed']}</b></label>
             %endif
         </div>

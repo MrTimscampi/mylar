@@ -44,7 +44,7 @@ from io import StringIO
 
 import mylar
 from . import logger
-from mylar import sabnzbd, nzbget, process
+from mylar.mylar import sabnzbd, nzbget, process
 
 def multikeysort(items, columns):
 
@@ -305,7 +305,7 @@ def rename_param(comicid, comicname, issue, ofilename, comicyear=None, issueid=N
                     chkissue = myDB.selectone("SELECT * from storyarcs WHERE ComicID=? AND Issue_Number=?", [comicid, issue]).fetchone()
                 else:
                     chkissue = myDB.selectone("SELECT * from issues WHERE ComicID=? AND Issue_Number=?", [comicid, issue]).fetchone()
-                    if all([chkissue is None, annualize is None, not mylar.CONFIG.ANNUALS_ON]):
+                    if all([chkissue is None, annualize is None, not mylar.mylar.CONFIG.ANNUALS_ON]):
                         chkissue = myDB.selectone("SELECT * from annuals WHERE ComicID=? AND Issue_Number=?", [comicid, issue]).fetchone()
 
                 if chkissue is None:
@@ -314,7 +314,7 @@ def rename_param(comicid, comicname, issue, ofilename, comicyear=None, issueid=N
                         chkissue = myDB.selectone("SELECT * from storyarcs WHERE ComicID=? AND Int_IssueNumber=?", [comicid, issuedigits(issue)]).fetchone()
                     else:
                         chkissue = myDB.selectone("SELECT * from issues WHERE ComicID=? AND Int_IssueNumber=?", [comicid, issuedigits(issue)]).fetchone()
-                        if all([chkissue is None, annualize == 'yes', mylar.CONFIG.ANNUALS_ON]):
+                        if all([chkissue is None, annualize == 'yes', mylar.mylar.CONFIG.ANNUALS_ON]):
                             chkissue = myDB.selectone("SELECT * from annuals WHERE ComicID=? AND Int_IssueNumber=?", [comicid, issuedigits(issue)]).fetchone()
 
                     if chkissue is None:
@@ -354,14 +354,14 @@ def rename_param(comicid, comicname, issue, ofilename, comicyear=None, issueid=N
                 seriesfilename = series   #Alternate FileNaming is not available with story arcs.
                 seriesyear = issuenzb['SeriesYear']
                 arcdir = filesafe(issuenzb['StoryArc'])
-                if mylar.CONFIG.REPLACE_SPACES:
-                    arcdir = arcdir.replace(' ', mylar.CONFIG.REPLACE_CHAR)
-                if mylar.CONFIG.STORYARCDIR:
-                    storyarcd = os.path.join(mylar.CONFIG.DESTINATION_DIR, "StoryArcs", arcdir)
+                if mylar.mylar.CONFIG.REPLACE_SPACES:
+                    arcdir = arcdir.replace(' ', mylar.mylar.CONFIG.REPLACE_CHAR)
+                if mylar.mylar.CONFIG.STORYARCDIR:
+                    storyarcd = os.path.join(mylar.mylar.CONFIG.DESTINATION_DIR, "StoryArcs", arcdir)
                     logger.fdebug('Story Arc Directory set to : ' + storyarcd)
                 else:
-                    logger.fdebug('Story Arc Directory set to : ' + mylar.CONFIG.GRABBAG_DIR)
-                    storyarcd = os.path.join(mylar.CONFIG.DESTINATION_DIR, mylar.CONFIG.GRABBAG_DIR)
+                    logger.fdebug('Story Arc Directory set to : ' + mylar.mylar.CONFIG.GRABBAG_DIR)
+                    storyarcd = os.path.join(mylar.mylar.CONFIG.DESTINATION_DIR, mylar.mylar.CONFIG.GRABBAG_DIR)
 
                 comlocation = storyarcd
                 comversion = None   #need to populate this.
@@ -463,14 +463,14 @@ def rename_param(comicid, comicname, issue, ofilename, comicyear=None, issueid=N
                 iss = issuenum
                 issueno = iss
             # issue zero-suppression here
-            if mylar.CONFIG.ZERO_LEVEL == "0":
+            if mylar.mylar.CONFIG.ZERO_LEVEL == "0":
                 zeroadd = ""
             else:
-                if mylar.CONFIG.ZERO_LEVEL_N  == "none": zeroadd = ""
-                elif mylar.CONFIG.ZERO_LEVEL_N == "0x": zeroadd = "0"
-                elif mylar.CONFIG.ZERO_LEVEL_N == "00x": zeroadd = "00"
+                if mylar.mylar.CONFIG.ZERO_LEVEL_N  == "none": zeroadd = ""
+                elif mylar.mylar.CONFIG.ZERO_LEVEL_N == "0x": zeroadd = "0"
+                elif mylar.mylar.CONFIG.ZERO_LEVEL_N == "00x": zeroadd = "00"
 
-            logger.fdebug('Zero Suppression set to : ' + str(mylar.CONFIG.ZERO_LEVEL_N))
+            logger.fdebug('Zero Suppression set to : ' + str(mylar.mylar.CONFIG.ZERO_LEVEL_N))
             prettycomiss = None
 
             if issueno.isalpha():
@@ -510,10 +510,10 @@ def rename_param(comicid, comicname, issue, ofilename, comicyear=None, issueid=N
                         prettycomiss = str(zeroadd) + str(iss)
                     if issue_except != 'None':
                         prettycomiss = str(prettycomiss) + issue_except
-                    logger.fdebug('Zero level supplement set to ' + str(mylar.CONFIG.ZERO_LEVEL_N) + '. Issue will be set as : ' + str(prettycomiss))
+                    logger.fdebug('Zero level supplement set to ' + str(mylar.mylar.CONFIG.ZERO_LEVEL_N) + '. Issue will be set as : ' + str(prettycomiss))
                 elif int(issueno) >= 10 and int(issueno) < 100:
                     logger.fdebug('issue detected greater than 10, but less than 100')
-                    if mylar.CONFIG.ZERO_LEVEL_N == "none":
+                    if mylar.mylar.CONFIG.ZERO_LEVEL_N == "none":
                         zeroadd = ""
                     else:
                         zeroadd = "0"
@@ -527,7 +527,7 @@ def rename_param(comicid, comicname, issue, ofilename, comicyear=None, issueid=N
                         prettycomiss = str(zeroadd) + str(iss)
                     if issue_except != 'None':
                         prettycomiss = str(prettycomiss) + issue_except
-                    logger.fdebug('Zero level supplement set to ' + str(mylar.CONFIG.ZERO_LEVEL_N) + '.Issue will be set as : ' + str(prettycomiss))
+                    logger.fdebug('Zero level supplement set to ' + str(mylar.mylar.CONFIG.ZERO_LEVEL_N) + '.Issue will be set as : ' + str(prettycomiss))
                 else:
                     logger.fdebug('issue detected greater than 100')
                     if issuenum == 'infinity':
@@ -539,13 +539,13 @@ def rename_param(comicid, comicname, issue, ofilename, comicyear=None, issueid=N
                         prettycomiss = str(issueno)
                     if issue_except != 'None':
                         prettycomiss = str(prettycomiss) + issue_except
-                    logger.fdebug('Zero level supplement set to ' + str(mylar.CONFIG.ZERO_LEVEL_N) + '. Issue will be set as : ' + str(prettycomiss))
+                    logger.fdebug('Zero level supplement set to ' + str(mylar.mylar.CONFIG.ZERO_LEVEL_N) + '. Issue will be set as : ' + str(prettycomiss))
             elif len(str(issueno)) == 0:
                 prettycomiss = str(issueno)
                 logger.fdebug('issue length error - cannot determine length. Defaulting to None:  ' + str(prettycomiss))
 
             logger.fdebug('Pretty Comic Issue is : ' + str(prettycomiss))
-            if mylar.CONFIG.UNICODE_ISSUENUMBER:
+            if mylar.mylar.CONFIG.UNICODE_ISSUENUMBER:
                 logger.fdebug('Setting this to Unicode format as requested: %s' % prettycomiss)
                 prettycomiss = unicodeissue
 
@@ -563,13 +563,13 @@ def rename_param(comicid, comicname, issue, ofilename, comicyear=None, issueid=N
                 comversion = 'None'
             #if comversion is None, remove it so it doesn't populate with 'None'
             if comversion == 'None':
-                chunk_f_f = re.sub('\$VolumeN', '', mylar.CONFIG.FILE_FORMAT)
+                chunk_f_f = re.sub('\$VolumeN', '', mylar.mylar.CONFIG.FILE_FORMAT)
                 chunk_f = re.compile(r'\s+')
                 chunk_file_format = chunk_f.sub(' ', chunk_f_f)
                 logger.fdebug('No version # found for series, removing from filename')
                 logger.fdebug("new format: " + str(chunk_file_format))
             else:
-                chunk_file_format = mylar.CONFIG.FILE_FORMAT
+                chunk_file_format = mylar.mylar.CONFIG.FILE_FORMAT
 
             if annualize is None:
                 chunk_f_f = re.sub('\$Annual', '', chunk_file_format)
@@ -580,7 +580,7 @@ def rename_param(comicid, comicname, issue, ofilename, comicyear=None, issueid=N
 
             else:
                 logger.fdebug('chunk_file_format is: ' + str(chunk_file_format))
-                if mylar.CONFIG.ANNUALS_ON:
+                if mylar.mylar.CONFIG.ANNUALS_ON:
                     if 'annual' in series.lower():
                         if '$Annual' not in chunk_file_format: # and 'annual' not in ofilename.lower():
                         #if it's an annual, but $annual isn't specified in file_format, we need to
@@ -660,7 +660,7 @@ def rename_param(comicid, comicname, issue, ofilename, comicyear=None, issueid=N
             if ofilename.lower().endswith(extensions):
                 path, ext = os.path.splitext(ofilename)
 
-            if mylar.CONFIG.FILE_FORMAT == '':
+            if mylar.mylar.CONFIG.FILE_FORMAT == '':
                 logger.fdebug('Rename Files is not enabled - keeping original filename.')
                 #check if extension is in nzb_name - will screw up otherwise
                 if ofilename.lower().endswith(extensions):
@@ -669,14 +669,14 @@ def rename_param(comicid, comicname, issue, ofilename, comicyear=None, issueid=N
                     nfilename = ofilename
             else:
                 nfilename = replace_all(chunk_file_format, file_values)
-                if mylar.CONFIG.REPLACE_SPACES:
-                    #mylar.CONFIG.REPLACE_CHAR ...determines what to replace spaces with underscore or dot
-                    nfilename = nfilename.replace(' ', mylar.CONFIG.REPLACE_CHAR)
+                if mylar.mylar.CONFIG.REPLACE_SPACES:
+                    #mylar.mylar.CONFIG.REPLACE_CHAR ...determines what to replace spaces with underscore or dot
+                    nfilename = nfilename.replace(' ', mylar.mylar.CONFIG.REPLACE_CHAR)
 
             nfilename = re.sub('[\,\:]', '', nfilename) + ext.lower()
             logger.fdebug('New Filename: ' + nfilename)
 
-            if mylar.CONFIG.LOWERCASE_FILENAMES:
+            if mylar.mylar.CONFIG.LOWERCASE_FILENAMES:
                 nfilename = nfilename.lower()
                 dst = os.path.join(comlocation, nfilename)
             else:
@@ -729,9 +729,9 @@ def ComicSort(comicorder=None, sequence=None, imported=None):
         comicorder = {}
         comicidlist = []
         if sequence == 'update':
-            mylar.COMICSORT['SortOrder'] = None
-            mylar.COMICSORT['LastOrderNo'] = None
-            mylar.COMICSORT['LastOrderID'] = None
+            mylar.mylar.COMICSORT['SortOrder'] = None
+            mylar.mylar.COMICSORT['LastOrderNo'] = None
+            mylar.mylar.COMICSORT['LastOrderID'] = None
         for csort in comicsort:
             if csort['ComicID'] is None: pass
             if not csort['ComicID'] in comicidlist:
@@ -742,7 +742,7 @@ def ComicSort(comicorder=None, sequence=None, imported=None):
                          })
                 elif sequence == 'update':
                     comicorderlist.append({
-#                    mylar.COMICSORT['SortOrder'].append({
+#                    mylar.mylar.COMICSORT['SortOrder'].append({
                          'ComicID':             csort['ComicID'],
                          'ComicOrder':           i
                          })
@@ -762,14 +762,14 @@ def ComicSort(comicorder=None, sequence=None, imported=None):
             logger.info('Sucessfully ordered ' + str(i -1) + ' series in your watchlist.')
             return comicorder
         elif sequence == 'update':
-            mylar.COMICSORT['SortOrder'] = comicorderlist
+            mylar.mylar.COMICSORT['SortOrder'] = comicorderlist
             #print ("i:" + str(i))
             if i == 0:
                 placemnt = 1
             else:
                 placemnt = int(i -1)
-            mylar.COMICSORT['LastOrderNo'] = placemnt
-            mylar.COMICSORT['LastOrderID'] = mylar.COMICSORT['SortOrder'][placemnt]['ComicID']
+            mylar.mylar.COMICSORT['LastOrderNo'] = placemnt
+            mylar.mylar.COMICSORT['LastOrderID'] = mylar.mylar.COMICSORT['SortOrder'][placemnt]['ComicID']
             return
     else:
         # for new series adds, we already know the comicid, so we set the sortorder to an abnormally high #
@@ -784,9 +784,9 @@ def ComicSort(comicorder=None, sequence=None, imported=None):
              'ComicID':             imported,
              'ComicOrder':           lastorderval
              })
-        mylar.COMICSORT['SortOrder'] = sortedapp
-        mylar.COMICSORT['LastOrderNo'] = lastorderval
-        mylar.COMICSORT['LastOrderID'] = imported
+        mylar.mylar.COMICSORT['SortOrder'] = sortedapp
+        mylar.mylar.COMICSORT['LastOrderNo'] = lastorderval
+        mylar.mylar.COMICSORT['LastOrderID'] = imported
         return
 
 def fullmonth(monthno):
@@ -809,10 +809,10 @@ def updateComicLocation():
 
     from . import db
     myDB = db.DBConnection()
-    if mylar.CONFIG.NEWCOM_DIR is not None:
+    if mylar.mylar.CONFIG.NEWCOM_DIR is not None:
         logger.info('Performing a one-time mass update to Comic Location')
         #create the root dir if it doesn't exist
-        checkdirectory = mylar.filechecker.validateAndCreateDirectory(mylar.CONFIG.NEWCOM_DIR, create=True)
+        checkdirectory = mylar.mylar.filechecker.validateAndCreateDirectory(mylar.mylar.CONFIG.NEWCOM_DIR, create=True)
         if not checkdirectory:
             logger.warn('Error trying to validate/create directory. Aborting this process at this time.')
             return
@@ -833,11 +833,11 @@ def updateComicLocation():
                     comversion = 'None'
                 #if comversion is None, remove it so it doesn't populate with 'None'
                 if comversion == 'None':
-                    chunk_f_f = re.sub('\$VolumeN', '', mylar.CONFIG.FOLDER_FORMAT)
+                    chunk_f_f = re.sub('\$VolumeN', '', mylar.mylar.CONFIG.FOLDER_FORMAT)
                     chunk_f = re.compile(r'\s+')
                     folderformat = chunk_f.sub(' ', chunk_f_f)
                 else:
-                    folderformat = mylar.CONFIG.FOLDER_FORMAT
+                    folderformat = mylar.mylar.CONFIG.FOLDER_FORMAT
 
                 #do work to generate folder path
 
@@ -852,20 +852,20 @@ def updateComicLocation():
                           }
 
                 #set the paths here with the seperator removed allowing for cross-platform altering.
-                ccdir = re.sub(r'[\\|/]', '%&', mylar.CONFIG.NEWCOM_DIR)
-                ddir = re.sub(r'[\\|/]', '%&', mylar.CONFIG.DESTINATION_DIR)
+                ccdir = re.sub(r'[\\|/]', '%&', mylar.mylar.CONFIG.NEWCOM_DIR)
+                ddir = re.sub(r'[\\|/]', '%&', mylar.mylar.CONFIG.DESTINATION_DIR)
                 dlc = re.sub(r'[\\|/]', '%&', dl['ComicLocation'])
 
-                if mylar.CONFIG.FFTONEWCOM_DIR:
+                if mylar.mylar.CONFIG.FFTONEWCOM_DIR:
                     #if this is enabled (1) it will apply the Folder_Format to all the new dirs
-                    if mylar.CONFIG.FOLDER_FORMAT == '':
+                    if mylar.mylar.CONFIG.FOLDER_FORMAT == '':
                         comlocation = re.sub(ddir, ccdir, dlc).strip()
                     else:
                         first = replace_all(folderformat, values)
-                        if mylar.CONFIG.REPLACE_SPACES:
-                            #mylar.CONFIG.REPLACE_CHAR ...determines what to replace spaces with underscore or dot
-                            first = first.replace(' ', mylar.CONFIG.REPLACE_CHAR)
-                        comlocation = os.path.join(mylar.CONFIG.NEWCOM_DIR, first).strip()
+                        if mylar.mylar.CONFIG.REPLACE_SPACES:
+                            #mylar.mylar.CONFIG.REPLACE_CHAR ...determines what to replace spaces with underscore or dot
+                            first = first.replace(' ', mylar.mylar.CONFIG.REPLACE_CHAR)
+                        comlocation = os.path.join(mylar.mylar.CONFIG.NEWCOM_DIR, first).strip()
 
                 else:
                     #DESTINATION_DIR = /mnt/mediavg/Comics
@@ -882,7 +882,7 @@ def updateComicLocation():
 
             if len(comloc) > 0:
                 #give the information about what we're doing.
-                if mylar.CONFIG.FFTONEWCOM_DIR:
+                if mylar.mylar.CONFIG.FFTONEWCOM_DIR:
                     logger.info('FFTONEWCOM_DIR is enabled. Applying the existing folder format to ALL directories regardless of existing location paths')
                 else:
                     logger.info('FFTONEWCOM_DIR is not enabled. I will keep existing subdirectory paths, and will only change the actual Comic Location in the path.')
@@ -900,8 +900,8 @@ def updateComicLocation():
         else:
             logger.info('There are no series in your watchlist to Update the locations. Not updating anything at this time.')
         #set the value to 0 here so we don't keep on doing this...
-        mylar.CONFIG.LOCMOVE = 0
-        #mylar.config_write()
+        mylar.mylar.CONFIG.LOCMOVE = 0
+        #mylar.mylar.config_write()
     else:
         logger.info('No new ComicLocation path specified - not updating. Set NEWCOMD_DIR in config.ini')
         #raise cherrypy.HTTPRedirect("config")
@@ -993,7 +993,7 @@ def issuedigits(issnum):
         #    logger.fdebug('ascii character.')
         #except:
         #    logger.fdebug('Unicode character detected: ' + issnum)
-        #else: issnum.decode(mylar.SYS_ENCODING).decode('utf-8')
+        #else: issnum.decode(mylar.mylar.SYS_ENCODING).decode('utf-8')
         if type(issnum) == str:
             try:
                 issnum = issnum.decode('utf-8')
@@ -1118,15 +1118,15 @@ def checkthepub(ComicID):
     pubchk = myDB.selectone("SELECT * FROM comics WHERE ComicID=?", [ComicID]).fetchone()
     if pubchk is None:
         logger.fdebug('No publisher information found to aid in determining series..defaulting to base check of 55 days.')
-        return mylar.CONFIG.BIGGIE_PUB
+        return mylar.mylar.CONFIG.BIGGIE_PUB
     else:
         for publish in publishers:
             if publish in pubchk['ComicPublisher'].lower():
                 #logger.fdebug('Biggie publisher detected - ' + pubchk['ComicPublisher'])
-                return mylar.CONFIG.BIGGIE_PUB
+                return mylar.mylar.CONFIG.BIGGIE_PUB
 
         #logger.fdebug('Indie publisher detected - ' + pubchk['ComicPublisher'])
-        return mylar.CONFIG.INDIE_PUB
+        return mylar.mylar.CONFIG.INDIE_PUB
 
 def annual_update():
     from . import db
@@ -1243,7 +1243,7 @@ def upgrade_dynamic():
     #update the comicdb to include the Dynamic Names (and any futher changes as required)
     clist = myDB.select('SELECT * FROM Comics')
     for cl in clist:
-        cl_d = mylar.filechecker.FileChecker(watchcomic=cl['ComicName'])
+        cl_d = mylar.mylar.filechecker.FileChecker(watchcomic=cl['ComicName'])
         cl_dyninfo = cl_d.dynamic_replace(cl['ComicName'])
         dynamic_comiclist.append({'DynamicComicName': re.sub('[\|\s]','', cl_dyninfo['mod_seriesname'].lower()).strip(),
                              'ComicID':          cl['ComicID']})
@@ -1258,7 +1258,7 @@ def upgrade_dynamic():
     dynamic_storylist = []
     rlist = myDB.select('SELECT * FROM storyarcs WHERE StoryArcID is not NULL')
     for rl in rlist:
-        rl_d = mylar.filechecker.FileChecker(watchcomic=rl['ComicName'])
+        rl_d = mylar.mylar.filechecker.FileChecker(watchcomic=rl['ComicName'])
         rl_dyninfo = cl_d.dynamic_replace(rl['ComicName'])
         dynamic_storylist.append({'DynamicComicName': re.sub('[\|\s]','', rl_dyninfo['mod_seriesname'].lower()).strip(),
                                   'IssueArcID':          rl['IssueArcID']})
@@ -1270,19 +1270,19 @@ def upgrade_dynamic():
             myDB.upsert("storyarcs", newVal, CtrlVal)   
 
     logger.info('Finished updating ' + str(len(dynamic_comiclist)) + ' / ' + str(len(dynamic_storylist)) + ' entries within the db.')
-    mylar.CONFIG.DYNAMIC_UPDATE = 4
-    mylar.CONFIG.writeconfig()
+    mylar.mylar.CONFIG.DYNAMIC_UPDATE = 4
+    mylar.mylar.CONFIG.writeconfig()
     return
 
 def checkFolder(folderpath=None):
-    from mylar import PostProcessor
+    from mylar.mylar import PostProcessor
     import queue
 
     queue = queue.Queue()
     #monitor a selected folder for 'snatched' files that haven't been processed
     if folderpath is None:
-        logger.info('Checking folder ' + mylar.CONFIG.CHECK_FOLDER + ' for newly snatched downloads')
-        path = mylar.CONFIG.CHECK_FOLDER
+        logger.info('Checking folder ' + mylar.mylar.CONFIG.CHECK_FOLDER + ' for newly snatched downloads')
+        path = mylar.mylar.CONFIG.CHECK_FOLDER
     else:
         logger.info('Submitted folder ' + folderpath + ' for direct folder post-processing')
         path = folderpath
@@ -1328,7 +1328,7 @@ def havetotals(refreshit=None):
         myDB = db.DBConnection()
 
         if refreshit is None:
-            if mylar.CONFIG.ANNUALS_ON:
+            if mylar.mylar.CONFIG.ANNUALS_ON:
                 comiclist = myDB.select('SELECT comics.*, COUNT(totalAnnuals.IssueID) AS TotalAnnuals FROM comics LEFT JOIN annuals as totalAnnuals on totalAnnuals.ComicID = comics.ComicID GROUP BY comics.ComicID order by comics.ComicSortName COLLATE NOCASE')
             else:
                 comiclist = myDB.select('SELECT * FROM comics GROUP BY ComicID order by ComicSortName COLLATE NOCASE')
@@ -1351,7 +1351,7 @@ def havetotals(refreshit=None):
             #        continue
             try:
                 totalissues = comic['Total']
-#                if mylar.CONFIG.ANNUALS_ON:
+#                if mylar.mylar.CONFIG.ANNUALS_ON:
 #                    totalissues += comic['TotalAnnuals']
                 haveissues = comic['Have']
             except TypeError:
@@ -1457,7 +1457,7 @@ def IssueDetails(filelocation, IssueID=None, justinfo=False):
     issuetag = None
 
     if justinfo is False:
-        dstlocation = os.path.join(mylar.CONFIG.CACHE_DIR, 'temp.zip')
+        dstlocation = os.path.join(mylar.mylar.CONFIG.CACHE_DIR, 'temp.zip')
 
 
         if filelocation.endswith('.cbz'):
@@ -1483,14 +1483,14 @@ def IssueDetails(filelocation, IssueID=None, justinfo=False):
                         low_infile_name = infile
                     if infile == 'ComicInfo.xml':
                         logger.fdebug('Extracting ComicInfo.xml to display.')
-                        dst = os.path.join(mylar.CONFIG.CACHE_DIR, 'ComicInfo.xml')
+                        dst = os.path.join(mylar.mylar.CONFIG.CACHE_DIR, 'ComicInfo.xml')
                         data = inzipfile.read(infile)
                         #print str(data)
                         issuetag = 'xml'
                     #looks for the first page and assumes it's the cover. (Alternate covers handled later on)
                     elif any(['000.' in infile, '00.' in infile]) and infile.endswith(pic_extensions) and cover == "notfound":
                         logger.fdebug('Extracting primary image ' + infile + ' as coverfile for display.')
-                        local_file = open(os.path.join(mylar.CONFIG.CACHE_DIR, 'temp.jpg'), "wb")
+                        local_file = open(os.path.join(mylar.mylar.CONFIG.CACHE_DIR, 'temp.jpg'), "wb")
                         local_file.write(inzipfile.read(infile))
                         local_file.close
                         cover = "found"
@@ -1499,7 +1499,7 @@ def IssueDetails(filelocation, IssueID=None, justinfo=False):
                         altlist = ('00a', '00b', '00c', '00d', '00e')
                         for alt in altlist:
                             if alt in infile:
-                                local_file = open(os.path.join(mylar.CONFIG.CACHE_DIR, 'temp.jpg'), "wb")
+                                local_file = open(os.path.join(mylar.mylar.CONFIG.CACHE_DIR, 'temp.jpg'), "wb")
                                 local_file.write(inzipfile.read(infile))
                                 local_file.close
                                 cover = "found"
@@ -1507,14 +1507,14 @@ def IssueDetails(filelocation, IssueID=None, justinfo=False):
 
                     elif any(['001.jpg' in infile, '001.png' in infile, '001.webp' in infile, '01.jpg' in infile, '01.png' in infile, '01.webp' in infile]) and cover == "notfound":
                         logger.fdebug('Extracting primary image ' + infile + ' as coverfile for display.')
-                        local_file = open(os.path.join(mylar.CONFIG.CACHE_DIR, 'temp.jpg'), "wb")
+                        local_file = open(os.path.join(mylar.mylar.CONFIG.CACHE_DIR, 'temp.jpg'), "wb")
                         local_file.write(inzipfile.read(infile))
                         local_file.close
                         cover = "found"
 
                 if cover != "found":
                     logger.fdebug('Invalid naming sequence for jpgs discovered. Attempting to find the lowest sequence and will use as cover (it might not work). Currently : ' + str(low_infile))
-                    local_file = open(os.path.join(mylar.CONFIG.CACHE_DIR, 'temp.jpg'), "wb")
+                    local_file = open(os.path.join(mylar.mylar.CONFIG.CACHE_DIR, 'temp.jpg'), "wb")
                     local_file.write(inzipfile.read(low_infile_name))
                     local_file.close
                     cover = "found"                
@@ -1911,10 +1911,10 @@ def manualArc(issueid, reading_order, storyarcid):
                            "ReadingOrder":   issarc['ReadingOrder']})
 
 
-    arc_results = mylar.cv.getComic(comicid=None, type='issue', issueid=None, arcid=storyarcid, arclist='M' + str(issueid))
+    arc_results = mylar.mylar.cv.getComic(comicid=None, type='issue', issueid=None, arcid=storyarcid, arclist='M' + str(issueid))
     arcval = arc_results['issuechoice'][0]
     comicname = arcval['ComicName']
-    st_d = mylar.filechecker.FileChecker(watchcomic=comicname)
+    st_d = mylar.mylar.filechecker.FileChecker(watchcomic=comicname)
     st_dyninfo = st_d.dynamic_replace(comicname)
     dynamic_name = re.sub('[\|\s]','', st_dyninfo['mod_seriesname'].lower()).strip()
     issname = arcval['Issue_Name']
@@ -1950,7 +1950,7 @@ def manualArc(issueid, reading_order, storyarcid):
     storedate = str(arcval['Store_Date'])
     int_issnum = issuedigits(issnum)
 
-    comicid_results = mylar.cv.getComic(comicid=None, type='comicyears', comicidlist=cidlist)
+    comicid_results = mylar.mylar.cv.getComic(comicid=None, type='comicyears', comicidlist=cidlist)
     seriesYear = 'None'
     issuePublisher = 'None'
     seriesVolume = 'None'
@@ -2048,7 +2048,7 @@ def listIssues(weeknumber, year):
                         'IssueYear': tmpdate})
 
     # Add the annuals
-    if mylar.CONFIG.ANNUALS_ON:
+    if mylar.mylar.CONFIG.ANNUALS_ON:
         list = myDB.select("SELECT annuals.Status, annuals.ComicID, annuals.ReleaseComicID, annuals.IssueID, annuals.ComicName, annuals.ReleaseDate, annuals.IssueDate, weekly.publisher, annuals.Issue_Number from weekly, annuals where weekly.IssueID = annuals.IssueID and weeknumber = ? and year = ?", [int(weeknumber), year])
         for row in list:
             if row['ReleaseDate'] is None:
@@ -2135,7 +2135,7 @@ def duplicate_filecheck(filename, ComicID=None, IssueID=None, StoryArcID=None, r
                     logger.info('[DUPECHECK] Series has invalid issue totals [' + str(havechk['Have']) + '/' + str(havechk['Total']) + '] Attempting to Refresh & continue post-processing this issue.')
                     cid.append(ComicID)
                     logger.fdebug('[DUPECHECK] ComicID: ' + str(ComicID))
-                    mylar.updater.dbUpdate(ComicIDList=cid, calledfrom='dupechk')
+                    mylar.mylar.updater.dbUpdate(ComicIDList=cid, calledfrom='dupechk')
                     return duplicate_filecheck(filename, ComicID, IssueID, StoryArcID)
                 else:
                     if rtnval is not None:
@@ -2168,12 +2168,12 @@ def duplicate_filecheck(filename, ComicID=None, IssueID=None, StoryArcID=None, r
                 else:
                     logger.info('[DUPECHECK] Assuming 0-byte file - this one is gonna get hammered.')
 
-            logger.fdebug('[DUPECHECK] Based on duplication preferences I will retain based on : ' + mylar.CONFIG.DUPECONSTRAINT)
+            logger.fdebug('[DUPECHECK] Based on duplication preferences I will retain based on : ' + mylar.mylar.CONFIG.DUPECONSTRAINT)
 
-            tmp_dupeconstraint = mylar.CONFIG.DUPECONSTRAINT
+            tmp_dupeconstraint = mylar.mylar.CONFIG.DUPECONSTRAINT
 
-            if any(['cbr' in mylar.CONFIG.DUPECONSTRAINT, 'cbz' in mylar.CONFIG.DUPECONSTRAINT]):
-                if 'cbr' in mylar.CONFIG.DUPECONSTRAINT:
+            if any(['cbr' in mylar.mylar.CONFIG.DUPECONSTRAINT, 'cbz' in mylar.mylar.CONFIG.DUPECONSTRAINT]):
+                if 'cbr' in mylar.mylar.CONFIG.DUPECONSTRAINT:
                     if filename.endswith('.cbr'):
                         #this has to be configured in config - either retain cbr or cbz.
                         if dupchk['Location'].endswith('.cbr'):
@@ -2194,7 +2194,7 @@ def duplicate_filecheck(filename, ComicID=None, IssueID=None, StoryArcID=None, r
                             rtnval = {'action':  "dupe_file",
                                       'to_dupe': filename}
 
-                elif 'cbz' in mylar.CONFIG.DUPECONSTRAINT:
+                elif 'cbz' in mylar.mylar.CONFIG.DUPECONSTRAINT:
                     if filename.endswith('.cbr'):
                         if dupchk['Location'].endswith('.cbr'):
                             logger.info('[DUPECHECK-CBZ PRIORITY] [#' + dupchk['Issue_Number'] + '] BOTH files are in cbr format. Retaining the larger filesize of the two.')
@@ -2214,7 +2214,7 @@ def duplicate_filecheck(filename, ComicID=None, IssueID=None, StoryArcID=None, r
                             rtnval = {'action':  "dupe_src",
                                       'to_dupe': os.path.join(series['ComicLocation'], dupchk['Location'])}
 
-            if mylar.CONFIG.DUPECONSTRAINT == 'filesize' or tmp_dupeconstraint == 'filesize':
+            if mylar.mylar.CONFIG.DUPECONSTRAINT == 'filesize' or tmp_dupeconstraint == 'filesize':
                 if filesz <= int(dupsize) and int(dupsize) != 0:
                     logger.info('[DUPECHECK-FILESIZE PRIORITY] [#' + dupchk['Issue_Number'] + '] Retaining currently scanned in filename : ' + dupchk['Location'])
                     rtnval = {'action':  "dupe_file",
@@ -2267,19 +2267,19 @@ def torrent_create(site, linkid, alt=None):
         pass
     #elif site == 'TPSE':
     #    if alt is None:
-    #        url = mylar.TPSEURL + 'torrent/' + str(linkid) + '.torrent'
+    #        url = mylar.mylar.TPSEURL + 'torrent/' + str(linkid) + '.torrent'
     #    else:
-    #        url = mylar.TPSEURL + 'torrent/' + str(linkid) + '.torrent'
+    #        url = mylar.mylar.TPSEURL + 'torrent/' + str(linkid) + '.torrent'
     elif site == 'DEM':
-        url = mylar.DEMURL + 'files/download/' + str(linkid) + '/'
+        url = mylar.mylar.DEMURL + 'files/download/' + str(linkid) + '/'
     elif site == 'WWT':
-        url = mylar.WWTURL + 'download.php'
+        url = mylar.mylar.WWTURL + 'download.php'
 
     return url
 
 def parse_32pfeed(rssfeedline):
     KEYS_32P = {}
-    if mylar.CONFIG.ENABLE_32P and len(rssfeedline) > 1:
+    if mylar.mylar.CONFIG.ENABLE_32P and len(rssfeedline) > 1:
         userid_st = rssfeedline.find('&user')
         userid_en = rssfeedline.find('&', userid_st +1)
         if userid_en == -1:
@@ -2304,7 +2304,7 @@ def parse_32pfeed(rssfeedline):
         KEYS_32P = {"user":    USERID_32P,
                     "auth":    AUTH_32P,
                     "authkey": AUTHKEY_32P,
-                    "passkey": mylar.CONFIG.PASSKEY_32P}
+                    "passkey": mylar.mylar.CONFIG.PASSKEY_32P}
 
     return KEYS_32P
 
@@ -2398,7 +2398,7 @@ def crc(filename):
 
     #speed in lieu of memory (file into memory entirely)
     #return "%X" % (zlib.crc32(open(filename, "rb").read()) & 0xFFFFFFFF)
-    filename = filename.encode(mylar.SYS_ENCODING)
+    filename = filename.encode(mylar.mylar.SYS_ENCODING)
     return hashlib.md5(filename).hexdigest()
 
 def issue_find_ids(ComicName, ComicID, pack, IssueNumber):
@@ -2576,8 +2576,8 @@ def updatearc_locs(storyarcid, issues):
                 pathsrc = os.path.join(chk['ComicLocation'], chk['Location'])
                 if not os.path.exists(pathsrc):
                     try:
-                        if all([mylar.CONFIG.MULTIPLE_DEST_DIRS is not None, mylar.CONFIG.MULTIPLE_DEST_DIRS != 'None', os.path.join(mylar.CONFIG.MULTIPLE_DEST_DIRS, os.path.basename(chk['ComicLocation'])) != chk['ComicLocation'], os.path.exists(os.path.join(mylar.CONFIG.MULTIPLE_DEST_DIRS, os.path.basename(chk['ComicLocation'])))]):
-                            pathsrc = os.path.join(mylar.CONFIG.MULTIPLE_DEST_DIRS, os.path.basename(chk['ComicLocation']), chk['Location'])
+                        if all([mylar.mylar.CONFIG.MULTIPLE_DEST_DIRS is not None, mylar.mylar.CONFIG.MULTIPLE_DEST_DIRS != 'None', os.path.join(mylar.mylar.CONFIG.MULTIPLE_DEST_DIRS, os.path.basename(chk['ComicLocation'])) != chk['ComicLocation'], os.path.exists(os.path.join(mylar.mylar.CONFIG.MULTIPLE_DEST_DIRS, os.path.basename(chk['ComicLocation'])))]):
+                            pathsrc = os.path.join(mylar.mylar.CONFIG.MULTIPLE_DEST_DIRS, os.path.basename(chk['ComicLocation']), chk['Location'])
                         else:
                             logger.fdebug(module + ' file does not exist in location: ' + pathdir + '. Cannot valid location - some options will not be available for this item.')
                             continue
@@ -2605,12 +2605,12 @@ def updatearc_locs(storyarcid, issues):
                     logger.info('grdst:' + grdst)
                     #send to renamer here if valid.
                     dfilename = chk['Location']
-                    if mylar.CONFIG.RENAME_FILES:
+                    if mylar.mylar.CONFIG.RENAME_FILES:
                         renamed_file = rename_param(arcinfo['ComicID'], arcinfo['ComicName'], arcinfo['IssueNumber'], chk['Location'], issueid=arcinfo['IssueID'], arc=arcinfo['StoryArc'])
                         if renamed_file:
                             dfilename = renamed_file['nfilename']
 
-                    if mylar.CONFIG.READ2FILENAME:
+                    if mylar.mylar.CONFIG.READ2FILENAME:
                         #logger.fdebug('readingorder#: ' + str(arcinfo['ReadingOrder']))
                         #if int(arcinfo['ReadingOrder']) < 10: readord = "00" + str(arcinfo['ReadingOrder'])
                         #elif int(arcinfo['ReadingOrder']) >= 10 and int(arcinfo['ReadingOrder']) <= 99: readord = "0" + str(arcinfo['ReadingOrder'])
@@ -2624,10 +2624,10 @@ def updatearc_locs(storyarcid, issues):
                     logger.fdebug('Source Path : ' + pathsrc)
                     if not os.path.isdir(grdst):
                         logger.fdebug('[ARC-DIRECTORY] Arc directory doesn\'t exist. Creating: %s' % grdst)
-                        mylar.filechecker.validateAndCreateDirectory(grdst, create=True)
+                        mylar.mylar.filechecker.validateAndCreateDirectory(grdst, create=True)
 
                     if not os.path.isfile(pathdst):
-                        logger.info('[' + mylar.CONFIG.ARC_FILEOPS.upper() + '] ' + pathsrc + ' into directory : ' + pathdst)
+                        logger.info('[' + mylar.mylar.CONFIG.ARC_FILEOPS.upper() + '] ' + pathsrc + ' into directory : ' + pathdst)
 
                         try:
                             #need to ensure that src is pointing to the series in order to do a soft/hard-link properly
@@ -2635,7 +2635,7 @@ def updatearc_locs(storyarcid, issues):
                             if not fileoperation:
                                 raise OSError
                         except (OSError, IOError):
-                            logger.fdebug('[' + mylar.CONFIG.ARC_FILEOPS.upper() + '] Failure ' + pathsrc + ' - check directories and manually re-run.')
+                            logger.fdebug('[' + mylar.mylar.CONFIG.ARC_FILEOPS.upper() + '] Failure ' + pathsrc + ' - check directories and manually re-run.')
                             continue
                     updateloc = pathdst
                 else:
@@ -2682,7 +2682,7 @@ def arcformat(arc, spanyears, publisher):
               '$spanyears':   spanyears,
               '$publisher':   publisher}
 
-    tmp_folderformat = mylar.CONFIG.ARC_FOLDERFORMAT
+    tmp_folderformat = mylar.mylar.CONFIG.ARC_FOLDERFORMAT
 
     if publisher == 'None':
         chunk_f_f = re.sub('\$publisher', '', tmp_folderformat)
@@ -2695,19 +2695,19 @@ def arcformat(arc, spanyears, publisher):
     else:
         arcpath = replace_all(tmp_folderformat, values)
 
-    if mylar.CONFIG.REPLACE_SPACES:
-        arcpath = arcpath.replace(' ', mylar.CONFIG.REPLACE_CHAR)
+    if mylar.mylar.CONFIG.REPLACE_SPACES:
+        arcpath = arcpath.replace(' ', mylar.mylar.CONFIG.REPLACE_CHAR)
 
     if arcpath.startswith('/'):
         arcpath = arcpath[1:]
     elif arcpath.startswith('//'):
         arcpath = arcpath[2:]
 
-    if mylar.CONFIG.STORYARCDIR is True:
-        dstloc = os.path.join(mylar.CONFIG.DESTINATION_DIR, 'StoryArcs', arcpath)
-    elif mylar.CONFIG.COPY2ARCDIR is True:
-        logger.warn('Story arc directory is not configured. Defaulting to grabbag directory: ' + mylar.CONFIG.GRABBAG_DIR)
-        dstloc = os.path.join(mylar.CONFIG.GRABBAG_DIR, arcpath)
+    if mylar.mylar.CONFIG.STORYARCDIR is True:
+        dstloc = os.path.join(mylar.mylar.CONFIG.DESTINATION_DIR, 'StoryArcs', arcpath)
+    elif mylar.mylar.CONFIG.COPY2ARCDIR is True:
+        logger.warn('Story arc directory is not configured. Defaulting to grabbag directory: ' + mylar.mylar.CONFIG.GRABBAG_DIR)
+        dstloc = os.path.join(mylar.mylar.CONFIG.GRABBAG_DIR, arcpath)
     else:
         dstloc = None
 
@@ -2739,15 +2739,15 @@ def torrentinfo(issueid=None, torrent_hash=None, download=False, monitor=False):
        logger.error("Torrent hash is missing, or an invalid hash value has been passed")
        snatch_status = 'ERROR'
     else:
-        if mylar.USE_RTORRENT:
+        if mylar.mylar.USE_RTORRENT:
             from . import test
             rp = test.RTorrent()
             torrent_info = rp.main(torrent_hash, check=True)
-        elif mylar.USE_DELUGE:
+        elif mylar.mylar.USE_DELUGE:
             #need to set the connect here as well....
-            from .client import deluge as delu
+            from mylar.mylar.torrent.clients import deluge as delu
             dp = delu.TorrentClient()
-            if not dp.connect(mylar.CONFIG.DELUGE_HOST, mylar.CONFIG.DELUGE_USERNAME, mylar.CONFIG.DELUGE_PASSWORD):
+            if not dp.connect(mylar.mylar.CONFIG.DELUGE_HOST, mylar.mylar.CONFIG.DELUGE_USERNAME, mylar.mylar.CONFIG.DELUGE_PASSWORD):
                 logger.warn('Not connected to Deluge!')
 
             torrent_info = dp.get_torrent(torrent_hash)
@@ -2761,7 +2761,7 @@ def torrentinfo(issueid=None, torrent_hash=None, download=False, monitor=False):
         logger.warn('torrent returned no information. Check logs - aborting auto-snatch at this time.')
         snatch_status = 'ERROR'
     else:
-        if mylar.USE_DELUGE:
+        if mylar.mylar.USE_DELUGE:
             torrent_status = torrent_info['is_finished']
             torrent_files = torrent_info['num_files']
             torrent_folder = torrent_info['save_path']
@@ -2770,7 +2770,7 @@ def torrentinfo(issueid=None, torrent_hash=None, download=False, monitor=False):
             torrent_info['download_total'] = torrent_info['total_payload_download']
             torrent_info['time_started'] = torrent_info['time_added']
 
-        elif mylar.USE_RTORRENT:
+        elif mylar.mylar.USE_RTORRENT:
             torrent_status = torrent_info['completed']
             torrent_files = len(torrent_info['files'])
             torrent_folder = torrent_info['folder']
@@ -2782,21 +2782,21 @@ def torrentinfo(issueid=None, torrent_hash=None, download=False, monitor=False):
 
             import shlex, subprocess
             logger.info('Torrent is completed and status is currently Snatched. Attempting to auto-retrieve.')
-            with open(mylar.CONFIG.AUTO_SNATCH_SCRIPT, 'r') as f:
+            with open(mylar.mylar.CONFIG.AUTO_SNATCH_SCRIPT, 'r') as f:
                 first_line = f.readline()
 
-            if mylar.CONFIG.AUTO_SNATCH_SCRIPT.endswith('.sh'):
+            if mylar.mylar.CONFIG.AUTO_SNATCH_SCRIPT.endswith('.sh'):
                 shell_cmd = re.sub('#!', '', first_line)
                 if shell_cmd == '' or shell_cmd is None:
                     shell_cmd = '/bin/bash'
             else:
                 shell_cmd = sys.executable
 
-            curScriptName = shell_cmd + ' ' + str(mylar.CONFIG.AUTO_SNATCH_SCRIPT).decode("string_escape")
+            curScriptName = shell_cmd + ' ' + str(mylar.mylar.CONFIG.AUTO_SNATCH_SCRIPT).decode("string_escape")
             if torrent_files > 1:
                 downlocation = torrent_folder.encode('utf-8')
             else:
-                if mylar.USE_DELUGE:
+                if mylar.mylar.USE_DELUGE:
                     downlocation = os.path.join(torrent_folder.encode('utf-8'), torrent_info['files'][0]['path'])
                 else:
                     downlocation = torrent_info['files'][0].encode('utf-8')
@@ -2805,17 +2805,17 @@ def torrentinfo(issueid=None, torrent_hash=None, download=False, monitor=False):
             autosnatch_env['downlocation'] = re.sub("'", "\\'",downlocation)
 
             #these are pulled from the config and are the ssh values to use to retrieve the data
-            autosnatch_env['host'] = mylar.CONFIG.PP_SSHHOST
-            autosnatch_env['port'] = mylar.CONFIG.PP_SSHPORT
-            autosnatch_env['user'] = mylar.CONFIG.PP_SSHUSER
-            autosnatch_env['localcd'] = mylar.CONFIG.PP_SSHLOCALCD
+            autosnatch_env['host'] = mylar.mylar.CONFIG.PP_SSHHOST
+            autosnatch_env['port'] = mylar.mylar.CONFIG.PP_SSHPORT
+            autosnatch_env['user'] = mylar.mylar.CONFIG.PP_SSHUSER
+            autosnatch_env['localcd'] = mylar.mylar.CONFIG.PP_SSHLOCALCD
             #bash won't accept None, so send check and send empty strings for the 2 possible None values if needed
-            if mylar.CONFIG.PP_SSHKEYFILE is not None:
-                autosnatch_env['keyfile'] = mylar.CONFIG.PP_SSHKEYFILE
+            if mylar.mylar.CONFIG.PP_SSHKEYFILE is not None:
+                autosnatch_env['keyfile'] = mylar.mylar.CONFIG.PP_SSHKEYFILE
             else:
                 autosnatch_env['keyfile'] = ''
-            if mylar.CONFIG.PP_SSHPASSWD is not None:
-                autosnatch_env['passwd'] = mylar.CONFIG.PP_SSHPASSWD
+            if mylar.mylar.CONFIG.PP_SSHPASSWD is not None:
+                autosnatch_env['passwd'] = mylar.mylar.CONFIG.PP_SSHPASSWD
             else:
                 autosnatch_env['passwd'] = ''
 
@@ -2826,7 +2826,7 @@ def torrentinfo(issueid=None, torrent_hash=None, download=False, monitor=False):
             script_cmd = shlex.split(curScriptName, posix=False) # + [downlocation]
             logger.fdebug(u"Executing command " +str(script_cmd))
             try:
-                p = subprocess.Popen(script_cmd, env=dict(autosnatch_env), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=mylar.PROG_DIR)
+                p = subprocess.Popen(script_cmd, env=dict(autosnatch_env), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=mylar.mylar.PROG_DIR)
                 out, err = p.communicate()
                 logger.fdebug(u"Script result: " + out)
             except OSError as e:
@@ -2847,7 +2847,7 @@ def torrentinfo(issueid=None, torrent_hash=None, download=False, monitor=False):
                 snatch_status = 'IN PROGRESS'
             elif monitor is True:
                 #pause the torrent, copy it to the cache folder, unpause the torrent and return the complete path to the cache location
-                if mylar.USE_DELUGE:
+                if mylar.mylar.USE_DELUGE:
                     pauseit = dp.stop_torrent(torrent_hash)
                     if pauseit is False:
                         logger.warn('Unable to pause torrent - cannot run post-process on item at this time.')
@@ -2917,13 +2917,13 @@ def weekly_info(week=None, year=None):
         con_startweek = u"" + startweek.strftime(date_fmt).decode('cp1252')
         con_endweek = u"" + endweek.strftime(date_fmt).decode('cp1252')
 
-    if mylar.CONFIG.WEEKFOLDER_LOC is not None:
-        weekdst = mylar.CONFIG.WEEKFOLDER_LOC
+    if mylar.mylar.CONFIG.WEEKFOLDER_LOC is not None:
+        weekdst = mylar.mylar.CONFIG.WEEKFOLDER_LOC
     else:
-        weekdst = mylar.CONFIG.DESTINATION_DIR
+        weekdst = mylar.mylar.CONFIG.DESTINATION_DIR
 
-    if mylar.SCHED_WEEKLY_LAST is not None:
-        weekly_stamp = datetime.datetime.fromtimestamp(mylar.SCHED_WEEKLY_LAST)
+    if mylar.mylar.SCHED_WEEKLY_LAST is not None:
+        weekly_stamp = datetime.datetime.fromtimestamp(mylar.mylar.SCHED_WEEKLY_LAST)
         weekly_last = weekly_stamp.replace(microsecond=0)
     else:
         weekly_last = 'None'
@@ -2941,7 +2941,7 @@ def weekly_info(week=None, year=None):
                 'last_update':        weekly_last}
 
     if weekdst is not None:
-        if mylar.CONFIG.WEEKFOLDER_FORMAT == 0:
+        if mylar.mylar.CONFIG.WEEKFOLDER_FORMAT == 0:
             weekfold = os.path.join(weekdst, str( str(weekinfo['year']) + '-' + str(weeknumber) ))
         else:
             weekfold = os.path.join(weekdst, str( str(weekinfo['midweek']) ))
@@ -2976,25 +2976,25 @@ def latestdate_update():
 
 def postprocess_main(queue):
     while True:
-        if mylar.APILOCK is True:
+        if mylar.mylar.APILOCK is True:
             time.sleep(5)
 
-        elif mylar.APILOCK is False and queue.qsize() >= 1: #len(queue) > 1:
+        elif mylar.mylar.APILOCK is False and queue.qsize() >= 1: #len(queue) > 1:
             item = queue.get(True)
             logger.info('Now loading from post-processing queue: %s' % item)
             if item == 'exit':
                 logger.info('Cleaning up workers for shutdown')
                 break
 
-            if mylar.APILOCK is False:
+            if mylar.mylar.APILOCK is False:
                 pprocess = process.Process(item['nzb_name'], item['nzb_folder'], item['failed'], item['issueid'], item['comicid'], item['apicall'])
                 pp = pprocess.post_process()
                 time.sleep(5) #arbitrary sleep to let the process attempt to finish pp'ing
 
-            if mylar.APILOCK is True:
+            if mylar.mylar.APILOCK is True:
                 logger.info('Another item is post-processing still...')
                 time.sleep(15)
-                #mylar.PP_QUEUE.put(item)
+                #mylar.mylar.PP_QUEUE.put(item)
         else:
             time.sleep(5)
 
@@ -3032,7 +3032,7 @@ def worker_main(queue):
         if snstat['snatch_status'] == 'IN PROGRESS':
             logger.info('Still downloading in client....let us try again momentarily.')
             time.sleep(30)
-            mylar.SNATCHED_QUEUE.put(item)
+            mylar.mylar.SNATCHED_QUEUE.put(item)
         elif any([snstat['snatch_status'] == 'MONITOR FAIL', snstat['snatch_status'] == 'MONITOR COMPLETE']):
             logger.info('File copied for post-processing - submitting as a direct pp.')
             threading.Thread(target=self.checkFolder, args=[os.path.abspath(os.path.join(snstat['copied_filepath'], os.pardir))]).start()
@@ -3044,10 +3044,10 @@ def nzb_monitor(queue):
         if item == 'exit':
             logger.info('Cleaning up workers for shutdown')
             break
-        if all([mylar.USE_SABNZBD is True, mylar.CONFIG.SAB_CLIENT_POST_PROCESSING is True]):
+        if all([mylar.mylar.USE_SABNZBD is True, mylar.mylar.CONFIG.SAB_CLIENT_POST_PROCESSING is True]):
            nz = sabnzbd.SABnzbd(item)
            nzstat = nz.processor()
-        elif all([mylar.USE_NZBGET is True, mylar.CONFIG.NZBGET_CLIENT_POST_PROCESSING is True]):
+        elif all([mylar.mylar.USE_NZBGET is True, mylar.mylar.CONFIG.NZBGET_CLIENT_POST_PROCESSING is True]):
            nz = nzbget.NZBGet()
            nzstat = nz.processor(item)
         else:
@@ -3057,7 +3057,7 @@ def nzb_monitor(queue):
         if nzstat['status'] is False:
             logger.info('Could not find NZBID %s in the downloader\'s queue. I will requeue this item for post-processing...' % item['NZBID'])
             time.sleep(5)
-            mylar.NZB_QUEUE.put(item)
+            mylar.mylar.NZB_QUEUE.put(item)
         elif nzstat['status'] is True:
             if nzstat['failed'] is False:
                 logger.info('File successfully downloaded - now initiating completed downloading handling.')
@@ -3081,7 +3081,7 @@ def script_env(mode, vars):
     #var = dictionary containing variables to pass
     mylar_env = os.environ.copy()
     if mode == 'on-snatch':
-        runscript = mylar.CONFIG.SNATCH_SCRIPT
+        runscript = mylar.mylar.CONFIG.SNATCH_SCRIPT
         if 'torrentinfo' in vars:
             if 'hash' in vars['torrentinfo']:
                 mylar_env['mylar_release_hash'] = vars['torrentinfo']['hash'] 
@@ -3162,10 +3162,10 @@ def script_env(mode, vars):
 
     elif mode == 'post-process':
         #to-do
-        runscript = mylar.CONFIG.EXTRA_SCRIPTS
+        runscript = mylar.mylar.CONFIG.EXTRA_SCRIPTS
     elif mode == 'pre-process':
         #to-do
-        runscript = mylar.CONFIG.PRE_SCRIPTS
+        runscript = mylar.mylar.CONFIG.PRE_SCRIPTS
 
     logger.fdebug('Initiating ' + mode + ' script detection.')
     with open(runscript, 'r') as f:
@@ -3205,19 +3205,19 @@ def disable_provider(site, newznab=False):
     logger.info('Temporarily disabling %s due to not responding' % site)
     if newznab is True:
         tmplist = []
-        for ti in mylar.CONFIG.EXTRA_NEWZNABS:
+        for ti in mylar.mylar.CONFIG.EXTRA_NEWZNABS:
             tmpnewz = list(ti)
             if tmpnewz[0] == site:
                 tmpnewz[5] = '0'
             tmplist.append(tuple(tmpnewz))
-        mylar.CONFIG.EXTRA_NEWZNABS = tmplist
+        mylar.mylar.CONFIG.EXTRA_NEWZNABS = tmplist
     else:
         if site == 'nzbsu':
-            mylar.CONFIG.NZBSU = False
+            mylar.mylar.CONFIG.NZBSU = False
         elif site == 'dognzb':
-            mylar.CONFIG.DOGNZB = False
+            mylar.mylar.CONFIG.DOGNZB = False
         elif site == 'experimental':
-            mylar.CONFIG.EXPERIMENTAL = False
+            mylar.mylar.CONFIG.EXPERIMENTAL = False
 
 
 def date_conversion(originaldate):
@@ -3251,66 +3251,66 @@ def job_management(write=False, job=None, last_run_completed=None, current_run=N
             #set default values if nothing has been ran yet
             for ji in job_info:
                 if 'update' in ji['JobName'].lower():
-                    if mylar.SCHED_DBUPDATE_LAST is None:
-                        mylar.SCHED_DBUPDATE_LAST = ji['prev_run_timestamp']
+                    if mylar.mylar.SCHED_DBUPDATE_LAST is None:
+                        mylar.mylar.SCHED_DBUPDATE_LAST = ji['prev_run_timestamp']
                     dbupdate_newstatus = ji['status']
                     dbupdate_nextrun = ji['next_run_timestamp']
                 elif 'search' in ji['JobName'].lower():
-                    if mylar.SCHED_SEARCH_LAST is None:
-                        mylar.SCHED_SEARCH_LAST = ji['prev_run_timestamp']
+                    if mylar.mylar.SCHED_SEARCH_LAST is None:
+                        mylar.mylar.SCHED_SEARCH_LAST = ji['prev_run_timestamp']
                     search_newstatus = ji['status']
                     search_nextrun = ji['next_run_timestamp']
                 elif 'rss' in ji['JobName'].lower():
-                    if mylar.SCHED_RSS_LAST is None:
-                        mylar.SCHED_RSS_LAST = ji['prev_run_timestamp']
+                    if mylar.mylar.SCHED_RSS_LAST is None:
+                        mylar.mylar.SCHED_RSS_LAST = ji['prev_run_timestamp']
                     rss_newstatus = ji['status']
                     rss_nextrun = ji['next_run_timestamp']
                 elif 'weekly' in ji['JobName'].lower():
-                    if mylar.SCHED_WEEKLY_LAST is None:
-                        mylar.SCHED_WEEKLY_LAST = ji['prev_run_timestamp']
+                    if mylar.mylar.SCHED_WEEKLY_LAST is None:
+                        mylar.mylar.SCHED_WEEKLY_LAST = ji['prev_run_timestamp']
                     weekly_newstatus = ji['status']
                     weekly_nextrun = ji['next_run_timestamp']
                 elif 'version' in ji['JobName'].lower():
-                    if mylar.SCHED_VERSION_LAST is None:
-                        mylar.SCHED_VERSION_LAST = ji['prev_run_timestamp']
+                    if mylar.mylar.SCHED_VERSION_LAST is None:
+                        mylar.mylar.SCHED_VERSION_LAST = ji['prev_run_timestamp']
                     version_newstatus = ji['status']
                     version_nextrun = ji['next_run_timestamp']
                 elif 'monitor' in ji['JobName'].lower():
-                    if mylar.SCHED_MONITOR_LAST is None:
-                        mylar.SCHED_MONITOR_LAST = ji['prev_run_timestamp']
+                    if mylar.mylar.SCHED_MONITOR_LAST is None:
+                        mylar.mylar.SCHED_MONITOR_LAST = ji['prev_run_timestamp']
                     monitor_newstatus = ji['status']
                     monitor_nextrun = ji['next_run_timestamp']
 
-            monitors = {'weekly': mylar.SCHED_WEEKLY_LAST,
-                        'monitor': mylar.SCHED_MONITOR_LAST,
-                        'search': mylar.SCHED_SEARCH_LAST,
-                        'dbupdater': mylar.SCHED_DBUPDATE_LAST,
-                        'version': mylar.SCHED_VERSION_LAST,
-                        'rss': mylar.SCHED_RSS_LAST}
+            monitors = {'weekly': mylar.mylar.SCHED_WEEKLY_LAST,
+                        'monitor': mylar.mylar.SCHED_MONITOR_LAST,
+                        'search': mylar.mylar.SCHED_SEARCH_LAST,
+                        'dbupdater': mylar.mylar.SCHED_DBUPDATE_LAST,
+                        'version': mylar.mylar.SCHED_VERSION_LAST,
+                        'rss': mylar.mylar.SCHED_RSS_LAST}
 
             #this is for initial startup
-            for jb in mylar.SCHED.get_jobs():
+            for jb in mylar.mylar.SCHED.get_jobs():
                 #logger.fdebug('jb: %s' % jb)
                 jobinfo = str(jb)
                 if 'Status Updater' in jobinfo.lower():
                     continue
                 elif 'update' in jobinfo.lower():
-                    prev_run_timestamp = mylar.SCHED_DBUPDATE_LAST
+                    prev_run_timestamp = mylar.mylar.SCHED_DBUPDATE_LAST
                     newstatus = dbupdate_newstatus
                 elif 'search' in jobinfo.lower():
-                    prev_run_timestamp = mylar.SCHED_SEARCH_LAST
+                    prev_run_timestamp = mylar.mylar.SCHED_SEARCH_LAST
                     newstatus = search_newstatus
                 elif 'rss' in jobinfo.lower():
-                    prev_run_timestamp = mylar.SCHED_RSS_LAST
+                    prev_run_timestamp = mylar.mylar.SCHED_RSS_LAST
                     newstatus = rss_newstatus
                 elif 'weekly' in jobinfo.lower():
-                    prev_run_timestamp = mylar.SCHED_WEEKLY_LAST
+                    prev_run_timestamp = mylar.mylar.SCHED_WEEKLY_LAST
                     newstatus = weekly_newstatus
                 elif 'version' in jobinfo.lower():
-                    prev_run_timestamp = mylar.SCHED_VERSION_LAST
+                    prev_run_timestamp = mylar.mylar.SCHED_VERSION_LAST
                     newstatus = version_newstatus
                 elif 'monitor' in jobinfo.lower():
-                    prev_run_timestamp = mylar.SCHED_MONITOR_LAST
+                    prev_run_timestamp = mylar.mylar.SCHED_MONITOR_LAST
                     newstatus = monitor_newstatus
 
                 jobname = jobinfo[:jobinfo.find('(')-1].strip()
@@ -3368,38 +3368,38 @@ def job_management(write=False, job=None, last_run_completed=None, current_run=N
                 elif last_run_completed is not None:
                     if any([job == 'DB Updater', job == 'Auto-Search', job == 'RSS Feeds', job == 'Weekly Pullist', job == 'Check Version', job == 'Folder Monitor']):
                         jobstore = None
-                        for jbst in mylar.SCHED.get_jobs():
+                        for jbst in mylar.mylar.SCHED.get_jobs():
                             jb = str(jbst)
                             if 'Status Updater' in jb.lower():
                                continue
                             elif job == 'DB Updater' and 'update' in jb.lower():
-                                nextrun_stamp = utctimestamp() + (int(mylar.DBUPDATE_INTERVAL) * 60)
+                                nextrun_stamp = utctimestamp() + (int(mylar.mylar.DBUPDATE_INTERVAL) * 60)
                                 jobstore = jbst
                                 break
                             elif job == 'Auto-Search' and 'search' in jb.lower():
-                                nextrun_stamp = utctimestamp() + (mylar.CONFIG.SEARCH_INTERVAL * 60)
+                                nextrun_stamp = utctimestamp() + (mylar.mylar.CONFIG.SEARCH_INTERVAL * 60)
                                 jobstore = jbst
                                 break
                             elif job == 'RSS Feeds' and 'rss' in jb.lower():
-                                nextrun_stamp = utctimestamp() + (int(mylar.CONFIG.RSS_CHECKINTERVAL) * 60)
-                                mylar.SCHED_RSS_LAST = last_run_completed
+                                nextrun_stamp = utctimestamp() + (int(mylar.mylar.CONFIG.RSS_CHECKINTERVAL) * 60)
+                                mylar.mylar.SCHED_RSS_LAST = last_run_completed
                                 jobstore = jbst
                                 break
                             elif job == 'Weekly Pullist' and 'weekly' in jb.lower():
-                                if mylar.CONFIG.ALT_PULL == 2:
+                                if mylar.mylar.CONFIG.ALT_PULL == 2:
                                     wkt = 4
                                 else:
                                     wkt = 24
                                 nextrun_stamp = utctimestamp() + (wkt * 60 * 60)
-                                mylar.SCHED_WEEKLY_LAST = last_run_completed
+                                mylar.mylar.SCHED_WEEKLY_LAST = last_run_completed
                                 jobstore = jbst
                                 break
                             elif job == 'Check Version' and 'version' in jb.lower():
-                                nextrun_stamp = utctimestamp() + (mylar.CONFIG.CHECK_GITHUB_INTERVAL * 60)
+                                nextrun_stamp = utctimestamp() + (mylar.mylar.CONFIG.CHECK_GITHUB_INTERVAL * 60)
                                 jobstore = jbst
                                 break
                             elif job == 'Folder Monitor' and 'monitor' in jb.lower():
-                                nextrun_stamp = utctimestamp() + (int(mylar.CONFIG.DOWNLOAD_SCAN_INTERVAL) * 60)
+                                nextrun_stamp = utctimestamp() + (int(mylar.mylar.CONFIG.DOWNLOAD_SCAN_INTERVAL) * 60)
                                 jobstore = jbst
                                 break
 
@@ -3433,8 +3433,8 @@ def stupidchk():
     myDB = db.DBConnection()
     CCOMICS = myDB.select("SELECT COUNT(*) FROM comics WHERE Status='Active'")
     ens = myDB.select("SELECT COUNT(*) FROM comics WHERE Status='Loading' OR Status='Paused'")
-    mylar.COUNT_COMICS = CCOMICS[0][0]
-    mylar.EN_OOMICS = ens[0][0]
+    mylar.mylar.COUNT_COMICS = CCOMICS[0][0]
+    mylar.mylar.EN_OOMICS = ens[0][0]
 
 def newznab_test(name, host, ssl, apikey):
     from xml.dom.minidom import parseString, Element
@@ -3499,30 +3499,30 @@ def sizeof_fmt(num, suffix='B'):
 
 def getImage(comicid, url, issueid=None):
 
-    if os.path.exists(mylar.CONFIG.CACHE_DIR):
+    if os.path.exists(mylar.mylar.CONFIG.CACHE_DIR):
         pass
     else:
         #let's make the dir.
         try:
-            os.makedirs(str(mylar.CONFIG.CACHE_DIR))
-            logger.info('Cache Directory successfully created at: ' + str(mylar.CONFIG.CACHE_DIR))
+            os.makedirs(str(mylar.mylar.CONFIG.CACHE_DIR))
+            logger.info('Cache Directory successfully created at: ' + str(mylar.mylar.CONFIG.CACHE_DIR))
 
         except OSError:
-            logger.error('Could not create cache dir. Check permissions of cache dir: ' + str(mylar.CONFIG.CACHE_DIR))
+            logger.error('Could not create cache dir. Check permissions of cache dir: ' + str(mylar.mylar.CONFIG.CACHE_DIR))
 
-    coverfile = os.path.join(mylar.CONFIG.CACHE_DIR,  str(comicid) + ".jpg")
+    coverfile = os.path.join(mylar.mylar.CONFIG.CACHE_DIR,  str(comicid) + ".jpg")
 
     #if cover has '+' in url it's malformed, we need to replace '+' with '%20' to retreive properly.
 
     #new CV API restriction - one api request / second.(probably unecessary here, but it doesn't hurt)
-    if mylar.CONFIG.CVAPI_RATE is None or mylar.CONFIG.CVAPI_RATE < 2:
+    if mylar.mylar.CONFIG.CVAPI_RATE is None or mylar.mylar.CONFIG.CVAPI_RATE < 2:
         time.sleep(2)
     else:
-        time.sleep(mylar.CONFIG.CVAPI_RATE)
+        time.sleep(mylar.mylar.CONFIG.CVAPI_RATE)
 
     logger.info('Attempting to retrieve the comic image for series')
     try:
-        r = requests.get(url, params=None, stream=True, verify=mylar.CONFIG.CV_VERIFY, headers=mylar.CV_HEADERS)
+        r = requests.get(url, params=None, stream=True, verify=mylar.mylar.CONFIG.CV_VERIFY, headers=mylar.mylar.CV_HEADERS)
     except Exception as e:
         logger.warn('Unable to download image from CV URL link: ' + url + ' [Status Code returned: ' + str(r.status_code) + ']')
 
@@ -3753,7 +3753,7 @@ def lookupthebitches(filelist, folder, nzbname, nzbid, prov, hash, pulldate):
     year = dt.strftime("%Y")
     for f in filelist:
         file = re.sub(folder, '', f).strip()
-        pp = mylar.filechecker.FileChecker(justparse=True, file=file)
+        pp = mylar.mylar.filechecker.FileChecker(justparse=True, file=file)
         parsedinfo = pp.listFiles()
         if parsedinfo['parse_status'] == 'success':
             dyncheck = re.sub('[\|\s]', '', parsedinfo['dynamic_name'].lower()).strip()
@@ -3770,16 +3770,16 @@ def lookupthebitches(filelist, folder, nzbname, nzbid, prov, hash, pulldate):
 
     if len(matchlist) > 0:
         for x in matchlist:
-            if all([x['comicid'] not in watchlist, mylar.CONFIG.PACK_0DAY_WATCHLIST_ONLY is False]):
+            if all([x['comicid'] not in watchlist, mylar.mylar.CONFIG.PACK_0DAY_WATCHLIST_ONLY is False]):
                 oneoff = True
                 mode = 'pullwant'
-            elif all([x['comicid'] not in watchlist, mylar.CONFIG.PACK_0DAY_WATCHLIST_ONLY is True]):
+            elif all([x['comicid'] not in watchlist, mylar.mylar.CONFIG.PACK_0DAY_WATCHLIST_ONLY is True]):
                 continue
             else:
                 oneoff = False
                 mode = 'want'
-            mylar.updater.nzblog(x['issueid'], nzbname, x['comicname'], id=nzbid, prov=prov, oneoff=oneoff)
-            mylar.updater.foundsearch(x['comicid'], x['issueid'], mode=mode, provider=prov, hash=hash)
+            mylar.mylar.updater.nzblog(x['issueid'], nzbname, x['comicname'], id=nzbid, prov=prov, oneoff=oneoff)
+            mylar.mylar.updater.foundsearch(x['comicid'], x['issueid'], mode=mode, provider=prov, hash=hash)
 
 
 def DateAddedFix():
@@ -3803,18 +3803,18 @@ def file_ops(path,dst,arc=False,one_off=False):
 #    # one-off = if the file_operation is being performed where it is either going into the grabbab_dst or story arc folder
 
 #    #get the crc of the file prior to the operation and then compare after to ensure it's complete.
-#    crc_check = mylar.filechecker.crc(path)
+#    crc_check = mylar.mylar.filechecker.crc(path)
 #    #will be either copy / move
 
     if any([one_off, arc]):
-        action_op = mylar.CONFIG.ARC_FILEOPS
+        action_op = mylar.mylar.CONFIG.ARC_FILEOPS
     else:
-        action_op = mylar.CONFIG.FILE_OPTS
+        action_op = mylar.mylar.CONFIG.FILE_OPTS
 
     if action_op == 'copy' or (arc is True and any([action_op == 'copy', action_op == 'move'])):
         try:
             shutil.copy( path , dst )
-#        if crc_check == mylar.filechecker.crc(dst):
+#        if crc_check == mylar.mylar.filechecker.crc(dst):
         except Exception as e:
             logger.error('[%s] error : %s' % (action_op, e))
             return False
@@ -3823,14 +3823,14 @@ def file_ops(path,dst,arc=False,one_off=False):
     elif action_op == 'move':
         try:
             shutil.move( path , dst )
-#        if crc_check == mylar.filechecker.crc(dst):
+#        if crc_check == mylar.mylar.filechecker.crc(dst):
         except Exception as e:
             logger.error('[MOVE] error : %s' % e)
             return False
         return True
 
     elif any([action_op == 'hardlink', action_op == 'softlink']):
-        if 'windows' not in mylar.OS_DETECT.lower():
+        if 'windows' not in mylar.mylar.OS_DETECT.lower():
             # if it's an arc, then in needs to go reverse since we want to keep the src files (in the series directory)
             if action_op == 'hardlink':
                 import sys
@@ -3907,7 +3907,7 @@ def file_ops(path,dst,arc=False,one_off=False):
             #kdll.CreateSymbolicLinkW(path, dst, 0)
 
             #option 2
-            if mylar.CONFIG.FILE_OPTS == 'hardlink':
+            if mylar.mylar.CONFIG.FILE_OPTS == 'hardlink':
                 try:
                     os.system(r'mklink /H dst path')
                     logger.fdebug('Successfully hardlinked file [' + dst + ' --> ' + path + ']')
@@ -3919,7 +3919,7 @@ def file_ops(path,dst,arc=False,one_off=False):
                     except:
                         return False
 
-            elif mylar.CONFIG.FILE_OPTS == 'softlink':  #ie. shortcut.
+            elif mylar.mylar.CONFIG.FILE_OPTS == 'softlink':  #ie. shortcut.
                 try:
                     shutil.move( path, dst )
                     if os.path.lexists( path ):

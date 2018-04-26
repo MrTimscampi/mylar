@@ -2,23 +2,13 @@
 from future import standard_library
 standard_library.install_aliases()
 from builtins import str
-from bs4 import BeautifulSoup, UnicodeDammit
-import urllib.request, urllib.error, urllib.parse
-import csv
-import fileinput
-import sys
+from bs4 import BeautifulSoup
 import re
 import os
-import sqlite3
-import datetime
-import unicodedata
-from decimal import Decimal
-from html.parser import HTMLParseError
-from time import strptime
 import requests
 
 import mylar
-from mylar import logger
+from mylar.mylar import logger
 
 def newpull():
         pagelinks = "http://www.previewsworld.com/Home/1/1/71/952"

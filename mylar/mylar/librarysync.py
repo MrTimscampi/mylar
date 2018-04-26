@@ -14,8 +14,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
-from builtins import str
 from __future__ import with_statement
+from builtins import str
 
 import os
 import glob
@@ -24,7 +24,7 @@ import shutil
 import random
 
 import mylar
-from mylar import db, logger, helpers, importer, updater, filechecker
+from mylar.mylar import db, logger, helpers, importer, updater, filechecker
 
 # You can scan a single directory and append it to the current library by specifying append=True
 def libraryScan(dir=None, append=False, ComicID=None, ComicName=None, cron=None, queue=None):

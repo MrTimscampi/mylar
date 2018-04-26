@@ -1,7 +1,7 @@
 <%inherit file="base.html" />
 <%!
 	import mylar
-	from mylar.helpers import checked
+	from mylar.mylar.helpers import checked
 %>
 <%def name="headerIncludes()">
 	<div id="subhead_container">
@@ -27,8 +27,8 @@
 		<div id="tabs-1" class="configtable">
                                <div style="float:right;position:absolute;right:0;top;0;margin-right:50px;">
                                   <legend>Current Import Status</legend>
-                                     %if mylar.IMPORT_STATUS:
-                                         %if mylar.IMPORT_STATUS == 'Import completed.':
+                                     %if mylar.mylar.IMPORT_STATUS:
+                                         %if mylar.mylar.IMPORT_STATUS == 'Import completed.':
                                              <input type="text" name="importstatus" id="importstatus" style="text-align:center; font-size:11px;" size="60" DISABLED /></br>
                                              <script>
                                              turnitoff();
@@ -45,16 +45,16 @@
                                          </script>
                                          <input type="text" name="importstatus" id="importstatus" style="text-align:center; font-size:11px;" size="60" value="Import is currently not running" DISABLED /></br>
                                      %endif
-                                     <label>Number of valid files to process:&nbsp</label>${mylar.IMPORT_TOTALFILES}
-                                     %if int(mylar.IMPORT_FILES) != int(mylar.IMPORT_TOTALFILES):
-                                          / ${mylar.IMPORT_FILES}
+                                     <label>Number of valid files to process:&nbsp</label>${mylar.mylar.IMPORT_TOTALFILES}
+                                     %if int(mylar.mylar.IMPORT_FILES) != int(mylar.mylar.IMPORT_TOTALFILES):
+                                          / ${mylar.mylar.IMPORT_FILES}
                                      %endif
                                      </br>
-                                     <label>Files with ComicID's present:&nbsp</label>${mylar.IMPORT_CID_COUNT}</br>
-                                     <label>Files that were parsed:&nbsp</label>${mylar.IMPORT_PARSED_COUNT}</br>
-                                     <label>Files that couldn't be parsed:&nbsp</label>${mylar.IMPORT_FAILURE_COUNT}</br>
+                                     <label>Files with ComicID's present:&nbsp</label>${mylar.mylar.IMPORT_CID_COUNT}</br>
+                                     <label>Files that were parsed:&nbsp</label>${mylar.mylar.IMPORT_PARSED_COUNT}</br>
+                                     <label>Files that couldn't be parsed:&nbsp</label>${mylar.mylar.IMPORT_FAILURE_COUNT}</br>
 
-                                     %if mylar.IMPORTLOCK:
+                                     %if mylar.mylar.IMPORTLOCK:
                                          </br></br></br></br>
                                          <div class="row checkbox">
                                             <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="forcescan" id="forcescan" value="1"><label>Existing Import Running. Force this import?</label>
@@ -74,32 +74,32 @@
 					<br/>
 					<div class="row">
                                         <label for="">Path to directory</label>
-                                        %if mylar.CONFIG.COMIC_DIR:
-                                            <input type="text" value="${mylar.CONFIG.COMIC_DIR}" name="path" size="70" />
+                                        %if mylar.mylar.CONFIG.COMIC_DIR:
+                                            <input type="text" value="${mylar.mylar.CONFIG.COMIC_DIR}" name="path" size="70" />
                                         %else:
                                             <input type="text" value="Enter a Comic Directory to scan" onfocus="if
                                             (this.value==this.defaultValue) this.value='';" name="path" size="70" />
                                         %endif
                                         </div>
                                         <div class="row checkbox">
-                                           <input type="checkbox" name="autoadd" id="autoadd" value="1" ${checked(mylar.CONFIG.ADD_COMICS)}><label>Auto-add new series</label>
+                                           <input type="checkbox" name="autoadd" id="autoadd" value="1" ${checked(mylar.mylar.CONFIG.ADD_COMICS)}><label>Auto-add new series</label>
                                         </div>
                                         <div class="row checkbox">
-                                             <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="imp_metadata" id="imp_metadata" value="1" ${checked(mylar.CONFIG.IMP_METADATA)}><label>Use existing Metadata</label>
+                                             <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="imp_metadata" id="imp_metadata" value="1" ${checked(mylar.mylar.CONFIG.IMP_METADATA)}><label>Use existing Metadata</label>
                                              <small>Use existing Metadata to better locate series for import</small>
                                         </div>
                                         <div class="row checkbox">
-                                           <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="imp_move" onclick="initConfigCheckbox($this));" id="imp_move" value="1" ${checked(mylar.CONFIG.IMP_MOVE)}><label>Move files into corresponding Series directory</label>
+                                           <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="imp_move" onclick="initConfigCheckbox($this));" id="imp_move" value="1" ${checked(mylar.mylar.CONFIG.IMP_MOVE)}><label>Move files into corresponding Series directory</label>
                                            <small>Leaving this unchecked will not move anything, but will mark the issues as Archived</small>
                                         </div>
                                         <div class="config">
-                                               <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="imp_rename" id="imp_rename" value="1" ${checked(mylar.CONFIG.IMP_RENAME)}><label>Rename Files </label>
+                                               <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="imp_rename" id="imp_rename" value="1" ${checked(mylar.mylar.CONFIG.IMP_RENAME)}><label>Rename Files </label>
                                                <small>Rename files to configuration settings</small>
                                         </div>
                                         <br/>
                                       <input type="button" value="Save Changes and Scan" onclick="addScanAction();doAjaxCall('comicScan',$(this),'tabs',true);return true;" data-success="Import Scan now submitted." data-error="Unable to start the scan. Check the logs.">
                                       <input type="button" value="Save Changes without Scanning Library" onclick="doAjaxCall('comicScan',$(this),'tabs',true);return false;" data-success="Changes Saved Successfully" data-error="Unable to save settings. Check the logs.">
-                                      %if mylar.IMPORTBUTTON:
+                                      %if mylar.mylar.IMPORTBUTTON:
                                           <input type="button" value="Import Results Management" style="float: right;" onclick="location.href='importResults';" />
                                       %endif
                               </form>
@@ -123,8 +123,8 @@
                                         post-processing options.<br/> The remainder will not be moved from the given directory</strong></p>
                                         <div class="row">
                                             <label for="">Path to Manually Run</label>
-                                            %if mylar.CONFIG.CHECK_FOLDER:
-                                              <input type="text" value="${mylar.CONFIG.CHECK_FOLDER}" name="nzb_folder" size="70" />
+                                            %if mylar.mylar.CONFIG.CHECK_FOLDER:
+                                              <input type="text" value="${mylar.mylar.CONFIG.CHECK_FOLDER}" name="nzb_folder" size="70" />
                                             %else:
                                               <input type="text" value="Enter the full path to post-process" onfocus="if
                                               (this.value==this.defaultValue) this.value='';" name="nzb_folder" size="70" />

@@ -13,12 +13,12 @@
 # You should have received a copy of the GNU General Public License
 # along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
-from builtins import object
 from __future__ import with_statement
+from builtins import object
 
 import mylar
 
-from mylar import logger, helpers, weeklypull
+from mylar.mylar import logger, helpers, weeklypull
 
 class Weekly(object):
     def __init__(self):

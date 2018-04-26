@@ -1,8 +1,8 @@
 <%inherit file="base.html"/>
 <%!
 	import mylar
-	from mylar import db
-        from mylar.helpers import checked
+	from mylar.mylar import db
+        from mylar.mylar.helpers import checked
 %>
 
 <%def name="headerIncludes()">
@@ -15,7 +15,7 @@
 -->
                         <a id="menu_link_scan" class="button">Download</a>
                         <a href="#" id="menu_link_refresh" onclick="doAjaxCall('pullSearch?week=${weekinfo['weeknumber']}&year=${weekinfo['year']}',$(this),'table')" data-success="Submitted background search request for new pull issues">Manually check for issues</a>
-                        %if all([mylar.CONFIG.ENABLE_TORRENT_SEARCH is True, mylar.CONFIG.ENABLE_32P is True, mylar.CONFIG.MODE_32P is True]):
+                        %if all([mylar.mylar.CONFIG.ENABLE_TORRENT_SEARCH is True, mylar.mylar.CONFIG.ENABLE_32P is True, mylar.mylar.CONFIG.MODE_32P is True]):
                             <a href="#" id="menu_link_refresh" onclick="doAjaxCall('download_0day?week=${weekinfo['midweek']}',$(this),'table')" data-success="Submitted background search request for 0-day pack for this week">Download 0-Day Pack</a>
                         %endif
 		</div>
@@ -54,7 +54,7 @@
              <fieldset>
                   <div class="row checkbox left clearfix">
                        </br>
-                       <input type="checkbox" name="weekfolder" id="weekfolder" value="1" ${checked(mylar.CONFIG.WEEKFOLDER)} /><label>Store in Weekly Directory (${weekfold})</label> 
+                       <input type="checkbox" name="weekfolder" id="weekfolder" value="1" ${checked(mylar.mylar.CONFIG.WEEKFOLDER)} /><label>Store in Weekly Directory (${weekfold})</label>
                  </div>
 
                <input type="hidden" name="year" value="${weekinfo['year']}">
@@ -140,16 +140,16 @@
                                         %if weekly['HAVEIT'] == 'OneOff':
                                             %if weekly['STATUS'] == 'Snatched' or weekly['STATUS'] == 'Downloaded':
                                                 <a href="#" onclick="doAjaxCall('queueit?ComicName=${weekly['COMIC'] | u}&ComicID=${weekly['COMICID']}&IssueID=${weekly['ISSUEID']}&ComicIssue=${weekly['ISSUE']}&mode=pullwant&Publisher=${weekly['PUBLISHER']}&pullinfo=${weekinfo['midweek']}&pullweek=${weekinfo['weeknumber']}&pullyear=${weekinfo['year']}',$(this),'table')" data-success="Successfully submitted search request for ${weekly['COMIC']} #${weekly['ISSUE']}" title="Snatch issue again as a One-Off">
-                                                %if mylar.CONFIG.SHOW_ICONS:
+                                                %if mylar.mylar.CONFIG.SHOW_ICONS:
                                                     <img style="margin: 0px 5px" src="interfaces/default/images/retry.png" height="25" width="25" class="highqual" />
                                                 %else:
                                                     <span class="ui-icon ui-icon-plus"></span>Retry
                                                 %endif
                                                 </a>
                                             %endif
-                                            %if weekly['HASH'] is not None and mylar.CONFIG.AUTO_SNATCH is True:
+                                            %if weekly['HASH'] is not None and mylar.mylar.CONFIG.AUTO_SNATCH is True:
                                                 <a href="#" onclick="doAjaxCall('torrentit?torrent_hash=${weekly['HASH']}&download=True',$(this),'table')" title="Auto-Snatch torrent file">
-                                                %if mylar.CONFIG.SHOW_ICONS:
+                                                %if mylar.mylar.CONFIG.SHOW_ICONS:
                                                      <img style="margin: 0px 5px" src="interfaces/default/images/snatch.png" height="25" width="25" class="highqual" />
                                                 %else:
                                                       <span class="ui-icon ui-icon-plus"></span>Auto-Snatch
@@ -160,7 +160,7 @@
                                             %if weekly['STATUS'] == 'Skipped':
                                                 %if weekly['COMICID'] != '' and weekly['COMICID'] is not None:
                                                     <a href="#" title="auto-add to Watchlist directly by ID available for this series" onclick="doAjaxCall('addbyid?comicid=${weekly['COMICID']}&calledby=True',$(this),'table')" data-success="${weekly['COMIC']} is now being added to your wachlist.">
-                                                    %if mylar.CONFIG.SHOW_ICONS:
+                                                    %if mylar.mylar.CONFIG.SHOW_ICONS:
                                                         <img style="margin: 0px 5px" src="interfaces/default/images/add.png" height="25" width="25" class="highqual" />
                                                     %else:
                                                         <span class="ui-icon ui-icon-plus"></span>Add
@@ -169,7 +169,7 @@
                                                 %else:
                                                     %if weekly['ISSUE'] == '1' or weekly['ISSUE'] == '0':
                                                         <a href="#" title="Watch for this series and auto-add to Watchlist when available" onclick="doAjaxCall('add2futurewatchlist?ComicName=${weekly['COMIC'] |u}&Issue=${weekly['ISSUE']}&Publisher=${weekly['PUBLISHER']}&ShipDate=${weekinfo['midweek']}&weeknumber=${weekinfo['weeknumber']}&year=${weekinfo['year']}',$(this),'table')" data-success="${weekly['COMIC']} is now on auto-watch/add.">
-                                                        %if mylar.CONFIG.SHOW_ICONS:
+                                                        %if mylar.mylar.CONFIG.SHOW_ICONS:
                                                             <img style="margin: 0px 5px" src="interfaces/default/images/watch.png" height="25" width="25" class="highqual" />
                                                         %else:
                                                             <span class="ui-icon ui-icon-plus"></span>Watch
@@ -177,7 +177,7 @@
                                                         </a>
                                                      %endif
                                                      <a href="searchit?name=${weekly['COMIC'] | u}&issue=${weekly['ISSUE']}&mode=pullseries" title="Search for this series to add to your watchlist">
-                                                     %if mylar.CONFIG.SHOW_ICONS:
+                                                     %if mylar.mylar.CONFIG.SHOW_ICONS:
                                                          <img style="margin: 0px 5px" src="interfaces/default/images/search_add.png" height="25" width="25" class="highqual" />
                                                      %else:
                                                          <span class="ui-icon ui-icon-plus"></span>Search
@@ -190,7 +190,7 @@
                                             %endif
                                             %if weekly['HAVEIT'] == 'No' and weekly['STATUS'] == 'Skipped':
                                                 <a href="#" onclick="doAjaxCall('queueit?ComicName=${weekly['COMIC'] | u}&ComicID=${weekly['COMICID']}&IssueID=${weekly['ISSUEID']}&ComicIssue=${weekly['ISSUE']}&mode=pullwant&Publisher=${weekly['PUBLISHER']}&pullinfo=${weekinfo['midweek']}&pullweek=${weekinfo['weeknumber']}&pullyear=${weekinfo['year']}',$(this),'table')" data-success="Successfully submitted search request for ${weekly['COMIC']} #${weekly['ISSUE']}" title="One off download">
-                                                %if mylar.CONFIG.SHOW_ICONS:
+                                                %if mylar.mylar.CONFIG.SHOW_ICONS:
                                                     <img style="margin: 0px 5px" src="interfaces/default/images/search.png" height="25" width="25" class="highqual" />
                                                 %else:
                                                     <span class="ui-icon ui-icon-plus"></span>One-Off
@@ -199,7 +199,7 @@
                                             %endif
 <!--
                                             <a class="menu_link_edit" id="choose_specific_download" title="Choose Specific Download" href="javascript:void(0)" onclick="getAvailableDownloads('${weekly['ISSUEID']}', '${weekly['COMIC']}', '${weekly['COMICID']}', '${weekly['ISSUE']}', '${weekly['VOLUME']}', 'pullwant', '${weekly['PUBLISHER']}', '${weekinfo['midweek']}', '${weekinfo['weeknumber']}', '${weekinfo['year']}', '${dl}')">
-                                            %if mylar.CONFIG.SHOW_ICONS:
+                                            %if mylar.mylar.CONFIG.SHOW_ICONS:
                                                 <img style="margin: 0px 5px" src="interfaces/default/images/magnifier.png" height="25" width="25" class="highqual" />
                                             %else:
                                                 <span class="ui-icon ui-icon-plus"></span>Choose
@@ -220,9 +220,9 @@
                                               </table>
                                             </div>
 -->
-                                        %elif weekly['HASH'] is not None and mylar.CONFIG.AUTO_SNATCH is True:
+                                        %elif weekly['HASH'] is not None and mylar.mylar.CONFIG.AUTO_SNATCH is True:
                                             <a href="#" onclick="doAjaxCall('torrentit?torrent_hash=${weekly['HASH']}&download=True',$(this),'table')" title="Auto-Snatch torrent file">
-                                            %if mylar.CONFIG.SHOW_ICONS:
+                                            %if mylar.mylar.CONFIG.SHOW_ICONS:
                                                 <img style="margin: 0px 5px" src="interfaces/default/images/snatch.png" height="25" width="25" class="highqual" />
                                             %else:
                                                 <span class="ui-icon ui-icon-plus"></span>Auto-Snatch
@@ -230,7 +230,7 @@
                                             </a>
                                         %elif weekly['STATUS'] == 'Snatched':
                                             <a href="#" onclick="doAjaxCall('queueit?ComicName=${weekly['COMIC'] | u}&ComicID=${weekly['COMICID']}&IssueID=${weekly['ISSUEID']}&ComicIssue=${weekly['ISSUE']}&mode=pullwant&Publisher=${weekly['PUBLISHER']}&pullinfo=${weekinfo['midweek']}&pullweek=${weekinfo['weeknumber']}&pullyear=${weekinfo['year']}',$(this),'table')" data-success="Successfully submitted search request for ${weekly['COMIC']} #${weekly['ISSUE']}" title="Snatch issue again">
-                                            %if mylar.CONFIG.SHOW_ICONS:
+                                            %if mylar.mylar.CONFIG.SHOW_ICONS:
                                                   <img style="margin: 0px 5px" src="interfaces/default/images/retry.png" height="25" width="25" class="highqual" />
                                             %else:
                                                   <span class="ui-icon ui-icon-plus"></span>Retry

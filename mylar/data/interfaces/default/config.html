@@ -15,7 +15,7 @@
 <%def name="body()">
 
         <%
-             mylar.DONATEBUTTON = False
+             mylar.mylar.DONATEBUTTON = False
         %>
 
 	<div id="paddingheader">
@@ -314,7 +314,7 @@
                                         <input type="text" name="chmod_file" value="${config['chmod_file']}" size="50">
                                         <small>Permissions on created/moved files</small>
                                     </div>
-                                    %if 'windows' not in mylar.OS_DETECT.lower():
+                                    %if 'windows' not in mylar.mylar.OS_DETECT.lower():
                                         <div class="row">
                                             <label>Owner</label>
                                             <input type="text" name="chowner" value="${config['chowner']}" size="50">
@@ -820,10 +820,10 @@
                                                 </div>
                                                 <div name="inkdrops32p" id="inkdrops32p" style="font-size:11px;" align="center">
                                                 <%
-                                                    if mylar.INKDROPS_32P is None:
+                                                    if mylar.mylar.INKDROPS_32P is None:
                                                         inkdrops = ''
                                                     else:
-                                                        inkdrops = 'Inkdrops Available: ' + '{:06,}'.format(float(mylar.INKDROPS_32P))
+                                                        inkdrops = 'Inkdrops Available: ' + '{:06,}'.format(float(mylar.mylar.INKDROPS_32P))
                                                 %>
                                                     <span>${inkdrops}</span>
                                                 </div>
@@ -949,7 +949,7 @@
              <tr>
                       <%
                            porder = []
-                           for k,v in sorted(mylar.CONFIG.PROVIDER_ORDER.iteritems(), key=itemgetter(0), reverse=False):
+                           for k,v in sorted(mylar.mylar.CONFIG.PROVIDER_ORDER.iteritems(), key=itemgetter(0), reverse=False):
                                porder.append(v)
                            porder = ', '.join(porder)
                        %>
@@ -1046,7 +1046,7 @@
                                         <label>When Post-Processing
                                         <select name="file_opts" onchange="changeTest()" id="file_opts">
                                          <%
-                                               if 'windows' in mylar.OS_DETECT.lower():
+                                               if 'windows' in mylar.mylar.OS_DETECT.lower():
                                                    optionlist = ['move', 'copy']
                                                else:
                                                    optionlist = ['move', 'copy', 'hardlink', 'softlink']
@@ -1230,7 +1230,7 @@
                                                    <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="comic_cover_local" value="1" ${config['comic_cover_local']} /><label>Place cover.jpg into Comic Directory for each comic</label>
                                                    <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="cvinfo" value="1" ${config['cvinfo']} /><label>Write cvinfo into each comic directory</label>
                                                    <input type="checkbox" style="vertical-align: bottom; margin: 3px; margin-top: -1px;" name="alternate_latest_series_covers" value="1" ${config['alternate_latest_series_covers']} /><label>Alternate Series Covers</label>
-                                                   %if mylar.CONFIG.ENABLE_TORRENTS:
+                                                   %if mylar.mylar.CONFIG.ENABLE_TORRENTS:
                                                        <input type="checkbox" style="vertical-align: middle; margin: 3px; margin-top: -1px;" name="snatchedtorrent_notify" value="1" ${config['snatchedtorrent_notify']} /><label>Manual Post-Processing - Notify on Completed Torrents</label>
                                                    %endif
 
@@ -1243,7 +1243,7 @@
 							<select name="interface"><h3>
 							%for interface in config['interface_list']:
 								<%
-									if interface == mylar.CONFIG.INTERFACE:
+									if interface == mylar.mylar.CONFIG.INTERFACE:
 										selected = 'selected="selected"'
 									else:
 										selected = ''

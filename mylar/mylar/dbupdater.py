@@ -18,7 +18,7 @@ from __future__ import with_statement
 
 import mylar
 
-from mylar import logger, helpers
+from mylar.mylar import logger, helpers
 
 #import threading
 

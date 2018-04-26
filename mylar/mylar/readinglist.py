@@ -13,15 +13,15 @@
 #  You should have received a copy of the GNU General Public License
 #  along with Mylar.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import with_statement
 from builtins import str
 from builtins import object
-from __future__ import with_statement
 
 import os
 import re
 import mylar
 
-from mylar import logger, db, helpers
+from mylar.mylar import logger, db, helpers
 
 class Readinglist(object):
 

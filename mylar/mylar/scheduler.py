@@ -23,7 +23,7 @@ import time
 import threading
 import traceback
 
-from mylar import logger
+from mylar.mylar import logger
 
 
 class Scheduler(object):

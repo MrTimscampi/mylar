@@ -36,7 +36,7 @@ import cherrypy
 import requests
 
 import mylar
-from mylar import logger, helpers, db, mb, cv, parseit, filechecker, search, updater, moveit, comicbookdb
+from mylar.mylar import logger, helpers, db, mb, cv, parseit, filechecker, search, updater, moveit, comicbookdb
 
 
 def is_exists(comicid):

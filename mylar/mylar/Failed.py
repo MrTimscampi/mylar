@@ -20,7 +20,7 @@ standard_library.install_aliases()
 from builtins import str
 from builtins import object
 import mylar
-from mylar import logger, db, updater, helpers, parseit, findcomicfeed, notifiers, rsscheck
+from mylar.mylar import logger, db, updater, helpers, parseit, findcomicfeed, notifiers, rsscheck
 
 import feedparser as feedparser
 import urllib.request, urllib.parse, urllib.error

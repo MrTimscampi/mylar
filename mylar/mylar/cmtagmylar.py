@@ -16,7 +16,7 @@ import subprocess
 from subprocess import CalledProcessError, check_output
 import mylar
 
-from mylar import logger
+from mylar.mylar import logger
 
 
 def run(dirName, nzbName=None, issueid=None, comversion=None, manual=None, filename=None, module=None, manualmeta=False):

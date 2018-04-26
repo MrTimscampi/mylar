@@ -25,7 +25,7 @@ import hashlib
 import io
 
 import mylar
-from mylar import logger
+from mylar.mylar import logger
 
 class utorrentclient(object):
 

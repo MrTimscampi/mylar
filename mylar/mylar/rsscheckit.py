@@ -22,7 +22,7 @@ from past.utils import old_div
 import datetime
 import threading
 import mylar
-from mylar import logger, rsscheck, helpers, auth32p
+from mylar.mylar import logger, rsscheck, helpers, auth32p
 
 rss_lock = threading.Lock()
 

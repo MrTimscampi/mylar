@@ -30,7 +30,7 @@ from cgi import escape
 import urllib.request, urllib.parse, urllib.error
 import re
 import mylar
-from mylar import logger
+from mylar.mylar import logger
 
 SESSION_KEY = '_cp_username'
 

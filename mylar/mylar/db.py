@@ -17,11 +17,11 @@
 ## Stolen from Sick-Beard's db.py  ##
 #####################################
 
+from __future__ import with_statement
 from future import standard_library
 standard_library.install_aliases()
 from builtins import str
 from builtins import object
-from __future__ import with_statement
 
 import os
 import sqlite3
@@ -31,14 +31,14 @@ import queue
 
 import mylar
 
-from mylar import logger
+from mylar.mylar import logger
 
 db_lock = threading.Lock()
 mylarQueue = queue.Queue()
 
 def dbFilename(filename="mylar.db"):
 
-    return os.path.join(mylar.DATA_DIR, filename)
+    return os.path.join(mylar.mylar.DATA_DIR, filename)
 
 class WriteOnly(object):
 

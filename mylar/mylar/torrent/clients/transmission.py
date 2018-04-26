@@ -1,7 +1,7 @@
 from builtins import object
 import os
 import mylar
-from mylar import logger
+from mylar.mylar import logger
 from transmissionrpc import Client
 
 

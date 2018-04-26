@@ -17,7 +17,7 @@ from builtins import object
 
 import mylar
 
-from mylar import logger, helpers, versioncheck
+from mylar.mylar import logger, helpers, versioncheck
 
 class CheckVersion(object):
     def __init__(self):

@@ -45,9 +45,9 @@ from apscheduler.triggers.interval import IntervalTrigger
 
 import cherrypy
 
-from mylar import logger, versioncheckit, rsscheckit, searchit, weeklypullit, PostProcessor, updater, helpers
+from mylar.mylar import logger, versioncheckit, rsscheckit, searchit, weeklypullit, PostProcessor, updater, helpers
 
-import mylar.config
+import mylar.mylar.config
 
 #these are the globals that are runtime-based (ie. not config-valued at all)
 #they are referenced in other modules just as mylar.VARIABLE (instead of mylar.CONFIG.VARIABLE)
@@ -175,7 +175,7 @@ def initialize(config_file):
                MONITOR_STATUS, SEARCH_STATUS, RSS_STATUS, WEEKLY_STATUS, VERSION_STATUS, UPDATER_STATUS, DBUPDATE_INTERVAL, LOG_LANG, LOG_CHARSET, APILOCK, SEARCHLOCK, LOG_LEVEL, \
                SCHED_RSS_LAST, SCHED_WEEKLY_LAST, SCHED_MONITOR_LAST, SCHED_SEARCH_LAST, SCHED_VERSION_LAST, SCHED_DBUPDATE_LAST, COMICINFO, SEARCH_TIER_DATE
 
-        cc = mylar.config.Config(config_file)
+        cc = mylar.mylar.config.Config(config_file)
         CONFIG = cc.read(startup=True)
 
         assert CONFIG is not None
@@ -256,7 +256,7 @@ def initialize(config_file):
             helpers.updateComicLocation()
 
         #Ordering comics here
-        if mylar.MAINTENANCE is False:
+        if mylar.mylar.MAINTENANCE is False:
             logger.info('Remapping the sorting to allow for new additions.')
             COMICSORT = helpers.ComicSort(sequence='startup')
 

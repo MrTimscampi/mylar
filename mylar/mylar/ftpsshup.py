@@ -5,7 +5,7 @@ import os
 import time
 
 import mylar
-from mylar import logger
+from mylar.mylar import logger
 
 def putfile(localpath, file):    #localpath=full path to .torrent (including filename), file=filename of torrent
 

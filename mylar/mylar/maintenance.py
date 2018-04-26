@@ -22,7 +22,7 @@ import sqlite3
 import json
 
 import mylar
-from mylar import logger, importer
+from mylar.mylar import logger, importer
 
 class Maintenance(object):
 

@@ -1,0 +1,3 @@
+[console_scripts]
+mylar = mylar.Mylar:main
+

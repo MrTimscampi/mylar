@@ -5,7 +5,7 @@ from builtins import object
 import os
 import mylar
 import base64
-from mylar import logger, helpers
+from mylar.mylar import logger, helpers
 
 from deluge_client import DelugeRPCClient
 

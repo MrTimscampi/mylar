@@ -26,10 +26,6 @@ from . import helpers
 from . import logger
 import datetime
 import sys
-from decimal import Decimal
-from html.parser import HTMLParseError
-from time import strptime
-import mylar
 
 def GCDScraper(ComicName, ComicYear, Total, ComicID, quickmatch=None):
     NOWyr = datetime.date.today().year

@@ -4,16 +4,10 @@ from __future__ import absolute_import
 from future import standard_library
 standard_library.install_aliases()
 from builtins import str
-from bs4 import BeautifulSoup, UnicodeDammit
+from bs4 import BeautifulSoup
 import urllib.request, urllib.error, urllib.parse
 import re
-from . import helpers
-from . import logger
-import datetime
 import sys
-from decimal import Decimal
-from html.parser import HTMLParseError
-from time import strptime
 
 
 def cbdb(comicnm, ComicYear):

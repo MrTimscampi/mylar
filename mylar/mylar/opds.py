@@ -23,7 +23,7 @@ from builtins import zip
 from past.builtins import basestring
 from builtins import object
 import mylar
-from mylar import db, mb, importer, search, PostProcessor, versioncheck, logger, readinglist, helpers
+from mylar.mylar import db, mb, importer, search, PostProcessor, versioncheck, logger, readinglist, helpers
 import simplejson as simplejson
 import cherrypy
 from xml.sax.saxutils import escape

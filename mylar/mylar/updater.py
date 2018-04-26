@@ -27,10 +27,9 @@ import re
 import os
 import itertools
 import sys
-import exceptions
 
 import mylar
-from mylar import db, logger, helpers, filechecker
+from mylar.mylar import db, logger, helpers, filechecker
 
 def dbUpdate(ComicIDList=None, calledfrom=None, sched=False):
     if mylar.IMPORTLOCK:

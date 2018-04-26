@@ -16,7 +16,7 @@ import shutil
 import re
 import configparser
 import mylar
-from mylar import logger, helpers
+from mylar.mylar import logger, helpers
 
 config = configparser.SafeConfigParser()
 
@@ -496,9 +496,9 @@ class Config(object):
         setattr(self, 'EXTRA_TORZNABS', self.get_extra_torznabs())
         if any([self.CONFIG_VERSION == 0, self.CONFIG_VERSION < self.newconfig]):
             try:
-                shutil.move(self._config_file, os.path.join(mylar.DATA_DIR, 'config.ini.backup'))
+                shutil.move(self._config_file, os.path.join(mylar.mylar.DATA_DIR, 'config.ini.backup'))
             except:
-                print('Unable to make proper backup of config file in %s' % os.path.join(mylar.DATA_DIR, 'config.ini.backup'))
+                print('Unable to make proper backup of config file in %s' % os.path.join(mylar.mylar.DATA_DIR, 'config.ini.backup'))
             if self.newconfig == 8:
                 print('Attempting to update configuration..')
                 #torznab multiple entries merged into extra_torznabs value
@@ -524,11 +524,11 @@ class Config(object):
 
             # Start the logger, silence console logging if we need to
             if logger.LOG_LANG.startswith('en'):
-                logger.initLogger(console=not mylar.QUIET, log_dir=self.LOG_DIR, max_logsize=self.MAX_LOGSIZE, max_logfiles=self.MAX_LOGFILES, loglevel=mylar.LOG_LEVEL)
+                logger.initLogger(console=not mylar.mylar.QUIET, log_dir=self.LOG_DIR, max_logsize=self.MAX_LOGSIZE, max_logfiles=self.MAX_LOGFILES, loglevel=mylar.mylar.LOG_LEVEL)
             else:
-                if self.LOG_LEVEL != mylar.LOG_LEVEL:
-                    print('Logging level over-ridden by startup value. Changing from %s to %s' % (self.LOG_LEVEL, mylar.LOG_LEVEL))
-                logger.mylar_log.initLogger(loglevel=mylar.LOG_LEVEL, log_dir=self.LOG_DIR, max_logsize=self.MAX_LOGSIZE, max_logfiles=self.MAX_LOGFILES)
+                if self.LOG_LEVEL != mylar.mylar.LOG_LEVEL:
+                    print('Logging level over-ridden by startup value. Changing from %s to %s' % (self.LOG_LEVEL, mylar.mylar.LOG_LEVEL))
+                logger.mylar_log.initLogger(loglevel=mylar.mylar.LOG_LEVEL, log_dir=self.LOG_DIR, max_logsize=self.MAX_LOGSIZE, max_logfiles=self.MAX_LOGFILES)
 
         self.configure()
         return self
@@ -747,13 +747,13 @@ class Config(object):
            logger.fdebug('Log dir: %s' % self.LOG_DIR)
 
         if self.LOG_DIR is None:
-            self.LOG_DIR = os.path.join(mylar.DATA_DIR, 'logs')
+            self.LOG_DIR = os.path.join(mylar.mylar.DATA_DIR, 'logs')
 
         if not os.path.exists(self.LOG_DIR):
             try:
                 os.makedirs(self.LOG_DIR)
             except OSError:
-                if not mylar.QUIET:
+                if not mylar.mylar.QUIET:
                     logger.warn('Unable to create the log directory. Logging to screen only.')
 
         # if not update:
@@ -761,7 +761,7 @@ class Config(object):
 
         # Put the cache dir in the data dir for now
         if not self.CACHE_DIR:
-            self.CACHE_DIR = os.path.join(str(mylar.DATA_DIR), 'cache')
+            self.CACHE_DIR = os.path.join(str(mylar.mylar.DATA_DIR), 'cache')
             if not update:
                 logger.fdebug('[Cache Check] Cache directory not found in configuration. Defaulting location to : ' + self.CACHE_DIR)
 
@@ -769,7 +769,7 @@ class Config(object):
             try:
                os.makedirs(self.CACHE_DIR)
             except OSError:
-                logger.error('[Cache Check] Could not create cache dir. Check permissions of datadir: ' + mylar.DATA_DIR)
+                logger.error('[Cache Check] Could not create cache dir. Check permissions of datadir: ' + mylar.mylar.DATA_DIR)
 
         if all([self.GRABBAG_DIR is None, self.DESTINATION_DIR is not None]):
             self.GRABBAG_DIR = os.path.join(self.DESTINATION_DIR, 'Grabbag')
@@ -818,15 +818,15 @@ class Config(object):
 
         #comictagger - force to use included version if option is enabled.
         if self.ENABLE_META:
-            mylar.CMTAGGER_PATH = mylar.PROG_DIR
+            mylar.mylar.CMTAGGER_PATH = mylar.mylar.PROG_DIR
             #we need to make sure the default folder setting for the comictagger settings exists so things don't error out
-            mylar.CT_SETTINGSPATH = os.path.join(mylar.PROG_DIR, 'lib', 'comictaggerlib', 'ct_settings')
+            mylar.mylar.CT_SETTINGSPATH = os.path.join(mylar.mylar.PROG_DIR, 'lib', 'comictaggerlib', 'ct_settings')
             if not update:
-                logger.fdebug('Setting ComicTagger settings default path to : ' + mylar.CT_SETTINGSPATH)
+                logger.fdebug('Setting ComicTagger settings default path to : ' + mylar.mylar.CT_SETTINGSPATH)
 
-            if not os.path.exists(mylar.CT_SETTINGSPATH):
+            if not os.path.exists(mylar.mylar.CT_SETTINGSPATH):
                 try:
-                    os.mkdir(mylar.CT_SETTINGSPATH)
+                    os.mkdir(mylar.mylar.CT_SETTINGSPATH)
                 except OSError as e:
                     if e.errno != errno.EEXIST:
                         logger.error('Unable to create setting directory for ComicTagger. This WILL cause problems when tagging.')
@@ -834,25 +834,25 @@ class Config(object):
                     logger.fdebug('Successfully created ComicTagger Settings location.')
 
         if self.MODE_32P is False and self.RSSFEED_32P is not None:
-            mylar.KEYS_32P = self.parse_32pfeed(self.RSSFEED_32P)
+            mylar.mylar.KEYS_32P = self.parse_32pfeed(self.RSSFEED_32P)
 
         if self.AUTO_SNATCH is True and self.AUTO_SNATCH_SCRIPT is None:
-            setattr(self, 'AUTO_SNATCH_SCRIPT', os.path.join(mylar.PROG_DIR, 'post-processing', 'torrent-auto-snatch', 'getlftp.sh'))
+            setattr(self, 'AUTO_SNATCH_SCRIPT', os.path.join(mylar.mylar.PROG_DIR, 'post-processing', 'torrent-auto-snatch', 'getlftp.sh'))
             config.set('AutoSnatch', 'auto_snatch_script', self.AUTO_SNATCH_SCRIPT)
-        mylar.USE_SABNZBD = False
-        mylar.USE_NZBGET = False
-        mylar.USE_BLACKHOLE = False
+        mylar.mylar.USE_SABNZBD = False
+        mylar.mylar.USE_NZBGET = False
+        mylar.mylar.USE_BLACKHOLE = False
 
         if self.NZB_DOWNLOADER == 0:
-            mylar.USE_SABNZBD = True
+            mylar.mylar.USE_SABNZBD = True
         elif self.NZB_DOWNLOADER == 1:
-            mylar.USE_NZBGET = True
+            mylar.mylar.USE_NZBGET = True
         elif self.NZB_DOWNLOADER == 2:
-            mylar.USE_BLACKHOLE = True
+            mylar.mylar.USE_BLACKHOLE = True
         else:
             #default to SABnzbd
             self.NZB_DOWNLOADER = 0
-            mylar.USE_SABNZBD = True
+            mylar.mylar.USE_SABNZBD = True
 
         if self.SAB_PRIORITY.isdigit():
             if self.SAB_PRIORITY == "0": self.SAB_PRIORITY = "Default"
@@ -862,27 +862,27 @@ class Config(object):
             elif self.SAB_PRIORITY == "4": self.SAB_PRIORITY = "Paused"
             else: self.SAB_PRIORITY = "Default"
 
-        mylar.USE_WATCHDIR = False
-        mylar.USE_UTORRENT = False
-        mylar.USE_RTORRENT = False
-        mylar.USE_TRANSMISSION = False
-        mylar.USE_DELUGE = False
-        mylar.USE_QBITTORRENT = False
+        mylar.mylar.USE_WATCHDIR = False
+        mylar.mylar.USE_UTORRENT = False
+        mylar.mylar.USE_RTORRENT = False
+        mylar.mylar.USE_TRANSMISSION = False
+        mylar.mylar.USE_DELUGE = False
+        mylar.mylar.USE_QBITTORRENT = False
         if self.TORRENT_DOWNLOADER == 0:
-            mylar.USE_WATCHDIR = True
+            mylar.mylar.USE_WATCHDIR = True
         elif self.TORRENT_DOWNLOADER == 1:
-            mylar.USE_UTORRENT = True
+            mylar.mylar.USE_UTORRENT = True
         elif self.TORRENT_DOWNLOADER == 2:
-            mylar.USE_RTORRENT = True
+            mylar.mylar.USE_RTORRENT = True
         elif self.TORRENT_DOWNLOADER == 3:
-            mylar.USE_TRANSMISSION = True
+            mylar.mylar.USE_TRANSMISSION = True
         elif self.TORRENT_DOWNLOADER == 4:
-            mylar.USE_DELUGE = True
+            mylar.mylar.USE_DELUGE = True
         elif self.TORRENT_DOWNLOADER == 5:
-            mylar.USE_QBITTORRENT = True
+            mylar.mylar.USE_QBITTORRENT = True
         else:
             self.TORRENT_DOWNLOADER = 0
-            mylar.USE_WATCHDIR = True
+            mylar.mylar.USE_WATCHDIR = True
 
     def parse_32pfeed(self, rssfeedline):
         KEYS_32P = {}

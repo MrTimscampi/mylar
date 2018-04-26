@@ -18,7 +18,7 @@ from html.parser import HTMLParseError
 from time import strptime
 
 import mylar
-from mylar import logger, helpers
+from mylar.mylar import logger, helpers
 
 def solicit(month, year):
     #convert to numerics just to ensure this...

@@ -5,7 +5,7 @@ import mylar
 from base64 import b16encode, b32decode
 import re
 import time
-from mylar import logger, helpers
+from mylar.mylar import logger, helpers
 
 from qbittorrent import Client
 
