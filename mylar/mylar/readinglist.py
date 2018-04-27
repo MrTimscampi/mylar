@@ -19,7 +19,7 @@ from builtins import object
 
 import os
 import re
-import mylar
+import mylar.mylar
 
 from mylar.mylar import logger, db, helpers
 

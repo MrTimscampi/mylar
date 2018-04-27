@@ -22,7 +22,7 @@ import traceback
 import threading
 import platform
 import locale
-import mylar
+import mylar.mylar
 from mylar.mylar import helpers
 import logging
 from logging import getLogger, WARN, ERROR, INFO, DEBUG, StreamHandler, Formatter, Handler

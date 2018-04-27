@@ -23,29 +23,29 @@ import re
 import shutil
 import random
 
-import mylar
+import mylar.mylar
 from mylar.mylar import db, logger, helpers, importer, updater, filechecker
 
 # You can scan a single directory and append it to the current library by specifying append=True
 def libraryScan(dir=None, append=False, ComicID=None, ComicName=None, cron=None, queue=None):
 
-    if cron and not mylar.LIBRARYSCAN:
+    if cron and not mylar.mylar.LIBRARYSCAN:
         return
 
     if not dir:
-        dir = mylar.CONFIG.COMIC_DIR
+        dir = mylar.mylar.CONFIG.COMIC_DIR
 
     # If we're appending a dir, it's coming from the post processor which is
     # already bytestring
     if not append:
-        dir = dir.encode(mylar.SYS_ENCODING)
+        dir = dir.encode(mylar.mylar.SYS_ENCODING)
 
     if not os.path.isdir(dir):
-        logger.warn('Cannot find directory: %s. Not scanning' % dir.decode(mylar.SYS_ENCODING, 'replace'))
+        logger.warn('Cannot find directory: %s. Not scanning' % dir.decode(mylar.mylar.SYS_ENCODING, 'replace'))
         return "Fail"
 
 
-    logger.info('Scanning comic directory: %s' % dir.decode(mylar.SYS_ENCODING, 'replace'))
+    logger.info('Scanning comic directory: %s' % dir.decode(mylar.mylar.SYS_ENCODING, 'replace'))
 
     basedir = dir
 
@@ -57,12 +57,12 @@ def libraryScan(dir=None, append=False, ComicID=None, ComicName=None, cron=None,
     cv_location = []
     cbz_retry = 0
 
-    mylar.IMPORT_STATUS = 'Now attempting to parse files for additional information'
+    mylar.mylar.IMPORT_STATUS = 'Now attempting to parse files for additional information'
 
-    #mylar.IMPORT_PARSED_COUNT #used to count what #/totalfiles the filename parser is currently on
+    #mylar.mylar.IMPORT_PARSED_COUNT #used to count what #/totalfiles the filename parser is currently on
     for r, d, f in os.walk(dir):
         for files in f:
-            mylar.IMPORT_FILES +=1
+            mylar.mylar.IMPORT_FILES +=1
             if 'cvinfo' in files:
                 cv_location.append(r)
                 logger.fdebug('CVINFO found: ' + os.path.join(r))
@@ -106,7 +106,7 @@ def libraryScan(dir=None, append=False, ComicID=None, ComicName=None, cron=None,
                         continue
 
                     # We need the unicode path to use for logging, inserting into database
-                    unicode_comic_path = comicpath.decode(mylar.SYS_ENCODING, 'replace')
+                    unicode_comic_path = comicpath.decode(mylar.mylar.SYS_ENCODING, 'replace')
 
                     if results['parse_status'] == 'success':
                         comic_list.append({'ComicFilename':           comic,
@@ -119,7 +119,7 @@ def libraryScan(dir=None, append=False, ComicID=None, ComicName=None, cron=None,
                                                                        'issue_number':   results['issue_number']}
                                            })
                         comiccnt +=1
-                        mylar.IMPORT_PARSED_COUNT +=1
+                        mylar.mylar.IMPORT_PARSED_COUNT +=1
                     else:
                         failure_list.append({'ComicFilename':           comic,
                                              'ComicLocation':           comicpath,
@@ -130,7 +130,7 @@ def libraryScan(dir=None, append=False, ComicID=None, ComicName=None, cron=None,
                                                                          'issue_year':     results['issue_year'],
                                                                          'issue_number':   results['issue_number']}
                                            })
-                        mylar.IMPORT_FAILURE_COUNT +=1
+                        mylar.mylar.IMPORT_FAILURE_COUNT +=1
                         if comic.endswith('.cbz'):
                             cbz_retry +=1
 
@@ -144,17 +144,17 @@ def libraryScan(dir=None, append=False, ComicID=None, ComicName=None, cron=None,
                                                'error':                   e
                                              })
                     logger.info('[' + str(e) + '] FAILURE encountered. Logging the error for ' + comic + ' and continuing...')
-                    mylar.IMPORT_FAILURE_COUNT +=1
+                    mylar.mylar.IMPORT_FAILURE_COUNT +=1
                     if comic.endswith('.cbz'):
                         cbz_retry +=1
                     continue
 
-    mylar.IMPORT_TOTALFILES = comiccnt
+    mylar.mylar.IMPORT_TOTALFILES = comiccnt
     logger.info('I have successfully discovered & parsed a total of ' + str(comiccnt) + ' files....analyzing now')
     logger.info('I have not been able to determine what ' + str(len(failure_list)) + ' files are')
     logger.info('However, ' + str(cbz_retry) + ' out of the ' + str(len(failure_list)) + ' files are in a cbz format, which may contain metadata.')
     logger.info('[ERRORS] I have encountered ' + str(len(utter_failure_list)) + ' file-scanning errors during the scan, but have recorded the necessary information.')
-    mylar.IMPORT_STATUS = 'Successfully parsed ' + str(comiccnt) + ' files'
+    mylar.mylar.IMPORT_STATUS = 'Successfully parsed ' + str(comiccnt) + ' files'
     #return queue.put(valreturn)
 
     logger.fdebug(utter_failure_list)
@@ -229,10 +229,10 @@ def libraryScan(dir=None, append=False, ComicID=None, ComicName=None, cron=None,
     cvscanned_loc = None
     cvinfo_CID = None
     cnt = 0
-    mylar.IMPORT_STATUS = '[0%] Now parsing individual filenames for metadata if available'
+    mylar.mylar.IMPORT_STATUS = '[0%] Now parsing individual filenames for metadata if available'
 
     for i in comic_list:
-        mylar.IMPORT_STATUS = '[' + str(cnt) + '/' + str(comiccnt) + '] Now parsing individual filenames for metadata if available'
+        mylar.mylar.IMPORT_STATUS = '[' + str(cnt) + '/' + str(comiccnt) + '] Now parsing individual filenames for metadata if available'
         logger.fdebug('Analyzing : ' + i['ComicFilename'])
         comfilename = i['ComicFilename']
         comlocation = i['ComicLocation']
@@ -269,7 +269,7 @@ def libraryScan(dir=None, append=False, ComicID=None, ComicName=None, cron=None,
         #    don't scan in it again if it's already been done initially
         #    continue
 
-        if mylar.CONFIG.IMP_METADATA:
+        if mylar.mylar.CONFIG.IMP_METADATA:
             #if read tags is enabled during import, check here.
             if i['ComicLocation'].endswith('.cbz'):
                 logger.fdebug('[IMPORT-CBZ] Metatagging checking enabled.')
@@ -394,9 +394,9 @@ def libraryScan(dir=None, append=False, ComicID=None, ComicName=None, cron=None,
                                                                             'issuenumber': issue_number,
                                                                             'volume':      issuevolume,
                                                                             'comfilename': comfilename,
-                                                                            'comlocation': comlocation.decode(mylar.SYS_ENCODING)}
+                                                                            'comlocation': comlocation.decode(mylar.mylar.SYS_ENCODING)}
                                                              })
-                                        mylar.IMPORT_CID_COUNT +=1
+                                        mylar.mylar.IMPORT_CID_COUNT +=1
                                         issuepopulated = True
 
                                 if issuepopulated == False:
@@ -417,10 +417,10 @@ def libraryScan(dir=None, append=False, ComicID=None, ComicName=None, cron=None,
                                         "volume": issuevolume,
                                         "issueid": issuenotes_id,
                                         "comfilename": comfilename,
-                                        "comlocation": comlocation.decode(mylar.SYS_ENCODING)
+                                        "comlocation": comlocation.decode(mylar.mylar.SYS_ENCODING)
                                                        })
 
-                                    mylar.IMPORT_CID_COUNT +=1
+                                    mylar.mylar.IMPORT_CID_COUNT +=1
                         else:
                             pass            
                             #logger.fdebug(i['ComicFilename'] + ' is not in a metatagged format (cbz). Bypassing reading of the metatags')
@@ -507,8 +507,8 @@ def libraryScan(dir=None, append=False, ComicID=None, ComicName=None, cron=None,
 
     vals = None
     if len(reverse_issueids) > 0:
-        mylar.IMPORT_STATUS = 'Now Reverse looking up ' + str(len(reverse_issueids)) + ' IssueIDs to get the ComicIDs'
-        vals = mylar.cv.getComic(None, 'import', comicidlist=reverse_issueids)
+        mylar.mylar.IMPORT_STATUS = 'Now Reverse looking up ' + str(len(reverse_issueids)) + ' IssueIDs to get the ComicIDs'
+        vals = mylar.mylar.cv.getComic(None, 'import', comicidlist=reverse_issueids)
         #logger.fdebug('vals returned:' + str(vals))
 
     if len(watch_kchoice) > 0:
@@ -520,7 +520,7 @@ def libraryScan(dir=None, append=False, ComicID=None, ComicName=None, cron=None,
         comicids = []
 
         if watchfound > 0:
-            if mylar.CONFIG.IMP_MOVE:
+            if mylar.mylar.CONFIG.IMP_MOVE:
                 logger.info('You checked off Move Files...so that\'s what I am going to do') 
                 #check to see if Move Files is enabled.
                 #if not being moved, set the archive bit.
@@ -538,8 +538,8 @@ def libraryScan(dir=None, append=False, ComicID=None, ComicName=None, cron=None,
                     logger.fdebug('Orig. Location: ' + orig_comlocation)
                     logger.fdebug('Orig. Filename: ' + orig_filename)
                     #before moving check to see if Rename to Mylar structure is enabled.
-                    if mylar.CONFIG.IMP_RENAME:
-                        logger.fdebug('Renaming files according to configuration details : ' + str(mylar.CONFIG.FILE_FORMAT))
+                    if mylar.mylar.CONFIG.IMP_RENAME:
+                        logger.fdebug('Renaming files according to configuration details : ' + str(mylar.mylar.CONFIG.FILE_FORMAT))
                         renameit = helpers.rename_param(watch_comicid, watch_comicname, watch_comicyear, watch_comiciss)
                         nfilename = renameit['nfilename']
 
@@ -613,27 +613,27 @@ def libraryScan(dir=None, append=False, ComicID=None, ComicName=None, cron=None,
 
 
 def scanLibrary(scan=None, queue=None):
-    mylar.IMPORT_FILES = 0
-    mylar.IMPORT_PARSED_COUNT = 0
+    mylar.mylar.IMPORT_FILES = 0
+    mylar.mylar.IMPORT_PARSED_COUNT = 0
     valreturn = []
     if scan:
         try:
             soma = libraryScan(queue=queue)
         except Exception as e:
             logger.error('[IMPORT] Unable to complete the scan: %s' % e)
-            mylar.IMPORT_STATUS = None
+            mylar.mylar.IMPORT_STATUS = None
             valreturn.append({"somevalue":  'self.ie',
                               "result":     'error'})
             return queue.put(valreturn)
         if soma == "Completed":
             logger.info('[IMPORT] Sucessfully completed import.')
         elif soma == "Fail":
-            mylar.IMPORT_STATUS = 'Failure'
+            mylar.mylar.IMPORT_STATUS = 'Failure'
             valreturn.append({"somevalue":  'self.ie',
                               "result":     'error'})
             return queue.put(valreturn)
         else:
-            mylar.IMPORT_STATUS = 'Now adding the completed results to the DB.'
+            mylar.mylar.IMPORT_STATUS = 'Now adding the completed results to the DB.'
             logger.info('[IMPORT] Parsing/Reading of files completed!')
             logger.info('[IMPORT] Attempting to import ' + str(int(soma['import_cv_ids'] + soma['import_count'])) + ' files into your watchlist.')
             logger.info('[IMPORT-BREAKDOWN] Files with ComicIDs successfully extracted: ' + str(soma['import_cv_ids']))
@@ -698,7 +698,7 @@ def scanLibrary(scan=None, queue=None):
             # unzip -z filename.cbz will show the comment field of the zip which contains the metadata.
 
         #self.importResults()
-        mylar.IMPORT_STATUS = 'Import completed.'
+        mylar.mylar.IMPORT_STATUS = 'Import completed.'
         valreturn.append({"somevalue":  'self.ie',
                           "result":     'success'})
         return queue.put(valreturn)

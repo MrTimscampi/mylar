@@ -26,7 +26,7 @@ import sys
 import threading
 import time
 
-import mylar
+import mylar.mylar
 from mylar.mylar import webstart, logger, filechecker, versioncheck, maintenance
 
 if ( sys.platform == 'win32' and sys.executable.split( '\\' )[-1] == 'pythonw.exe'):

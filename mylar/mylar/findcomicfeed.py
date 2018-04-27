@@ -10,7 +10,7 @@ import time
 import feedparser
 import re
 from . import logger
-import mylar
+import mylar.mylar
 import unicodedata
 import urllib.request, urllib.parse, urllib.error
 
@@ -54,16 +54,16 @@ def Startit(searchName, searchIssue, searchYear, ComicVersion, IssDateFix):
         searchName = searchName.replace("-", '((\\s)?[-:])?(\\s)?')
     regexName = searchName.replace(" ", '((\\s)?[-:])?(\\s)?') 
 
-    if mylar.CONFIG.USE_MINSIZE:
-        size_constraints = "minsize=" + str(mylar.CONFIG.MINSIZE)
+    if mylar.mylar.CONFIG.USE_MINSIZE:
+        size_constraints = "minsize=" + str(mylar.mylar.CONFIG.MINSIZE)
     else:
         size_constraints = "minsize=10"
 
-    if mylar.CONFIG.USE_MAXSIZE:
-        size_constraints = size_constraints + "&maxsize=" + str(mylar.CONFIG.MAXSIZE)
+    if mylar.mylar.CONFIG.USE_MAXSIZE:
+        size_constraints = size_constraints + "&maxsize=" + str(mylar.mylar.CONFIG.MAXSIZE)
 
-    if mylar.CONFIG.USENET_RETENTION != None:
-        max_age = "&age=" + str(mylar.CONFIG.USENET_RETENTION)
+    if mylar.mylar.CONFIG.USENET_RETENTION != None:
+        max_age = "&age=" + str(mylar.mylar.CONFIG.USENET_RETENTION)
 
     feeds = []
     i = 1

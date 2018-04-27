@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 
 from lib.rtorrent import RTorrent
 
-import mylar
+import mylar.mylar
 from mylar.mylar import logger, helpers
 
 class TorrentClient(object):

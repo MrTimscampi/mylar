@@ -23,7 +23,7 @@ from builtins import str
 from builtins import zip
 from past.builtins import basestring
 from builtins import object
-import mylar
+import mylar.mylar
 from mylar.mylar import db, mb, importer, search, process, versioncheck, logger, webserve, helpers
 import simplejson as simplejson
 import json
@@ -71,31 +71,31 @@ class Api(object):
             self.data = self._error_with_message('Missing parameter: cmd')
             return
 
-        if not mylar.CONFIG.API_ENABLED:
-            if kwargs['apikey'] != mylar.DOWNLOAD_APIKEY:
+        if not mylar.mylar.CONFIG.API_ENABLED:
+            if kwargs['apikey'] != mylar.mylar.DOWNLOAD_APIKEY:
                self.data = self._error_with_message('API not enabled')
                return
 
-        if kwargs['apikey'] != mylar.CONFIG.API_KEY and all([kwargs['apikey'] != mylar.DOWNLOAD_APIKEY, mylar.DOWNLOAD_APIKEY != None]):
+        if kwargs['apikey'] != mylar.mylar.CONFIG.API_KEY and all([kwargs['apikey'] != mylar.mylar.DOWNLOAD_APIKEY, mylar.mylar.DOWNLOAD_APIKEY != None]):
             self.data = self._error_with_message('Incorrect API key')
             return
         else:
-            if kwargs['apikey'] == mylar.CONFIG.API_KEY:
+            if kwargs['apikey'] == mylar.mylar.CONFIG.API_KEY:
                 self.apitype = 'normal'
-            elif kwargs['apikey'] == mylar.DOWNLOAD_APIKEY:
+            elif kwargs['apikey'] == mylar.mylar.DOWNLOAD_APIKEY:
                 self.apitype = 'download'
             logger.fdebug('Matched to key. Api set to : ' + self.apitype + ' mode.')
             self.apikey = kwargs.pop('apikey')
 
-        if not([mylar.CONFIG.API_KEY, mylar.DOWNLOAD_APIKEY]):
+        if not([mylar.mylar.CONFIG.API_KEY, mylar.mylar.DOWNLOAD_APIKEY]):
             self.data = self._error_with_message('API key not generated')
             return
 
         if self.apitype:
-            if self.apitype == 'normal' and len(mylar.CONFIG.API_KEY) != 32:
+            if self.apitype == 'normal' and len(mylar.mylar.CONFIG.API_KEY) != 32:
                 self.data = self._error_with_message('API key not generated correctly')
                 return
-            if self.apitype == 'download' and len(mylar.DOWNLOAD_APIKEY) != 32:
+            if self.apitype == 'download' and len(mylar.mylar.DOWNLOAD_APIKEY) != 32:
                 self.data = self._error_with_message('Download API key not generated correctly')
                 return
         else:
@@ -173,7 +173,7 @@ class Api(object):
 
         comic = self._dic_from_query('SELECT * from comics WHERE ComicID="' + self.id + '"')
         issues = self._dic_from_query('SELECT * from issues WHERE ComicID="' + self.id + '"order by Int_IssueNumber DESC')
-        if mylar.CONFIG.ANNUALS_ON:
+        if mylar.mylar.CONFIG.ANNUALS_ON:
             annuals = self._dic_from_query('SELECT * FROM annuals WHERE ComicID="' + self.id + '"')
         else:
             annuals = []
@@ -213,11 +213,11 @@ class Api(object):
         return
 
     def _getLogs(self, **kwargs):
-        self.data = mylar.LOG_LIST
+        self.data = mylar.mylar.LOG_LIST
         return
 
     def _clearLogs(self, **kwargs):
-        mylar.LOG_LIST = []
+        mylar.mylar.LOG_LIST = []
         self.data = 'Cleared log'
         return
 
@@ -367,7 +367,7 @@ class Api(object):
 
         if 'apc_version' not in kwargs:
             logger.info('Received API Request for PostProcessing %s [%s]. Queueing...' % (self.nzb_name, self.nzb_folder))
-            mylar.PP_QUEUE.put({'nzb_name':    self.nzb_name,
+            mylar.mylar.PP_QUEUE.put({'nzb_name':    self.nzb_name,
                                 'nzb_folder':  self.nzb_folder,
                                 'issueid':     issueid,
                                 'failed':      failed,
@@ -385,11 +385,11 @@ class Api(object):
 
     def _getVersion(self, **kwargs):
         self.data = {
-            'git_path': mylar.CONFIG.GIT_PATH,
-            'install_type': mylar.INSTALL_TYPE,
-            'current_version': mylar.CURRENT_VERSION,
-            'latest_version': mylar.LATEST_VERSION,
-            'commits_behind': mylar.COMMITS_BEHIND,
+            'git_path': mylar.mylar.CONFIG.GIT_PATH,
+            'install_type': mylar.mylar.INSTALL_TYPE,
+            'current_version': mylar.mylar.CURRENT_VERSION,
+            'latest_version': mylar.mylar.LATEST_VERSION,
+            'commits_behind': mylar.mylar.COMMITS_BEHIND,
         }
 
     def _checkGithub(self, **kwargs):
@@ -397,13 +397,13 @@ class Api(object):
         self._getVersion()
 
     def _shutdown(self, **kwargs):
-        mylar.SIGNAL = 'shutdown'
+        mylar.mylar.SIGNAL = 'shutdown'
 
     def _restart(self, **kwargs):
-        mylar.SIGNAL = 'restart'
+        mylar.mylar.SIGNAL = 'restart'
 
     def _update(self, **kwargs):
-        mylar.SIGNAL = 'update'
+        mylar.mylar.SIGNAL = 'update'
 
     def _getArtistArt(self, **kwargs):
         if 'id' not in kwargs:
@@ -449,7 +449,7 @@ class Api(object):
             self.id = kwargs['id']
 
         img = None
-        image_path = os.path.join(mylar.CONFIG.CACHE_DIR, str(self.id) + '.jpg')
+        image_path = os.path.join(mylar.mylar.CONFIG.CACHE_DIR, str(self.id) + '.jpg')
 
         # Checks if its a valid path and file
         if os.path.isfile(image_path):
@@ -531,8 +531,8 @@ class Api(object):
             comiclocation = comic.get('ComicLocation')
             f = os.path.join(comiclocation, issuelocation)
             if not os.path.isfile(f):
-                if mylar.CONFIG.MULTIPLE_DEST_DIRS is not None and mylar.CONFIG.MULTIPLE_DEST_DIRS != 'None':
-                    pathdir = os.path.join(mylar.CONFIG.MULTIPLE_DEST_DIRS, os.path.basename(comiclocation))
+                if mylar.mylar.CONFIG.MULTIPLE_DEST_DIRS is not None and mylar.mylar.CONFIG.MULTIPLE_DEST_DIRS != 'None':
+                    pathdir = os.path.join(mylar.mylar.CONFIG.MULTIPLE_DEST_DIRS, os.path.basename(comiclocation))
                     f = os.path.join(pathdir, issuelocation)
                     self.file = f
                     self.filename = issuelocation
@@ -549,7 +549,7 @@ class Api(object):
             return
 
         self.nzbname = nzbname
-        f = os.path.join(mylar.CONFIG.CACHE_DIR, nzbname)
+        f = os.path.join(mylar.mylar.CONFIG.CACHE_DIR, nzbname)
         if os.path.isfile(f):
             self.file = f
             self.filename = nzbname
@@ -626,9 +626,9 @@ class REST(object):
             req = cherrypy.request.headers
             logger.info('thekey: %s' % req)
             logger.info('url: %s' % cherrypy.url())
-            logger.info('mylar.apikey: %s [%s]' % (mylar.CONFIG.API_KEY, type(mylar.CONFIG.API_KEY)))
+            logger.info('mylar.mylar.apikey: %s [%s]' % (mylar.mylar.CONFIG.API_KEY, type(mylar.mylar.CONFIG.API_KEY)))
             logger.info('submitted.apikey: %s [%s]' % (req['Api-Key'], type(req['Api-Key'])))
-            if 'Api-Key' not in req or req['Api-Key'] != str(mylar.CONFIG.API_KEY): #str(mylar.API_KEY) or mylar.API_KEY not in cherrypy.url():
+            if 'Api-Key' not in req or req['Api-Key'] != str(mylar.mylar.CONFIG.API_KEY): #str(mylar.mylar.API_KEY) or mylar.mylar.API_KEY not in cherrypy.url():
                 logger.info('wrong APIKEY')
                 return 'api-key provided was either not present in auth header, or was incorrect.'
             else:

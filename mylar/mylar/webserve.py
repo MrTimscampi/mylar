@@ -40,7 +40,7 @@ import platform
 import urllib
 import shutil
 
-import mylar
+import mylar.mylar
 
 from mylar.mylar import logger, db, importer, mb, search, filechecker, helpers, updater, parseit, weeklypull, PostProcessor, \
     librarysync, moveit, Failed, readinglist, notifiers, sabparse, config

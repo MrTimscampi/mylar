@@ -21,7 +21,7 @@ from builtins import str
 from builtins import object
 import queue
 import threading
-import mylar
+import mylar.mylar
 from . import logger
 
 class Process(object):

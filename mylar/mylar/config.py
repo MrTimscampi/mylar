@@ -15,7 +15,7 @@ import codecs
 import shutil
 import re
 import configparser
-import mylar
+import mylar.mylar
 from mylar.mylar import logger, helpers
 
 config = configparser.SafeConfigParser()

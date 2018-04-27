@@ -29,7 +29,7 @@ import threading
 import time
 import queue
 
-import mylar
+import mylar.mylar
 
 from mylar.mylar import logger
 

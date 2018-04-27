@@ -1,5 +1,5 @@
 from builtins import str
-import mylar
+import mylar.mylar
 from mylar.mylar import db, logger, helpers, updater, filechecker
 import os
 import shutil

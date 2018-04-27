@@ -22,7 +22,7 @@ import base64
 import cherrypy
 import urllib.request, urllib.parse, urllib.error
 import urllib.request, urllib.error, urllib.parse
-import mylar
+import mylar.mylar
 from http.client import HTTPSConnection
 from urllib.parse import urlencode
 import os.path

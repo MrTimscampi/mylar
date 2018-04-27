@@ -22,7 +22,7 @@ import glob, urllib.request, urllib.parse, urllib.error, urllib.request, urllib.
 
 import simplejson as simplejson
 
-import mylar
+import mylar.mylar
 from mylar.mylar import db, helpers, logger
 
 

@@ -25,7 +25,7 @@ import cherrypy
 
 import portend as portend
 
-import mylar
+import mylar.mylar
 from mylar.mylar import logger
 from mylar.mylar.webserve import WebInterface
 from mylar.mylar.helpers import create_https_certificates

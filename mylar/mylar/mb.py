@@ -29,7 +29,7 @@ import urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error,
 from xml.dom.minidom import parseString, Element
 import requests
 
-import mylar
+import mylar.mylar
 from mylar.mylar import logger, db, cv
 from mylar.mylar.helpers import multikeysort, replace_all, cleanName, listLibrary, listStoryArcs
 import http.client

@@ -19,7 +19,7 @@ from future import standard_library
 standard_library.install_aliases()
 from builtins import str
 from builtins import object
-import mylar
+import mylar.mylar
 from mylar.mylar import logger, db, updater, helpers, parseit, findcomicfeed, notifiers, rsscheck
 
 import feedparser as feedparser
@@ -212,7 +212,7 @@ class FailedProcessor(object):
         logger.info(module + ' Successfully marked as Failed.')
         self._log('Successfully marked as Failed.')
 
-        if mylar.CONFIG.FAILED_AUTO:
+        if mylar.mylar.CONFIG.FAILED_AUTO:
             logger.info(module + ' Sending back to search to see if we can find something that will not fail.')
             self._log('Sending back to search to see if we can find something better that will not fail.')
             self.valreturn.append({"self.log":    self.log,

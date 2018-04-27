@@ -7,7 +7,7 @@ import re
 import os
 import requests
 
-import mylar
+import mylar.mylar
 from mylar.mylar import logger
 
 def newpull():

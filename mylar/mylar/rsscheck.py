@@ -13,7 +13,7 @@ import time
 import random
 from io import StringIO
 
-import mylar
+import mylar.mylar
 from mylar.mylar import db, logger, ftpsshup, helpers, auth32p, utorrent
 from mylar.mylar.torrent.clients import transmission as transmission
 from mylar.mylar.torrent.clients import deluge as deluge

@@ -18,7 +18,7 @@ import requests
 from bs4 import BeautifulSoup, UnicodeDammit
 import datetime
 import re
-import mylar
+import mylar.mylar
 from mylar.mylar import logger, db
 
 def locg(pulldate=None,weeknumber=None,year=None):
@@ -54,7 +54,7 @@ def locg(pulldate=None,weeknumber=None,year=None):
         url = 'https://walksoftly.itsaninja.party/newcomics.php'
 
         try:
-            r = requests.get(url, params=params, verify=True, headers={'User-Agent': mylar.USER_AGENT[:mylar.USER_AGENT.find('/')+7] + mylar.USER_AGENT[mylar.USER_AGENT.find('(')+1]})
+            r = requests.get(url, params=params, verify=True, headers={'User-Agent': mylar.mylar.USER_AGENT[:mylar.mylar.USER_AGENT.find('/')+7] + mylar.mylar.USER_AGENT[mylar.mylar.USER_AGENT.find('(')+1]})
         except requests.exceptions.RequestException as e:
             logger.warn(e)
             return {'status': 'failure'}
@@ -107,7 +107,7 @@ def locg(pulldate=None,weeknumber=None,year=None):
             if x['alias'] is not None:
                 comicname = x['alias']
 
-            cl_d = mylar.filechecker.FileChecker()
+            cl_d = mylar.mylar.filechecker.FileChecker()
             cl_dyninfo = cl_d.dynamic_replace(comicname)
             dynamic_name = re.sub('[\|\s]','', cl_dyninfo['mod_seriesname'].lower()).strip()
 
@@ -129,7 +129,7 @@ def locg(pulldate=None,weeknumber=None,year=None):
 
         logger.info('[PULL-LIST] Successfully populated pull-list into Mylar for the week of: ' + str(weeknumber))
         #set the last poll date/time here so that we don't start overwriting stuff too much...
-        mylar.CONFIG.PULL_REFRESH = todaydate
+        mylar.mylar.CONFIG.PULL_REFRESH = todaydate
 
         return {'status':     'success',
                 'count':      len(data),

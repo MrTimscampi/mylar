@@ -21,18 +21,18 @@ import threading
 import sqlite3
 import json
 
-import mylar
+import mylar.mylar
 from mylar.mylar import logger, importer
 
 class Maintenance(object):
 
     def __init__(self, mode, file=None, output=None):
         self.mode = mode
-        self.maintenance_db = os.path.join(mylar.DATA_DIR, '.mylar_maintenance.db')
+        self.maintenance_db = os.path.join(mylar.mylar.DATA_DIR, '.mylar_maintenance.db')
         if self.mode == 'database-import':
             self.dbfile = file
         else:
-            self.dbfile = mylar.DB_FILE
+            self.dbfile = mylar.mylar.DB_FILE
         self.file = file
         self.outputfile = output
         self.comiclist = []
@@ -41,11 +41,11 @@ class Maintenance(object):
 
     def sql_attachmylar(self):
         self.connectmylar = sqlite3.connect(self.dbfile)
-        self.dbmylar = self.connectmylar.cursor()
+        self.dbmylar = self.connectmylar.mylar.cursor()
 
     def sql_closemylar(self):
-        self.connectmylar.commit()
-        self.dbmylar.close()
+        self.connectmylar.mylar.commit()
+        self.dbmylar.mylar.close()
 
     def sql_attach(self):
         self.conn = sqlite3.connect(self.maintenance_db)
@@ -59,7 +59,7 @@ class Maintenance(object):
     def database_import(self):
         self.sql_attachmylar()
 
-        comicidlist = self.dbmylar.execute('SELECT * FROM comics')
+        comicidlist = self.dbmylar.mylar.execute('SELECT * FROM comics')
         for i in comicidlist:
             self.comiclist.append(i['ComicID'])
 
@@ -75,7 +75,7 @@ class Maintenance(object):
     def json_export(self):
         self.sql_attachmylar()
 
-        for i in self.dbmylar.execute('SELECT ComicID FROM comics'):
+        for i in self.dbmylar.mylar.execute('SELECT ComicID FROM comics'):
             self.comiclist.append({'ComicID': i[0]})
 
         self.sql_closemylar()

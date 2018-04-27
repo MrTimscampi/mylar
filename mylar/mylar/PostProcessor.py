@@ -26,7 +26,7 @@ import re
 import shlex
 import time
 import logging
-import mylar
+import mylar.mylar
 import subprocess
 import urllib.request, urllib.error, urllib.parse
 import sys

@@ -29,7 +29,7 @@ from cgi import escape
 #from datetime import datetime, timedelta
 import urllib.request, urllib.parse, urllib.error
 import re
-import mylar
+import mylar.mylar
 from mylar.mylar import logger
 
 SESSION_KEY = '_cp_username'
@@ -58,9 +58,9 @@ def check_auth(*args, **kwargs):
             for condition in conditions:
                 # A condition is just a callable that returns true or false
                 if not condition():
-                    raise cherrypy.HTTPRedirect(mylar.CONFIG.HTTP_ROOT + "auth/login?from_page=%s" % get_params)
+                    raise cherrypy.HTTPRedirect(mylar.mylar.CONFIG.HTTP_ROOT + "auth/login?from_page=%s" % get_params)
         else:
-            raise cherrypy.HTTPRedirect(mylar.CONFIG.HTTP_ROOT + "auth/login?from_page=%s" % get_params)
+            raise cherrypy.HTTPRedirect(mylar.mylar.CONFIG.HTTP_ROOT + "auth/login?from_page=%s" % get_params)
 
 cherrypy.tools.auth = cherrypy.Tool('before_handler', check_auth)
 
@@ -128,7 +128,7 @@ class AuthController(object):
         # not needed or used for Mylar currently
 
     def get_loginform(self, username, msg="Enter login information", from_page="/"):
-        from mylar.webserve import serve_template
+        from mylar.mylar.webserve import serve_template
         return serve_template(templatename="login.html", username=escape(username, True), title="Login", from_page=from_page)
 
     @cherrypy.expose
@@ -142,19 +142,19 @@ class AuthController(object):
         else:
             #if all([from_page != "/", from_page != "//"]):
             #    from_page = from_page
-            #if mylar.OS_DETECT == 'Windows':
-            #    if mylar.CONFIG.HTTP_ROOT != "//":
-            #        from_page = re.sub(mylar.CONFIG.HTTP_ROOT, '', from_page,1).strip()
+            #if mylar.mylar.OS_DETECT == 'Windows':
+            #    if mylar.mylar.CONFIG.HTTP_ROOT != "//":
+            #        from_page = re.sub(mylar.mylar.CONFIG.HTTP_ROOT, '', from_page,1).strip()
             #else:
-            #    #if mylar.CONFIG.HTTP_ROOT != "/":
-            #    from_page = re.sub(mylar.CONFIG.HTTP_ROOT, '', from_page,1).strip()
+            #    #if mylar.mylar.CONFIG.HTTP_ROOT != "/":
+            #    from_page = re.sub(mylar.mylar.CONFIG.HTTP_ROOT, '', from_page,1).strip()
             cherrypy.session.regenerate()
             cherrypy.session[SESSION_KEY] = cherrypy.request.login = current_username
             #expiry = datetime.now() + (timedelta(days=30) if remember_me == '1' else timedelta(minutes=60))
             #cherrypy.session[SESSION_KEY] = {'user':    cherrypy.request.login,
             #                                 'expiry':  expiry}
             self.on_login(current_username)
-            raise cherrypy.HTTPRedirect(from_page or mylar.CONFIG.HTTP_ROOT)
+            raise cherrypy.HTTPRedirect(from_page or mylar.mylar.CONFIG.HTTP_ROOT)
 
     @cherrypy.expose
     def logout(self, from_page="/"):
@@ -164,5 +164,5 @@ class AuthController(object):
         if username:
             cherrypy.request.login = None
             self.on_logout(username)
-            raise cherrypy.HTTPRedirect(from_page or mylar.CONFIG.HTTP_ROOT)
+            raise cherrypy.HTTPRedirect(from_page or mylar.mylar.CONFIG.HTTP_ROOT)
 

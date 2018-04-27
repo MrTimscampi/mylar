@@ -28,7 +28,7 @@ import datetime
 from datetime import timedelta
 import lib.cfscrape as cfscrape
 
-import mylar
+import mylar.mylar
 from mylar.mylar import logger, helpers
 
 class wwt(object):

@@ -17,7 +17,7 @@ from decimal import Decimal
 from html.parser import HTMLParseError
 from time import strptime
 
-import mylar
+import mylar.mylar
 from mylar.mylar import logger, helpers
 
 def solicit(month, year):

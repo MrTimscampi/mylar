@@ -16,7 +16,7 @@
 from builtins import object
 from __future__ import with_statement
 
-import mylar
+import mylar.mylar
 
 from mylar.mylar import logger, helpers
 
@@ -29,5 +29,5 @@ class dbUpdate(object):
     def run(self, sched):
         logger.info('[DBUpdate] Updating Database.')
         helpers.job_management(write=True, job='DB Updater', current_run=helpers.utctimestamp(), status='Running')
-        mylar.updater.dbUpdate(sched=sched)
+        mylar.mylar.updater.dbUpdate(sched=sched)
         helpers.job_management(write=True, job='DB Updater', last_run_completed=helpers.utctimestamp(), status='Waiting')

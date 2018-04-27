@@ -18,7 +18,7 @@ standard_library.install_aliases()
 from builtins import str
 import platform, subprocess, re, os, urllib.request, urllib.error, urllib.parse, tarfile
 
-import mylar
+import mylar.mylar
 from mylar.mylar import logger, version
 
 import requests

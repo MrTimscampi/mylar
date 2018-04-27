@@ -37,7 +37,7 @@ import datetime as dt
 import subprocess
 from subprocess import CalledProcessError, check_output
 
-import mylar
+import mylar.mylar
 from mylar.mylar import logger, helpers
 
 class FileChecker(object):
@@ -225,7 +225,7 @@ class FileChecker(object):
                 #sub = re.sub(origpath, '', path).strip()})
                 logger.fdebug('[SUB-PATH] Original Path : ' + str(path))
                 logger.fdebug('[SUB-PATH] Sub-directory : ' + str(subpath))
-                if 'windows' in mylar.OS_DETECT.lower():
+                if 'windows' in mylar.mylar.OS_DETECT.lower():
                     if path in subpath:
                         ab = len(path)
                         tmppath = subpath[ab:]
@@ -254,15 +254,15 @@ class FileChecker(object):
             reading_order = None
 
             #if it's a story-arc, make sure to remove any leading reading order #'s
-            if self.sarc and mylar.CONFIG.READ2FILENAME:
+            if self.sarc and mylar.mylar.CONFIG.READ2FILENAME:
                 removest = modfilename.find('-') # the - gets removed above so we test for the first blank space...
-                if mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
+                if mylar.mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
                    logger.fdebug('[SARC] Checking filename for Reading Order sequence - Reading Sequence Order found #: ' + str(modfilename[:removest]))
                 if modfilename[:removest].isdigit() and removest <= 3:
                     reading_order = {'reading_sequence': str(modfilename[:removest]),
                                      'filename':         filename[removest+1:]}
                     modfilename = modfilename[removest+1:]
-                    if mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
+                    if mylar.mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
                         logger.fdebug('[SARC] Removed Reading Order sequence from subname. Now set to : ' + modfilename)
 
 
@@ -917,7 +917,7 @@ class FileChecker(object):
             #if the filename is unicoded, it won't match due to the unicode translation. Keep the unicode as well as the decoded.
             series_name_decoded= unicodedata.normalize('NFKD', helpers.conversion(series_name)).encode('ASCII', 'ignore')
             #check for annual in title(s) here.
-            if not self.justparse and all([mylar.CONFIG.ANNUALS_ON, 'annual' not in self.watchcomic.lower(), 'special' not in self.watchcomic.lower()]):
+            if not self.justparse and all([mylar.mylar.CONFIG.ANNUALS_ON, 'annual' not in self.watchcomic.lower(), 'special' not in self.watchcomic.lower()]):
                 if 'annual' in series_name.lower():
                     issue_number = 'Annual ' + str(issue_number)
                     series_name = re.sub('annual', '', series_name, flags=re.I).strip()
@@ -1024,7 +1024,7 @@ class FileChecker(object):
 
             justthedigits = series_info['issue_number']
 
-            if mylar.CONFIG.ANNUALS_ON and 'annual' not in nspace_watchcomic.lower():
+            if mylar.mylar.CONFIG.ANNUALS_ON and 'annual' not in nspace_watchcomic.lower():
                 if 'annual' in series_name.lower():
                     justthedigits = 'Annual ' + series_info['issue_number']
                     nspace_seriesname = re.sub('annual', '', nspace_seriesname.lower()).strip()
@@ -1058,10 +1058,10 @@ class FileChecker(object):
                     #loop through the Alternates picking out the ones that match and then do an overall loop.
                     loopchk = [x for x in self.AS_Alt if re.sub('[\|\s]','', x.lower()).strip() == re.sub('[\|\s]','', nspace_seriesname.lower()).strip()]
                     if len(loopchk) > 0 and loopchk[0] != '':
-                        if mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
+                        if mylar.mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
                             logger.fdebug('[FILECHECKER] This should be an alternate: ' + str(loopchk))
                         if any(['annual' in series_name.lower(), 'special' in series_name.lower()]):
-                            if mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
+                            if mylar.mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
                                 logger.fdebug('[FILECHECKER] Annual/Special detected - proceeding')
                             enable_annual = True
 
@@ -1074,12 +1074,12 @@ class FileChecker(object):
                         loopchk.append(nspace_watchcomic)
                         if any(['annual' in nspace_seriesname.lower(), 'special' in nspace_seriesname.lower()]):
                             if 'biannual' in nspace_seriesname.lower():
-                                if mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
+                                if mylar.mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
                                     logger.fdebug('[FILECHECKER] BiAnnual detected - wouldn\'t Deadpool be proud?')
                                 nspace_seriesname = re.sub('biannual', '', nspace_seriesname).strip()
                                 enable_annual = True
                             elif 'annual' in nspace_seriesname.lower():
-                                if mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
+                                if mylar.mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
                                     logger.fdebug('[FILECHECKER] Annual detected - proceeding cautiously.')
                                 nspace_seriesname = re.sub('annual', '', nspace_seriesname).strip()
                                 enable_annual = False
@@ -1089,19 +1089,19 @@ class FileChecker(object):
                                 nspace_seriesname = re.sub('special', '', nspace_seriesname).strip()
                                 enable_annual = False
 
-                    if mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
+                    if mylar.mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
                         logger.fdebug('[FILECHECKER] Complete matching list of names to this file [' + str(len(loopchk)) + '] : ' + str(loopchk))
 
                     for loopit in loopchk:
                         #now that we have the list of all possible matches for the watchcomic + alternate search names, we go through the list until we find a match.
                         modseries_name = loopit
-                        if mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
+                        if mylar.mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
                             logger.fdebug('[FILECHECKER] AS_Tuple : ' + str(self.AS_Tuple))
                             for ATS in self.AS_Tuple:
-                                if mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
+                                if mylar.mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
                                     logger.fdebug('[FILECHECKER] ' + str(ATS['AS_Alternate']) + ' comparing to ' + nspace_seriesname)
                                 if re.sub('\|','', ATS['AS_Alternate'].lower()).strip() == re.sub('\|','', nspace_seriesname.lower()).strip():
-                                    if mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
+                                    if mylar.mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
                                         logger.fdebug('[FILECHECKER] Associating ComiciD : ' + str(ATS['ComicID']))
                                     annual_comicid = str(ATS['ComicID'])
                                     modseries_name = ATS['AS_Alternate']
@@ -1111,15 +1111,15 @@ class FileChecker(object):
 
                 if enable_annual:
                     if annual_comicid is not None:
-                       if mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
+                       if mylar.mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
                            logger.fdebug('enable annual is on')
                            logger.fdebug('annual comicid is ' + str(annual_comicid))
                        if 'biannual' in nspace_watchcomic.lower():
-                           if mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
+                           if mylar.mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
                                logger.fdebug('bi annual detected')
                            justthedigits = 'BiAnnual ' + justthedigits
                        elif 'annual' in nspace_watchcomic.lower():
-                           if mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
+                           if mylar.mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
                                logger.fdebug('annual detected')
                            justthedigits = 'Annual ' + justthedigits
                        elif 'special' in nspace_watchcomic.lower():
@@ -1162,9 +1162,9 @@ class FileChecker(object):
         filelist = []
         comic_ext = ('.cbr','.cbz','.cb7','.pdf')
 
-        dir = dir.encode(mylar.SYS_ENCODING)
+        dir = dir.encode(mylar.mylar.SYS_ENCODING)
 
-        if all([mylar.CONFIG.ENABLE_TORRENTS is True, self.pp_mode is True]):
+        if all([mylar.mylar.CONFIG.ENABLE_TORRENTS is True, self.pp_mode is True]):
             from . import db
             myDB = db.DBConnection()
             pp_crclist =[]
@@ -1184,8 +1184,8 @@ class FileChecker(object):
                         #Ignoring MAC OS Finder directory of cached files (/.AppleDouble/<name of file(s)>)
                         continue
 
-                if all([mylar.CONFIG.ENABLE_TORRENTS is True, self.pp_mode is True]):
-                    tcrc = helpers.crc(os.path.join(dirname, fname).decode(mylar.SYS_ENCODING))
+                if all([mylar.mylar.CONFIG.ENABLE_TORRENTS is True, self.pp_mode is True]):
+                    tcrc = helpers.crc(os.path.join(dirname, fname).decode(mylar.mylar.SYS_ENCODING))
                     crcchk = [x for x in pp_crclist if tcrc == x['crc']]
                     if crcchk:
                         #logger.fdebug('%s Already post-processed this item %s - Ignoring' % fname)
@@ -1300,15 +1300,15 @@ class FileChecker(object):
                     # if it's !! present, it's the comicid associated with the series as an added annual.
                     # extract the !!, store it and then remove it so things will continue.
                     as_start = AS_Alternate.find('!!')
-                    if mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
+                    if mylar.mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
                         logger.fdebug('as_start: ' + str(as_start) + ' --- ' + str(AS_Alternate[as_start:]))
                     as_end = AS_Alternate.find('##', as_start)
                     if as_end == -1:
                         as_end = len(AS_Alternate)
-                    if mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
+                    if mylar.mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
                         logger.fdebug('as_start: ' + str(as_end) + ' --- ' + str(AS_Alternate[as_start:as_end]))
                     AS_ComicID =  AS_Alternate[as_start +2:as_end]
-                    if mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
+                    if mylar.mylar.CONFIG.FOLDER_SCAN_LOG_VERBOSE:
                         logger.fdebug('[FILECHECKER] Extracted comicid for given annual : ' + str(AS_ComicID))
                     AS_Alternate = re.sub('!!' + str(AS_ComicID), '', AS_Alternate)
                     AS_tupled = True
@@ -1378,11 +1378,11 @@ def validateAndCreateDirectory(dir, create=False, module=None):
             logger.warn(module + ' Could not find comic directory: ' + dir)
             if create:
                 if dir.strip():
-                    logger.info(module + ' Creating comic directory (' + str(mylar.CONFIG.CHMOD_DIR) + ') : ' + dir)
+                    logger.info(module + ' Creating comic directory (' + str(mylar.mylar.CONFIG.CHMOD_DIR) + ') : ' + dir)
                     try:
                         os.umask(0) # this is probably redudant, but it doesn't hurt to clear the umask here.
-                        if mylar.CONFIG.ENFORCE_PERMS:
-                            permission = int(mylar.CONFIG.CHMOD_DIR, 8)
+                        if mylar.mylar.CONFIG.ENFORCE_PERMS:
+                            permission = int(mylar.mylar.CONFIG.CHMOD_DIR, 8)
                             os.makedirs(dir.rstrip(), permission)
                             setperms(dir.rstrip(), True)
                         else:
@@ -1402,61 +1402,61 @@ def validateAndCreateDirectory(dir, create=False, module=None):
 
 def setperms(path, dir=False):
 
-    if 'windows' not in mylar.OS_DETECT.lower():
+    if 'windows' not in mylar.mylar.OS_DETECT.lower():
 
         try:
             os.umask(0) # this is probably redudant, but it doesn't hurt to clear the umask here.
-            if mylar.CONFIG.CHGROUP:
-                if mylar.CONFIG.CHOWNER is None or mylar.CONFIG.CHOWNER == 'None' or mylar.CONFIG.CHOWNER == '':
+            if mylar.mylar.CONFIG.CHGROUP:
+                if mylar.mylar.CONFIG.CHOWNER is None or mylar.mylar.CONFIG.CHOWNER == 'None' or mylar.mylar.CONFIG.CHOWNER == '':
                     import getpass
-                    mylar.CONFIG.CHOWNER = getpass.getuser()
+                    mylar.mylar.CONFIG.CHOWNER = getpass.getuser()
 
-                if not mylar.CONFIG.CHOWNER.isdigit():
+                if not mylar.mylar.CONFIG.CHOWNER.isdigit():
                     from pwd import getpwnam
-                    chowner = getpwnam(mylar.CONFIG.CHOWNER)[2]
+                    chowner = getpwnam(mylar.mylar.CONFIG.CHOWNER)[2]
                 else:
-                    chowner = int(mylar.CONFIG.CHOWNER)
+                    chowner = int(mylar.mylar.CONFIG.CHOWNER)
 
-                if not mylar.CONFIG.CHGROUP.isdigit():
+                if not mylar.mylar.CONFIG.CHGROUP.isdigit():
                     from grp import getgrnam
-                    chgroup = getgrnam(mylar.CONFIG.CHGROUP)[2]
+                    chgroup = getgrnam(mylar.mylar.CONFIG.CHGROUP)[2]
                 else:
-                    chgroup = int(mylar.CONFIG.CHGROUP)
+                    chgroup = int(mylar.mylar.CONFIG.CHGROUP)
 
                 if dir:
-                    permission = int(mylar.CONFIG.CHMOD_DIR, 8)
+                    permission = int(mylar.mylar.CONFIG.CHMOD_DIR, 8)
                     os.chmod(path, permission)
                     os.chown(path, chowner, chgroup)
                 elif os.path.isfile(path):
-                    permission = int(mylar.CONFIG.CHMOD_FILE, 8)
+                    permission = int(mylar.mylar.CONFIG.CHMOD_FILE, 8)
                     os.chown(path, chowner, chgroup)
                     os.chmod(path, permission)   
                 else:
                     for root, dirs, files in os.walk(path):
                         for momo in dirs:
-                            permission = int(mylar.CONFIG.CHMOD_DIR, 8)
+                            permission = int(mylar.mylar.CONFIG.CHMOD_DIR, 8)
                             os.chown(os.path.join(root, momo), chowner, chgroup)
                             os.chmod(os.path.join(root, momo), permission)
                         for momo in files:
-                            permission = int(mylar.CONFIG.CHMOD_FILE, 8)
+                            permission = int(mylar.mylar.CONFIG.CHMOD_FILE, 8)
                             os.chown(os.path.join(root, momo), chowner, chgroup)
                             os.chmod(os.path.join(root, momo), permission)
 
-                logger.fdebug('Successfully changed ownership and permissions [' + str(mylar.CONFIG.CHOWNER) + ':' + str(mylar.CONFIG.CHGROUP) + '] / [' + str(mylar.CONFIG.CHMOD_DIR) + ' / ' + str(mylar.CONFIG.CHMOD_FILE) + ']')
+                logger.fdebug('Successfully changed ownership and permissions [' + str(mylar.mylar.CONFIG.CHOWNER) + ':' + str(mylar.mylar.CONFIG.CHGROUP) + '] / [' + str(mylar.mylar.CONFIG.CHMOD_DIR) + ' / ' + str(mylar.mylar.CONFIG.CHMOD_FILE) + ']')
 
             elif os.path.isfile(path):
-                    permission = int(mylar.CONFIG.CHMOD_FILE, 8)
+                    permission = int(mylar.mylar.CONFIG.CHMOD_FILE, 8)
                     os.chmod(path, permission)
             else:
                 for root, dirs, files in os.walk(path):
                     for momo in dirs:
-                        permission = int(mylar.CONFIG.CHMOD_DIR, 8)
+                        permission = int(mylar.mylar.CONFIG.CHMOD_DIR, 8)
                         os.chmod(os.path.join(root, momo), permission)
                     for momo in files:
-                        permission = int(mylar.CONFIG.CHMOD_FILE, 8)
+                        permission = int(mylar.mylar.CONFIG.CHMOD_FILE, 8)
                         os.chmod(os.path.join(root, momo), permission)
 
-                logger.fdebug('Successfully changed permissions [' + str(mylar.CONFIG.CHMOD_DIR) + ' / ' + str(mylar.CONFIG.CHMOD_FILE) + ']')
+                logger.fdebug('Successfully changed permissions [' + str(mylar.mylar.CONFIG.CHMOD_DIR) + ' / ' + str(mylar.mylar.CONFIG.CHMOD_FILE) + ']')
 
         except OSError:
             logger.error('Could not change permissions : ' + path + '. Exiting...')

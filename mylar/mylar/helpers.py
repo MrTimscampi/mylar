@@ -42,7 +42,7 @@ import gzip
 import os, errno
 from io import StringIO
 
-import mylar
+import mylar.mylar
 from . import logger
 from mylar.mylar import sabnzbd, nzbget, process
 

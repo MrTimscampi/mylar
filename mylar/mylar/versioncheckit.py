@@ -15,7 +15,7 @@
 
 from builtins import object
 
-import mylar
+import mylar.mylar
 
 from mylar.mylar import logger, helpers, versioncheck
 

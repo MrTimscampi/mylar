@@ -28,7 +28,7 @@ import os
 import sys
 import re
 import time
-import mylar
+import mylar.mylar
 from . import logger
 
 class NZBGet(object):

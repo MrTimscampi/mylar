@@ -16,7 +16,7 @@ import cfscrape
 
 from operator import itemgetter
 
-import mylar
+import mylar.mylar
 from mylar.mylar import logger, filechecker, helpers
 
 
@@ -38,7 +38,7 @@ class info32p(object):
         self.error = None
         self.method = None
 
-        lses = self.LoginSession(mylar.CONFIG.USERNAME_32P, mylar.CONFIG.PASSWORD_32P)
+        lses = self.LoginSession(mylar.mylar.CONFIG.USERNAME_32P, mylar.mylar.CONFIG.PASSWORD_32P)
 
         if not lses.login():
             if not self.test:
@@ -55,9 +55,9 @@ class info32p(object):
             self.passkey = lses.passkey
             self.uid = lses.uid
             try:
-                mylar.INKDROPS_32P = int(math.floor(float(lses.inkdrops['results'][0]['inkdrops'])))
+                mylar.mylar.INKDROPS_32P = int(math.floor(float(lses.inkdrops['results'][0]['inkdrops'])))
             except:
-                mylar.INKDROPS_32P = lses.inkdrops['results'][0]['inkdrops']
+                mylar.mylar.INKDROPS_32P = lses.inkdrops['results'][0]['inkdrops']
 
         self.reauthenticate = reauthenticate
         self.searchterm = searchterm
@@ -66,18 +66,18 @@ class info32p(object):
     def authenticate(self):
 
         if self.test:
-            return {'status': True, 'inkdrops': mylar.INKDROPS_32P}
+            return {'status': True, 'inkdrops': mylar.mylar.INKDROPS_32P}
 
         feedinfo = []
 
         try:
             with cfscrape.create_scraper() as s:
                 s.headers = self.headers
-                cj = LWPCookieJar(os.path.join(mylar.CONFIG.CACHE_DIR, ".32p_cookies.dat"))
+                cj = LWPCookieJar(os.path.join(mylar.mylar.CONFIG.CACHE_DIR, ".32p_cookies.dat"))
                 cj.load()
                 s.cookies = cj
 
-                if mylar.CONFIG.VERIFY_32P == 1 or mylar.CONFIG.VERIFY_32P == True:
+                if mylar.mylar.CONFIG.VERIFY_32P == 1 or mylar.mylar.CONFIG.VERIFY_32P == True:
                     verify = True
                 else:
                     verify = False
@@ -153,10 +153,10 @@ class info32p(object):
 
         #set the keys here that will be used to download.
         try:
-            mylar.CONFIG.PASSKEY_32P = str(self.passkey)
-            mylar.AUTHKEY_32P = str(self.authkey)  # probably not needed here.
-            mylar.KEYS_32P = {}
-            mylar.KEYS_32P = {"user": str(self.uid),
+            mylar.mylar.CONFIG.PASSKEY_32P = str(self.passkey)
+            mylar.mylar.AUTHKEY_32P = str(self.authkey)  # probably not needed here.
+            mylar.mylar.KEYS_32P = {}
+            mylar.mylar.KEYS_32P = {"user": str(self.uid),
                               "auth": auth,
                               "passkey": str(self.passkey),
                               "authkey": str(self.authkey)}
@@ -168,7 +168,7 @@ class info32p(object):
         if self.reauthenticate:
             return
         else:
-            mylar.FEEDINFO_32P = feedinfo
+            mylar.mylar.FEEDINFO_32P = feedinfo
             return feedinfo
 
     def searchit(self):
@@ -206,7 +206,7 @@ class info32p(object):
             if comic_id:
                 chk_id = helpers.checkthe_id(comic_id)
 
-            if any([chk_id is None, mylar.CONFIG.DEEP_SEARCH_32P is True]):
+            if any([chk_id is None, mylar.mylar.CONFIG.DEEP_SEARCH_32P is True]):
                 #generate the dynamic name of the series here so we can match it up
                 as_d = filechecker.FileChecker()
                 as_dinfo = as_d.dynamic_replace(series_search)
@@ -223,13 +223,13 @@ class info32p(object):
                 if ',' in series_search:
                     series_search = series_search[:series_search.find(',')]
 
-                logger.fdebug('config.search_32p: %s' % mylar.CONFIG.SEARCH_32P)
-                if mylar.CONFIG.SEARCH_32P is False:
+                logger.fdebug('config.search_32p: %s' % mylar.mylar.CONFIG.SEARCH_32P)
+                if mylar.mylar.CONFIG.SEARCH_32P is False:
                     url = 'https://walksoftly.itsaninja.party/serieslist.php'
                     params = {'series': re.sub('\|','', mod_series.lower()).strip()} #series_search}
                     logger.fdebug('search query: %s' % re.sub('\|', '', mod_series.lower()).strip())
                     try:
-                        t = requests.get(url, params=params, verify=True, headers={'USER-AGENT': mylar.USER_AGENT[:mylar.USER_AGENT.find('/')+7] + mylar.USER_AGENT[mylar.USER_AGENT.find('(')+1]})
+                        t = requests.get(url, params=params, verify=True, headers={'USER-AGENT': mylar.mylar.USER_AGENT[:mylar.mylar.USER_AGENT.find('/')+7] + mylar.mylar.USER_AGENT[mylar.mylar.USER_AGENT.find('(')+1]})
                     except requests.exceptions.RequestException as e:
                         logger.warn(e)
                         return "no results"
@@ -252,7 +252,7 @@ class info32p(object):
 
         with cfscrape.create_scraper() as s:
             s.headers = self.headers
-            cj = LWPCookieJar(os.path.join(mylar.CONFIG.CACHE_DIR, ".32p_cookies.dat"))
+            cj = LWPCookieJar(os.path.join(mylar.mylar.CONFIG.CACHE_DIR, ".32p_cookies.dat"))
             cj.load()
             s.cookies = cj
             data = []
@@ -263,8 +263,8 @@ class info32p(object):
                 data.append({"id":      torrentid,
                              "series":  series_search})
             else:
-                if any([not chk_id, mylar.CONFIG.DEEP_SEARCH_32P is True]):
-                    if mylar.CONFIG.SEARCH_32P is True:
+                if any([not chk_id, mylar.mylar.CONFIG.DEEP_SEARCH_32P is True]):
+                    if mylar.mylar.CONFIG.SEARCH_32P is True:
                         url = 'https://32pag.es/torrents.php' #?action=serieslist&filter=' + series_search #&filter=F
                         params = {'action': 'serieslist', 'filter': series_search}
                         time.sleep(1)  #just to make sure we don't hammer, 1s pause.
@@ -273,7 +273,7 @@ class info32p(object):
                         results = soup.find_all("a", {"class":"object-qtip"},{"data-type":"torrentgroup"})
 
                     for r in results:
-                        if mylar.CONFIG.SEARCH_32P is True:
+                        if mylar.mylar.CONFIG.SEARCH_32P is True:
                             torrentid = r['data-id']
                             torrentname = r.findNext(text=True)
                             torrentname = torrentname.strip()
@@ -407,7 +407,7 @@ class info32p(object):
             except Exception as e:
                 logger.error('%s Can\'t create session with cfscrape' % self.module)
 
-            self.session_path = session_path if session_path is not None else os.path.join(mylar.CONFIG.CACHE_DIR, ".32p_cookies.dat")
+            self.session_path = session_path if session_path is not None else os.path.join(mylar.mylar.CONFIG.CACHE_DIR, ".32p_cookies.dat")
             self.ses.cookies = LWPCookieJar(self.session_path)
             if not os.path.exists(self.session_path):
                 logger.fdebug('%s Session cookie does not exist. Signing in and Creating.' % self.module)

@@ -22,7 +22,7 @@ standard_library.install_aliases()
 from builtins import zip
 from past.builtins import basestring
 from builtins import object
-import mylar
+import mylar.mylar
 from mylar.mylar import db, mb, importer, search, PostProcessor, versioncheck, logger, readinglist, helpers
 import simplejson as simplejson
 import cherrypy

@@ -1,7 +1,7 @@
 from builtins import str
 from builtins import object
 import os
-import mylar
+import mylar.mylar
 from base64 import b16encode, b32decode
 import re
 import time

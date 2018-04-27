@@ -27,7 +27,7 @@ import sys
 import re
 import time
 from . import logger
-import mylar
+import mylar.mylar
 
 class SABnzbd(object):
     def __init__(self, params):

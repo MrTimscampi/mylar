@@ -31,7 +31,7 @@ import requests
 
 from . import torrent.clients.rtorrent as TorClient
 
-import mylar
+import mylar.mylar
 from mylar.mylar import logger, helpers
 
 class RTorrent(object):

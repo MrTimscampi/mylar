@@ -3,7 +3,7 @@ standard_library.install_aliases()
 from builtins import str
 from builtins import object
 import os
-import mylar
+import mylar.mylar
 import base64
 from mylar.mylar import logger, helpers
 

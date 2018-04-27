@@ -24,7 +24,7 @@ import bencode
 import hashlib
 import io
 
-import mylar
+import mylar.mylar
 from mylar.mylar import logger
 
 class utorrentclient(object):

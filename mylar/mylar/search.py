@@ -20,7 +20,7 @@ from future import standard_library
 standard_library.install_aliases()
 from builtins import str
 from builtins import range
-import mylar
+import mylar.mylar
 from mylar.mylar import logger, db, updater, helpers, parseit, findcomicfeed, notifiers, rsscheck, Failed, filechecker, auth32p, sabnzbd, nzbget, wwt
 
 import feedparser

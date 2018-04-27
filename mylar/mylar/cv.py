@@ -26,7 +26,7 @@ from . import logger
 import string
 import urllib.request, urllib.error, urllib.parse
 import feedparser
-import mylar
+import mylar.mylar
 import platform
 from bs4 import BeautifulSoup as Soup
 import http.client
@@ -51,17 +51,17 @@ def pulldetails(comicid, type, issueid=None, offset=1, arclist=None, comicidlist
     #import easy to use xml parser called minidom:
     from xml.dom.minidom import parseString
 
-    if mylar.CONFIG.COMICVINE_API == 'None' or mylar.CONFIG.COMICVINE_API is None:
+    if mylar.mylar.CONFIG.COMICVINE_API == 'None' or mylar.mylar.CONFIG.COMICVINE_API is None:
         logger.warn('You have not specified your own ComicVine API key - it\'s a requirement. Get your own @ http://api.comicvine.com.')
         return
     else:
-        comicapi = mylar.CONFIG.COMICVINE_API
+        comicapi = mylar.mylar.CONFIG.COMICVINE_API
 
     if type == 'comic':
         if not comicid.startswith('4050-'): comicid = '4050-' + comicid
-        PULLURL = mylar.CVURL + 'volume/' + str(comicid) + '/?api_key=' + str(comicapi) + '&format=xml&field_list=name,count_of_issues,issues,start_year,site_detail_url,image,publisher,description,first_issue,deck,aliases'
+        PULLURL = mylar.mylar.CVURL + 'volume/' + str(comicid) + '/?api_key=' + str(comicapi) + '&format=xml&field_list=name,count_of_issues,issues,start_year,site_detail_url,image,publisher,description,first_issue,deck,aliases'
     elif type == 'issue':
-        if mylar.CONFIG.CV_ONLY:
+        if mylar.mylar.CONFIG.CV_ONLY:
             cv_type = 'issues'
             if arclist is None:
                 searchset = 'filter=volume:' + str(comicid) + '&field_list=cover_date,description,id,image,issue_number,name,date_last_updated,store_date'
@@ -70,32 +70,32 @@ def pulldetails(comicid, type, issueid=None, offset=1, arclist=None, comicidlist
         else:
             cv_type = 'volume/' + str(comicid)
             searchset = 'name,count_of_issues,issues,start_year,site_detail_url,image,publisher,description,store_date'
-        PULLURL = mylar.CVURL + str(cv_type) + '/?api_key=' + str(comicapi) + '&format=xml&' + str(searchset) + '&offset=' + str(offset)
+        PULLURL = mylar.mylar.CVURL + str(cv_type) + '/?api_key=' + str(comicapi) + '&format=xml&' + str(searchset) + '&offset=' + str(offset)
     elif any([type == 'image', type == 'firstissue']):
         #this is used ONLY for CV_ONLY
-        PULLURL = mylar.CVURL + 'issues/?api_key=' + str(comicapi) + '&format=xml&filter=id:' + str(issueid) + '&field_list=cover_date,image'
+        PULLURL = mylar.mylar.CVURL + 'issues/?api_key=' + str(comicapi) + '&format=xml&filter=id:' + str(issueid) + '&field_list=cover_date,image'
     elif type == 'storyarc':
-        PULLURL = mylar.CVURL + 'story_arcs/?api_key=' + str(comicapi) + '&format=xml&filter=name:' + str(issueid) + '&field_list=cover_date'
+        PULLURL = mylar.mylar.CVURL + 'story_arcs/?api_key=' + str(comicapi) + '&format=xml&filter=name:' + str(issueid) + '&field_list=cover_date'
     elif type == 'comicyears':
-        PULLURL = mylar.CVURL + 'volumes/?api_key=' + str(comicapi) + '&format=xml&filter=id:' + str(comicidlist) + '&field_list=name,id,start_year,publisher,description,deck&offset=' + str(offset)
+        PULLURL = mylar.mylar.CVURL + 'volumes/?api_key=' + str(comicapi) + '&format=xml&filter=id:' + str(comicidlist) + '&field_list=name,id,start_year,publisher,description,deck&offset=' + str(offset)
     elif type == 'import':
-        PULLURL = mylar.CVURL + 'issues/?api_key=' + str(comicapi) + '&format=xml&filter=id:' + (comicidlist) + '&field_list=cover_date,id,issue_number,name,date_last_updated,store_date,volume' + '&offset=' + str(offset)
+        PULLURL = mylar.mylar.CVURL + 'issues/?api_key=' + str(comicapi) + '&format=xml&filter=id:' + (comicidlist) + '&field_list=cover_date,id,issue_number,name,date_last_updated,store_date,volume' + '&offset=' + str(offset)
     elif type == 'update_dates':
-        PULLURL = mylar.CVURL + 'issues/?api_key=' + str(comicapi) + '&format=xml&filter=id:' + (comicidlist)+ '&field_list=date_last_updated, id, issue_number, store_date, cover_date, name, volume ' + '&offset=' + str(offset)
+        PULLURL = mylar.mylar.CVURL + 'issues/?api_key=' + str(comicapi) + '&format=xml&filter=id:' + (comicidlist)+ '&field_list=date_last_updated, id, issue_number, store_date, cover_date, name, volume ' + '&offset=' + str(offset)
 
     #logger.info('CV.PULLURL: ' + PULLURL)
     #new CV API restriction - one api request / second.
-    if mylar.CONFIG.CVAPI_RATE is None or mylar.CONFIG.CVAPI_RATE < 2:
+    if mylar.mylar.CONFIG.CVAPI_RATE is None or mylar.mylar.CONFIG.CVAPI_RATE < 2:
         time.sleep(2)
     else:
-        time.sleep(mylar.CONFIG.CVAPI_RATE)
+        time.sleep(mylar.mylar.CONFIG.CVAPI_RATE)
 
     #download the file:
     #set payload to None for now...
     payload = None
 
     try:
-        r = requests.get(PULLURL, params=payload, verify=mylar.CONFIG.CV_VERIFY, headers=mylar.CV_HEADERS)
+        r = requests.get(PULLURL, params=payload, verify=mylar.mylar.CONFIG.CV_VERIFY, headers=mylar.mylar.CV_HEADERS)
     except Exception as e:
         logger.warn('Error fetching data from ComicVine: %s' % (e))
         return
@@ -434,7 +434,7 @@ def GetComicInfo(comicid, dom, safechk=None):
 
 def GetIssuesInfo(comicid, dom, arcid=None):
     subtracks = dom.getElementsByTagName('issue')
-    if not mylar.CONFIG.CV_ONLY:
+    if not mylar.mylar.CONFIG.CV_ONLY:
         cntiss = dom.getElementsByTagName('count_of_issues')[0].firstChild.wholeText
         logger.fdebug("issues I've counted: " + str(len(subtracks)))
         logger.fdebug("issues CV says it has: " + str(int(cntiss)))
@@ -450,7 +450,7 @@ def GetIssuesInfo(comicid, dom, arcid=None):
     issuech = []
     firstdate = '2099-00-00'
     for subtrack in subtracks:
-        if not mylar.CONFIG.CV_ONLY:
+        if not mylar.mylar.CONFIG.CV_ONLY:
             if (dom.getElementsByTagName('name')[n].firstChild) is not None:
                 issue['Issue_Name'] = dom.getElementsByTagName('name')[n].firstChild.wholeText
             else:
